@@ -1,6 +1,10 @@
 # molecule-ansible-vagrant
 Example project showing how to test Ansible roles with Molecule and Vagrant
 
+### TDD for Infrastructure code with Molecule!
+
+![tdd-for-iac](https://yuml.me/diagram/scruffy/class/[Given:%20Spin%20up%20Infrastructure%20with%20Vagrant]-&gt;[Then:%20Execute%20Ansible%20Playbooks/Roles],[Then:%20Execute%20Ansible%20Playbooks/Roles]-&gt;[Then:%20Assert%20with%20Testinfra],[Then:%20Assert%20with%20Testinfra]-&gt;[Cleanup%20Infrastructure])
+
 
 ### Prerequisites
 
@@ -13,17 +17,18 @@ Example project showing how to test Ansible roles with Molecule and Vagrant
 * `brew cask install vagrant`
 * `brew install molecule`
 
-### Let´s go
+
+### How to
 
 Execute:
 
-`molecule init --driver vagrant --role install-docker --verifier testinfra`
+`molecule init --driver vagrant --role docker --verifier testinfra`
 
 this will give:
 
-`--> Initializing role install-docker...
- Successfully initialized new role in /Users/jonashecht/dev/molecule-ansible-vagrant/install-docker.`
+`--> Initializing role docker...
+ Successfully initialized new role in /Users/jonashecht/dev/molecule-ansible-vagrant/docker.`
  
-Now we´re able to run our first test. Go into `install-docker` directory and run:
+Now we´re able to run our first test. Go into `docker` directory and run:
 
 `molecule test`
