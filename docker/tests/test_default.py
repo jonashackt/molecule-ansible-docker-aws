@@ -21,4 +21,4 @@ def test_is_docker_installed(host):
 def test_vagrant_user_is_part_of_group_docker(host):
     user_vagrant = host.user('vagrant')
 
-    assert user_vagrant.group == 'docker'
+    assert 'docker' in user_vagrant.groups
