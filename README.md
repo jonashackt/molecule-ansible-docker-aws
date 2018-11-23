@@ -13,13 +13,39 @@ In the `Then` phase Molecule executes different [Verifiers](https://molecule.rea
 
 ![current-docs-url](screenshots/current-docs-url.png)
 
+Just start here: [Molecule docs](https://molecule.readthedocs.io/en/latest/configuration.html)
+
+
+### Prerequisites
+
+* `brew install ansible`
+* `brew cask install virtualbox`
+* `brew cask install vagrant`
+
+> Please don´t install molecule with homebrew on Mac, but always with pip since you only get old versions and need to manually install testinfra, ansible, flake8 and other packages
+* `pip install molecule --user`
+
+> For using Vagrant with Molecule we also need `python-vagrant` module installed
+* `pip install python-vagrant`
+
+
+
 ### Project structure
+
+To initialize a new Molecule powered Ansible role named `docker` with the Vagrant driver and the Testinfra verifier you have to execute the following command:
+
+`molecule init role --driver-name vagrant --role-name docker --verifier-name testinfra`
+
+This will give:
+
+`--> Initializing role docker...
+ Successfully initialized new role in /Users/jonashecht/dev/molecule-ansible-vagrant/docker.`
 
 Molecule introduces a well known project structure (at least for a Java developer like me):
 
 ![projectstructure](screenshots/projectstructure.png)
 
-As you may notice the role standard directory `tasks` is now accompanied by a `tests` directory where the Testinfra testcases reside.
+As you may notice the role standard directory `tasks` is now accompanied by a `tests` directory inside the `molecule` folder where the Testinfra testcases reside.
 
 This repository uses [a Ansible role](docker/tasks/main.yml) that installs Docker into an Ubuntu Box:
 
@@ -74,31 +100,80 @@ def test_vagrant_user_is_part_of_group_docker(host):
     
 ```
 
-### Prerequisites
+### Molecule configuration
 
-* `brew install ansible`
-* `brew cask install virtualbox`
-* `brew cask install vagrant`
+The [molecule.yml](docker/molecule/default/molecule.yml) configures Molecule:
 
-> Please don´t install molecule with homebrew on Mac, but always with pip since you only get old versions and need to manually install testinfra, ansible, flake8 and other packages
-* `pip install molecule --user`
+```
+dependency:
+  name: galaxy
+driver:
+  name: vagrant
+  provider:
+    name: virtualbox
+lint:
+  name: yamllint
+platforms:
+  - name: ubuntu-docker
+    box: ubuntu/bionic64
+    memory: 512
+    cpus: 1
+    provider_raw_config_args:
+    - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected' ]"
+provisioner:
+  name: ansible
+  lint:
+    name: ansible-lint
+ansible:
+  playbook: playbook.yml
+  group_vars:
+    all:
+      ansible_python_interpreter: /usr/bin/python3
+      ansible_user: vagrant
+      ansible_ssh_private_key_file: .vagrant/machines/ubuntu-docker/virtualbox/private_key
+scenario:
+  name: default
+verifier:
+  name: testinfra
+  env:
+    # get rid of the DeprecationWarning messages of third-party libs,
+    # see https://docs.pytest.org/en/latest/warnings.html#deprecationwarning-and-pendingdeprecationwarning
+    PYTHONWARNINGS: "ignore:.*U.*mode is deprecated:DeprecationWarning"
+  lint:
+    name: flake8
+```
 
-> For using Vagrant with Molecule we also need `python-vagrant` module installed
-* `pip install python-vagrant`
+We have two specialties here. First thing is the follow addition to the `platforms` key:
+
+```
+    provider_raw_config_args:
+    - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected' ]"
+```
+
+Without this configuration Molecule isn´t able to spin up "standard" Vagrant Ubuntu boxes like `ubuntu/bionic64` and `ubuntu/xenial64`. If you do a `tail -f /var/folders/5p/l1cc1kqd69n_qxrftgln7xdm0000gn/T/molecule/docker/default/vagrant-ubuntu-docker.err`, you see errors like this:
+
+```
+There was an error while executing `VBoxManage`, a CLI used by Vagrant
+for controlling VirtualBox. The command and stderr is shown below.
+
+Command: ["startvm", "64c5ca1e-0f7c-4dea-bc07-8144a56a0029", "--type", "headless"]
+
+Stderr: VBoxManage: error: RawFile#0 failed to create the raw output file /usr/local/lib/python2.7/site-packages/molecule/provisioner/ansible/playbooks/vagrant/ubuntu-bionic-18.04-cloudimg-console.log (VERR_ACCESS_DENIED)
+```
+
+This is a workaround until https://github.com/ansible/molecule/issues/1556 gets fixed. This shouldn´t be necessary to be configured.
+
+The second thing is `PYTHONWARNINGS: "ignore:.*U.*mode is deprecated:DeprecationWarning"` environment variable definition. If you don´t configure this you´ll end up with bloated test logs like this:
+
+![verify-with-deprecation-warnings](screenshots/verify-with-deprecation-warnings.png)
+
+If you use the `PYTHONWARNINGS` environment variable you gather beautiful and __green__ test executions:
+
+![verify-with-deprecation-warnings-ignored](screenshots/verify-with-deprecation-warnings-ignored.png)
 
 
-### How to
 
-See the [Molecule docs](https://molecule.readthedocs.io/en/latest/configuration.html)
-
-Execute:
-
-`molecule init role --driver-name vagrant --role-name docker --verifier-name testinfra`
-
-this will give:
-
-`--> Initializing role docker...
- Successfully initialized new role in /Users/jonashecht/dev/molecule-ansible-vagrant/docker.`
+### Execute Molecule
  
 Now we´re able to run our first test. Go into `docker` directory and run:
 
