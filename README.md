@@ -78,7 +78,7 @@ This repository uses [a Ansible role](docker/tasks/main.yml) that installs Docke
   become: true
 ```
 
-With Testinfra we can assert on things we want to achieve with our Ansible role: Install the `docker` package and add the user `vagrant` to the group `docker`. Testinfra uses [pytest](https://docs.pytest.org/en/latest/example/index.html) to execute the tests. Our testcases could be found in [test_docker.py](docker/tests/test_docker.py):
+With Testinfra we can assert on things we want to achieve with our Ansible role: Install the `docker` package and add the user `vagrant` to the group `docker`. Testinfra uses [pytest](https://docs.pytest.org/en/latest/example/index.html) to execute the tests. Our testcases could be found in [test_docker.py](docker/molecule/tests/test_docker.py):
 
 ```python
 import testinfra.utils.ansible_runner
@@ -102,7 +102,7 @@ def test_vagrant_user_is_part_of_group_docker(host):
 
 ## Molecule configuration
 
-The [molecule.yml](docker/molecule/default/molecule.yml) configures Molecule:
+The [molecule.yml](docker/molecule/vagrant-ubuntu/molecule.yml) configures Molecule:
 
 ```
 dependency:

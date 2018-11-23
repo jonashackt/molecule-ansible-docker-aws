@@ -1,5 +1,12 @@
 ---
 # tasks file for docker
+- name: install gpg package
+  apt:
+    pkg: gpg
+    state: latest
+    update_cache: true
+  become: true
+
 - name: add Docker apt key
   apt_key:
     url: https://download.docker.com/linux/ubuntu/gpg

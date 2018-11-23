@@ -1,13 +1,18 @@
 ---
 scenario:
-  # default scenario is Docker
-  name: default
+  name: vagrant-ubuntu
 
 driver:
-  name: docker
+  name: vagrant
+  provider:
+    name: virtualbox
 platforms:
-  - name: docker-ubuntu
-    image: ubuntu:bionic
+  - name: vagrant-ubuntu
+    box: ubuntu/bionic64
+    memory: 512
+    cpus: 1
+    provider_raw_config_args:
+    - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected' ]"
 
 provisioner:
   name: ansible

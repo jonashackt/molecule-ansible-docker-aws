@@ -1,17 +1,16 @@
 *******
-Vagrant driver installation guide
+Docker driver installation guide
 *******
 
 Requirements
 ============
 
-* Vagrant
-* Virtualbox, Parallels, VMware Fusion, VMware Workstation or VMware Desktop
-* python-vagrant
+* General molecule dependencies (see https://molecule.readthedocs.io/en/latest/installation.html)
+* Docker Engine
+* docker-py
+* docker
 
 Install
 =======
 
-.. code-block:: bash
-
-    $ sudo pip install python-vagrant
+    $ sudo pip install docker-py
