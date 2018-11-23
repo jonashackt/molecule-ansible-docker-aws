@@ -1,5 +1,7 @@
-# molecule-ansible-vagrant
-Example project showing how to test Ansible roles with Molecule and Vagrant
+# molecule-ansible-docker-vagrant
+[![Build Status](https://travis-ci.org/jonashackt/molecule-ansible-docker-vagrant.svg?branch=master)](https://travis-ci.org/jonashackt/molecule-ansible-docker-vagrant)
+
+Example project showing how to test Ansible roles with Molecule using Testinfra and a multiscenario approach with Docker & Vagrant as infrastructure 
 
 ## TDD for Infrastructure code with Molecule!
 
