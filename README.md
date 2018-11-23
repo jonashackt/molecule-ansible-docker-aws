@@ -185,3 +185,32 @@ Now we´re able to run our first test. Go into `docker` directory and run:
 `molecule test`
 
 As Molecule has different phases, you can also explicitely run `molecule verify` or `molecule converge` - the commands will recognice required upstream phases like `create` and skips them if they where already run before (e.g. if the Vagrant Box is running already).
+
+
+## Multi-Scenario Molecule setup
+
+With Molecule we could not only test our Ansible roles against one infrastructure setup - but we can use multiple of them! We only need to leverage the power of [Molecule scenarios](https://molecule.readthedocs.io/en/latest/configuration.html#scenario).
+
+To get an idea on how this works I sligthly restructured the repository. We started out with the Vagrant driver / scenario. Now after also implementing a Docker driver in this repository on it´s own: https://github.com/jonashackt/molecule-ansible-docker I integrated it into this repository.
+
+And because Docker is the default Molecule driver for testing Ansible roles I changed the name of the Vagrant scenario to `vagrant-ubuntu`. This enables us to use `molecule test` as we´re used to, which will execute the Docker (e.g. `default`) scenario. This change results in the following project structure:
+
+![multi-scenario-projectstructure](screenshots/multi-scenario-projectstructure.png)
+
+All the files which belong only to a certain scenario are placed inside the scenarios directory. For example in the Docker scenario this is `Dockerfile.js` and in Vagrant one this is `prepare.yml`. Also the `molecule.yml` files have to access the `playbook.yml` and the testfiles differently since they are now separate from the scenario directory to be [able to reuse them over all scenarios](https://molecule.readthedocs.io/en/latest/examples.html#sharing-across-scenarios):
+
+```
+...
+provisioner:
+  name: ansible
+...
+  playbooks:
+    converge: ../playbook.yml
+...
+verifier:
+  name: testinfra
+  directory: ../tests/
+...
+```
+
+Now we can also integrate & use TravisCI in this repository since the [default scenario Docker is supported on Travis](https://molecule.readthedocs.io/en/latest/testing.html#travis-ci)! :)
