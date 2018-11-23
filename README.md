@@ -3,11 +3,13 @@
 
 Example project showing how to test Ansible roles with Molecule using Testinfra and a multiscenario approach with Docker & Vagrant as infrastructure 
 
+[![asciicast](https://asciinema.org/a/213350.svg)](https://asciinema.org/a/213350)
+
 ## TDD for Infrastructure code with Molecule!
 
 [Molecule](https://molecule.readthedocs.io/en/latest/#) seems to be a pretty neat TDD framework for testing Infrastructur-as-Code using Ansible. Molecule executes the following steps:
 
-![tdd-for-iac](https://yuml.me/diagram/scruffy/class/[Given:%20Spin%20up%20Infrastructure%20with%20Vagrant]-&gt;[When:%20Execute%20Ansible%20Playbooks/Roles],[When:%20Execute%20Ansible%20Playbooks/Roles]-&gt;[Then:%20Assert%20with%20Testinfra],[Then:%20Assert%20with%20Testinfra]-&gt;[Cleanup%20Infrastructure])
+![tdd-for-iac](https://yuml.me/diagram/scruffy/class/[Given:%20Spin%20up%20Infrastructure%20with%20Docker%20or%20Vagrant%20or%20Other]-&gt;[When:%20Execute%20Ansible%20Playbooks/Roles],[When:%20Execute%20Ansible%20Playbooks/Roles]-&gt;[Then:%20Assert%20with%20Testinfra],[Then:%20Assert%20with%20Testinfra]-&gt;[Cleanup%20Infrastructure])
 
 In the `Then` phase Molecule executes different [Verifiers](https://molecule.readthedocs.io/en/latest/configuration.html#verifier), one of them is [Testinfra](https://testinfra.readthedocs.io/en/latest/), where you can write Unittest with a Python DSL. 
 
@@ -202,6 +204,8 @@ To execute the `vagrant-ubuntu` Scenario you have to explicitely call it´s name
 ```
 molecule test --scenario-name vagrant-ubuntu
 ```
+
+[![asciicast](https://asciinema.org/a/213352.svg)](https://asciinema.org/a/213352)
 
 All the files which belong only to a certain scenario are placed inside the scenarios directory. For example in the Docker scenario this is `Dockerfile.js` and in Vagrant one this is `prepare.yml`. Also the `molecule.yml` files have to access the `playbook.yml` and the testfiles differently since they are now separate from the scenario directory to be [able to reuse them over all scenarios](https://molecule.readthedocs.io/en/latest/examples.html#sharing-across-scenarios):
 
