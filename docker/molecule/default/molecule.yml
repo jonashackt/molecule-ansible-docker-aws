@@ -1,0 +1,33 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: vagrant
+  provider:
+    name: virtualbox
+lint:
+  name: yamllint
+platforms:
+  - name: ubuntu-docker
+    box: ubuntu/bionic64
+    memory: 512
+    cpus: 1
+    provider_raw_config_args:
+    - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected' ]"
+provisioner:
+  name: ansible
+  lint:
+    name: ansible-lint
+ansible:
+  playbook: playbook.yml
+  group_vars:
+    all:
+      ansible_python_interpreter: /usr/bin/python3
+      ansible_user: vagrant
+      ansible_ssh_private_key_file: .vagrant/machines/ubuntu-docker/virtualbox/private_key
+scenario:
+  name: default
+verifier:
+  name: testinfra
+  lint:
+    name: flake8
