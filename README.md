@@ -1,7 +1,7 @@
 # molecule-ansible-vagrant
 Example project showing how to test Ansible roles with Molecule and Vagrant
 
-### TDD for Infrastructure code with Molecule!
+## TDD for Infrastructure code with Molecule!
 
 [Molecule](https://molecule.readthedocs.io/en/latest/#) seems to be a pretty neat TDD framework for testing Infrastructur-as-Code using Ansible. Molecule executes the following steps:
 
@@ -16,7 +16,7 @@ In the `Then` phase Molecule executes different [Verifiers](https://molecule.rea
 Just start here: [Molecule docs](https://molecule.readthedocs.io/en/latest/configuration.html)
 
 
-### Prerequisites
+## Prerequisites
 
 * `brew install ansible`
 * `brew cask install virtualbox`
@@ -30,7 +30,7 @@ Just start here: [Molecule docs](https://molecule.readthedocs.io/en/latest/confi
 
 
 
-### Project structure
+## Project structure
 
 To initialize a new Molecule powered Ansible role named `docker` with the Vagrant driver and the Testinfra verifier you have to execute the following command:
 
@@ -78,7 +78,7 @@ This repository uses [a Ansible role](docker/tasks/main.yml) that installs Docke
   become: true
 ```
 
-With Testinfra we can assert on things we want to achieve with our Ansible role: Install the `docker` package and add the user `vagrant` to the group `docker`. Our testcases could be found in [test_docker.py](docker/tests/test_docker.py):
+With Testinfra we can assert on things we want to achieve with our Ansible role: Install the `docker` package and add the user `vagrant` to the group `docker`. Testinfra uses [pytest](https://docs.pytest.org/en/latest/example/index.html) to execute the tests. Our testcases could be found in [test_docker.py](docker/tests/test_docker.py):
 
 ```python
 import testinfra.utils.ansible_runner
@@ -100,7 +100,7 @@ def test_vagrant_user_is_part_of_group_docker(host):
     
 ```
 
-### Molecule configuration
+## Molecule configuration
 
 The [molecule.yml](docker/molecule/default/molecule.yml) configures Molecule:
 
@@ -173,10 +173,10 @@ If you use the `PYTHONWARNINGS` environment variable you gather beautiful and __
 
 
 
-### Execute Molecule
+## Execute Molecule
  
 Now we´re able to run our first test. Go into `docker` directory and run:
 
-`molecule verify`
+`molecule test`
 
-As Molecule has different phases, you can also explicitely run `molecule destroy` or `molecule converge` - the commands will recognice required upstream phases like `create` and skips them if they where already run before (e.g. if the Vagrant Box is running already).
+As Molecule has different phases, you can also explicitely run `molecule verify` or `molecule converge` - the commands will recognice required upstream phases like `create` and skips them if they where already run before (e.g. if the Vagrant Box is running already).
