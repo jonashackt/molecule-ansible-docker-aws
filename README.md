@@ -197,6 +197,12 @@ And because Docker is the default Molecule driver for testing Ansible roles I ch
 
 ![multi-scenario-projectstructure](screenshots/multi-scenario-projectstructure.png)
 
+To execute the `vagrant-ubuntu` Scenario you have to explicitely call it´s name:
+
+```
+molecule test --scenario-name vagrant-ubuntu
+```
+
 All the files which belong only to a certain scenario are placed inside the scenarios directory. For example in the Docker scenario this is `Dockerfile.js` and in Vagrant one this is `prepare.yml`. Also the `molecule.yml` files have to access the `playbook.yml` and the testfiles differently since they are now separate from the scenario directory to be [able to reuse them over all scenarios](https://molecule.readthedocs.io/en/latest/examples.html#sharing-across-scenarios):
 
 ```
@@ -214,3 +220,5 @@ verifier:
 ```
 
 Now we can also integrate & use TravisCI in this repository since the [default scenario Docker is supported on Travis](https://molecule.readthedocs.io/en/latest/testing.html#travis-ci)! :)
+
+![travisci-molecule-executing-testinfra-tests](screenshots/travisci-molecule-executing-testinfra-tests.png)
