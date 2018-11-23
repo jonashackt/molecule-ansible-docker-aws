@@ -1,5 +1,5 @@
 ---
-# tasks file for install-docker
+# tasks file for docker
 - name: add Docker apt key
   apt_key:
     url: https://download.docker.com/linux/ubuntu/gpg
