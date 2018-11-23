@@ -141,6 +141,9 @@ verifier:
     PYTHONWARNINGS: "ignore:.*U.*mode is deprecated:DeprecationWarning"
   lint:
     name: flake8
+  options:
+    # show which tests where executed in test output
+    v: 1
 ```
 
 We have two specialties here. First thing is the follow addition to the `platforms` key:
