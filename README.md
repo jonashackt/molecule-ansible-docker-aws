@@ -7,7 +7,9 @@ Example project showing how to test Ansible roles with Molecule using Testinfra 
 
 ## TDD for Infrastructure code with Molecule!
 
-[Molecule](https://molecule.readthedocs.io/en/latest/#) seems to be a pretty neat TDD framework for testing Infrastructur-as-Code using Ansible. Molecule executes the following steps:
+[Molecule](https://molecule.readthedocs.io/en/latest/#) seems to be a pretty neat TDD framework for testing Infrastructur-as-Code using Ansible. As previously announcement on [September 26 2018 Ansible treats Molecule as a first class citizen from now on](https://groups.google.com/forum/#!topic/ansible-project/ehrb6AEptzA) - backed by Redhat also.
+
+Molecule executes the following steps:
 
 ![tdd-for-iac](https://yuml.me/diagram/scruffy/class/[Given:%20Spin%20up%20Infrastructure%20with%20Docker%20or%20Vagrant%20or%20Other]-&gt;[When:%20Execute%20Ansible%20Playbooks/Roles],[When:%20Execute%20Ansible%20Playbooks/Roles]-&gt;[Then:%20Assert%20with%20Testinfra],[Then:%20Assert%20with%20Testinfra]-&gt;[Cleanup%20Infrastructure])
 
@@ -104,41 +106,41 @@ def test_vagrant_user_is_part_of_group_docker(host):
     
 ```
 
+
 ## Molecule configuration
 
 The [molecule.yml](docker/molecule/vagrant-ubuntu/molecule.yml) configures Molecule:
 
 ```
-dependency:
-  name: galaxy
+scenario:
+  name: vagrant-ubuntu
+
 driver:
   name: vagrant
   provider:
     name: virtualbox
-lint:
-  name: yamllint
 platforms:
-  - name: ubuntu-docker
+  - name: vagrant-ubuntu
     box: ubuntu/bionic64
     memory: 512
     cpus: 1
     provider_raw_config_args:
     - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected' ]"
+
 provisioner:
   name: ansible
   lint:
     name: ansible-lint
-ansible:
-  playbook: playbook.yml
-  group_vars:
-    all:
-      ansible_python_interpreter: /usr/bin/python3
-      ansible_user: vagrant
-      ansible_ssh_private_key_file: .vagrant/machines/ubuntu-docker/virtualbox/private_key
-scenario:
-  name: default
+    enabled: false
+  playbooks:
+    converge: playbook.yml
+
+lint:
+  name: yamllint
+  enabled: false
 verifier:
   name: testinfra
+  directory: ../tests/
   env:
     # get rid of the DeprecationWarning messages of third-party libs,
     # see https://docs.pytest.org/en/latest/warnings.html#deprecationwarning-and-pendingdeprecationwarning
@@ -148,9 +150,10 @@ verifier:
   options:
     # show which tests where executed in test output
     v: 1
+
 ```
 
-We have two specialties here. First thing is the follow addition to the `platforms` key:
+We have some specialties here. First thing is the follow addition to the `platforms` key:
 
 ```
     provider_raw_config_args:
@@ -178,6 +181,7 @@ If you use the `PYTHONWARNINGS` environment variable you gather beautiful and __
 
 ![verify-with-deprecation-warnings-ignored](screenshots/verify-with-deprecation-warnings-ignored.png)
 
+
 In case everything runs green you may notice that there´s is no hint which tests were executed. But I think that´s rather a pity since we want to see our whole test suite executed. That was the whole point why we even started to use a testing framework like Molecule!
 
 But luckily there´s a way to get those tests shown inside our output. As Molecule uses [Testinfra](https://testinfra.readthedocs.io/en/latest/invocation.html) which itself leverages [pytest](https://docs.pytest.org/en/latest/) to execute our test cases and Testinfra is able to invoke pytest with additional properties. And pytest has [many options we can experiment with](https://docs.pytest.org/en/latest/reference.html#configuration-options). To configure a more verbose output for our tests in Molecule, add the following to the `verifier` section of your `molecule.yml`:
@@ -203,7 +207,8 @@ Now we´re able to run our first test. Go into `docker` directory and run:
 
 `molecule test`
 
-As Molecule has different phases, you can also explicitely run `molecule verify` or `molecule converge` - the commands will recognice required upstream phases like `create` and skips them if they where already run before (e.g. if the Vagrant Box is running already).
+As Molecule has different phases, you can also explicitely run `molecule converge` or `molecule verify` - the commands will recognice required upstream phases like `create` and skips them if they where already run before (e.g. if the Vagrant Box is running already).
+
 
 
 ## Multi-Scenario Molecule setup
@@ -212,7 +217,13 @@ With Molecule we could not only test our Ansible roles against one infrastructur
 
 To get an idea on how this works I sligthly restructured the repository. We started out with the Vagrant driver / scenario. Now after also implementing a Docker driver in this repository on it´s own: https://github.com/jonashackt/molecule-ansible-docker I integrated it into this repository.
 
-And because Docker is the default Molecule driver for testing Ansible roles I changed the name of the Vagrant scenario to `vagrant-ubuntu`. This enables us to use `molecule test` as we´re used to, which will execute the Docker (e.g. `default`) scenario. This change results in the following project structure:
+And because Docker is the default Molecule driver for testing Ansible roles I changed the name of the Vagrant scenario to `vagrant-ubuntu`. Don´t forget to install `docker-py`:
+
+```
+pip install python-vagrant
+```
+
+Using `molecule test` as we´re used to will now execute the Docker (e.g. `default`) scenario. This change results in the following project structure:
 
 ![multi-scenario-projectstructure](screenshots/multi-scenario-projectstructure.png)
 
@@ -371,6 +382,7 @@ This will verify that
 2. the Docker daemon successfully pulled the image `hello-world` from the Docker Hub
 3. the Docker daemon created a new container from that image and runs the executable inside
 4. the Docker daemon streamed the executables output containing `Hello from Docker!` to the Docker client, which send it to the terminal
+
 
 
 ## Testinfra code examples
