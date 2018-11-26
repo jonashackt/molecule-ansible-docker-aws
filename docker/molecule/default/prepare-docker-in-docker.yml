@@ -1,0 +1,48 @@
+# Prepare things only necessary in Ubuntu Docker-in-Docker scenario
+- name: Prepare
+  hosts: all
+  tasks:
+    - name: install gpg package
+      apt:
+        pkg: gpg
+        state: latest
+        update_cache: true
+      become: true
+
+    # We need to anticipate the installation of Docker before the role execution...
+    - name: add Docker apt key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        id: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
+        state: present
+      ignore_errors: true
+
+    - name: add docker apt repo
+      apt_repository:
+        repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename }} stable"
+        update_cache: yes
+      become: true
+
+    - name: install Docker apt package
+      apt:
+        pkg: docker-ce
+        state: latest
+        update_cache: yes
+      become: true
+
+    - name: create /etc/docker
+      file:
+        state: directory
+        path: /etc/docker
+
+    - name: set storage-driver to vfs via daemon.json
+      copy:
+        content: |
+          {
+            "storage-driver": "vfs"
+          }
+        dest: /etc/docker/daemon.json
+
+    # ...since we need to start Docker in a complete different way
+    - name: start Docker daemon inside container see https://stackoverflow.com/a/43088716/4964553
+      shell: "/usr/bin/dockerd -H unix:///var/run/docker.sock > dockerd.log 2>&1 &"

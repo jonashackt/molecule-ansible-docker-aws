@@ -178,6 +178,23 @@ If you use the `PYTHONWARNINGS` environment variable you gather beautiful and __
 
 ![verify-with-deprecation-warnings-ignored](screenshots/verify-with-deprecation-warnings-ignored.png)
 
+In case everything runs green you may notice that there´s is no hint which tests were executed. But I think that´s rather a pity since we want to see our whole test suite executed. That was the whole point why we even started to use a testing framework like Molecule!
+
+But luckily there´s a way to get those tests shown inside our output. As Molecule uses [Testinfra](https://testinfra.readthedocs.io/en/latest/invocation.html) which itself leverages [pytest](https://docs.pytest.org/en/latest/) to execute our test cases and Testinfra is able to invoke pytest with additional properties. And pytest has [many options we can experiment with](https://docs.pytest.org/en/latest/reference.html#configuration-options). To configure a more verbose output for our tests in Molecule, add the following to the `verifier` section of your `molecule.yml`:
+
+```
+verifier:
+  name: testinfra
+...
+  options:
+    # show which tests where executed in test output
+    v: 1
+...
+```
+
+If we now execute a `molecule verify` we should see a much nicer overview of which test cases where executed:
+
+![verify-with-pytest-verbose](screenshots/verify-with-pytest-verbose.png)
 
 
 ## Execute Molecule
@@ -226,3 +243,142 @@ verifier:
 Now we can also integrate & use TravisCI in this repository since the [default scenario Docker is supported on Travis](https://molecule.readthedocs.io/en/latest/testing.html#travis-ci)! :)
 
 ![travisci-molecule-executing-testinfra-tests](screenshots/travisci-molecule-executing-testinfra-tests.png)
+
+
+
+## Ubuntu based Docker-in-Docker builds
+
+As we don´t have a Vagrant environment in a Cloud CI system available for us right now (see https://github.com/jonashackt/vagrant-ansible-on-appveyor), we should be enable us somehow to test our Ansible role only with the Docker driver.
+
+The standard Docker-in-Docker image provided by Docker Inc is based on Alpine Linux (see https://stackoverflow.com/a/53459483/4964553 & the `dind` tags in https://hub.docker.com/_/docker/). But our role is designed for Ubuntu and thus uses the `apt` package manager instead of `apk`. So we can´t use the standard Docker-in-Docker image.
+
+But there should be a way to do Docker-in-Docker installation with a Ubuntu base image like `ubuntu:bionic`! And there is :) 
+
+Let´s assume the [standard Ubuntu Docker installation](https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-docker-ce-1) our starting point. Everything described there is done inside our Ansible role under test __docker__ inside the playbook [docker/tasks/main.yml](docker/tasks/main.yml).
+
+All the extra steps needed to install Docker inside a Ubuntu Docker container will be handled inside the `prepare` step. Therefore we´ll use [Molecules´ prepare.yml playbook](https://molecule.readthedocs.io/en/latest/configuration.html#id12):
+
+> The prepare playbook executes actions which bring the system to a given state prior to converge. It is executed after create, and only once for the duration of the instances life. This can be used to bring instances into a particular state, prior to testing.
+
+
+#### Configure a custom prepare step
+ 
+The Docker-in-Docker build is only used ([and should only be used](https://jpetazzo.github.io/2015/09/03/do-not-use-docker-in-docker-for-ci/)) inside our CI pipeline. The `prepare` step inside our Molecule test suites´s `default` Docker scenario will be only executed for testing purposes.
+ 
+So let´s configure our `default` Docker scenario to use a `prepare.yml` which could be done inside the `molecule.yml`:
+
+```yaml
+...
+  playbooks:
+    prepare: prepare-docker-in-docker.yml
+    converge: ../playbook.yml
+...
+```
+
+
+#### Docker-in-Docker with ubuntu:bionic
+
+Now we should have a look into the [prepare-docker-in-docker.yml](docker/molecule/default/prepare-docker-in-docker.yml):
+
+```yaml
+# Prepare things only necessary in Ubuntu Docker-in-Docker scenario
+- name: Prepare
+  hosts: all
+  tasks:
+    - name: install gpg package
+      apt:
+        pkg: gpg
+        state: latest
+        update_cache: true
+      become: true
+
+    # We need to anticipate the installation of Docker before the role execution...
+    - name: add Docker apt key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        id: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
+        state: present
+      ignore_errors: true
+
+    - name: add docker apt repo
+      apt_repository:
+        repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename }} stable"
+        update_cache: yes
+      become: true
+
+    - name: install Docker apt package
+      apt:
+        pkg: docker-ce
+        state: latest
+        update_cache: yes
+      become: true
+
+    - name: create /etc/docker
+      file:
+        state: directory
+        path: /etc/docker
+
+    - name: set storage-driver to vfs via daemon.json
+      copy:
+        content: |
+          {
+            "storage-driver": "vfs"
+          }
+        dest: /etc/docker/daemon.json
+
+    # ...since we need to start Docker in a complete different way
+    - name: start Docker daemon inside container see https://stackoverflow.com/a/43088716/4964553
+      shell: "/usr/bin/dockerd -H unix:///var/run/docker.sock > dockerd.log 2>&1 &"
+```
+
+As the `ubuntu:bionic` Docker image is sligthly stripped down compared to a "real" Ubuntu virtual machine, we need to install the `gpg` package at first.
+
+Then really being able to run Docker-in-Docker we need to do three things:
+
+1. Run Docker with `--priviledged` (which should really only be used inside our CI environment, because it grant´s full access to the host environment (see https://hub.docker.com/_/docker/))
+2. Use the [storage-driver `vfs`](https://docs.docker.com/storage/storagedriver/vfs-driver/#configure-docker-with-the-vfs-storage-driver), which is slow & inefficient but is the only one guaranteed to work regardless of underlying filesystems
+3. Start the Docker daemon with `/usr/bin/dockerd -H unix:///var/run/docker.sock > dockerd.log 2>&1 &`, or otherwise you´ll run into errors like `Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?` (see https://stackoverflow.com/a/43088716/4964553)
+
+You may noticed that __2.__ & __3.__ are handled by our `prepare-docker-in-docker.yml` already. To enable the __1.__ `--priviledged` mode we need to configure Molecules´ Docker driver inside the `molecule.yml`:
+
+```yaml
+...
+driver:
+  name: docker
+platforms:
+  - name: docker-ubuntu
+    image: ubuntu:bionic
+    privileged: true
+...
+```
+
+#### Testing the Docker-in-Docker installation
+
+The last step - or the first, if you leverage the power of Test-Driven-Development (TDD) - was to create a suitable testcase. This test should verify whether the Docker-in-Docker installation was successful.
+
+Therefore we can use the [hello-world](https://hub.docker.com/_/hello-world/) Docker image. Let´s execute a `docker run hello-world` straight inside our test case `test_run_hello_world_container_successfully` in our test suite [test_docker.py](docker/molecule/tests/test_docker.py):
+
+```
+def test_run_hello_world_container_successfully(host):
+    hello_world_ran = host.run("docker run hello-world")
+
+    assert 'Hello from Docker!' in hello_world_ran.stdout
+```
+
+This will verify that
+
+1. the Docker client is able to contact the Docker daemon
+2. the Docker daemon successfully pulled the image `hello-world` from the Docker Hub
+3. the Docker daemon created a new container from that image and runs the executable inside
+4. the Docker daemon streamed the executables output containing `Hello from Docker!` to the Docker client, which send it to the terminal
+
+
+## Testinfra code examples
+
+As you´re not an in-depth Python hacker (like me), you´ll be maybe also interested in example code. Have a look at:
+
+https://github.com/philpep/testinfra#quick-start
+
+https://github.com/openmicroscopy/ansible-role-prometheus/blob/0.2.0/tests/test_default.py
+
+https://github.com/mongrelion/ansible-role-docker/blob/master/molecule/default/tests/test_default.py

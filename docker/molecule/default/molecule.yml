@@ -8,6 +8,7 @@ driver:
 platforms:
   - name: docker-ubuntu
     image: ubuntu:bionic
+    privileged: true
 
 provisioner:
   name: ansible
@@ -15,6 +16,7 @@ provisioner:
     name: ansible-lint
     enabled: false
   playbooks:
+    prepare: prepare-docker-in-docker.yml
     converge: ../playbook.yml
 
 lint:

@@ -1,12 +1,5 @@
 ---
 # tasks file for docker
-- name: install gpg package
-  apt:
-    pkg: gpg
-    state: latest
-    update_cache: true
-  become: true
-
 - name: add Docker apt key
   apt_key:
     url: https://download.docker.com/linux/ubuntu/gpg
@@ -27,9 +20,11 @@
     update_cache: yes
   become: true
 
-- name: add vagrant user to docker group.
+- name: add vagrant user to docker group
   user:
     name: vagrant
     groups: docker
     append: yes
   become: true
+
+
