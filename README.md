@@ -7,7 +7,7 @@ Example project showing how to test Ansible roles with Molecule using Testinfra 
 
 ## TDD for Infrastructure code with Molecule!
 
-[Molecule](https://molecule.readthedocs.io/en/latest/#) seems to be a pretty neat TDD framework for testing Infrastructur-as-Code using Ansible. As previously announcement on [September 26 2018 Ansible treats Molecule as a first class citizen from now on](https://groups.google.com/forum/#!topic/ansible-project/ehrb6AEptzA) - backed by Redhat also.
+[Molecule](https://molecule.readthedocs.io/en/latest/#) seems to be a pretty neat TDD framework for testing Infrastructur-as-Code using Ansible. As previously announced on September 26 2018 [Ansible treats Molecule as a first class citizen](https://groups.google.com/forum/#!topic/ansible-project/ehrb6AEptzA) from now on - backed by Redhat also.
 
 Molecule executes the following steps:
 
@@ -220,7 +220,7 @@ To get an idea on how this works I sligthly restructured the repository. We star
 And because Docker is the default Molecule driver for testing Ansible roles I changed the name of the Vagrant scenario to `vagrant-ubuntu`. Don´t forget to install `docker-py`:
 
 ```
-pip install python-vagrant
+pip install docker-py
 ```
 
 Using `molecule test` as we´re used to will now execute the Docker (e.g. `default`) scenario. This change results in the following project structure:
@@ -296,53 +296,38 @@ Now we should have a look into the [prepare-docker-in-docker.yml](docker/molecul
 - name: Prepare
   hosts: all
   tasks:
-    - name: install gpg package
-      apt:
-        pkg: gpg
-        state: latest
-        update_cache: true
-      become: true
+  - name: install gpg package
+    apt:
+      pkg: gpg
+      state: latest
+      update_cache: true
+    become: true
 
     # We need to anticipate the installation of Docker before the role execution...
-    - name: add Docker apt key
-      apt_key:
-        url: https://download.docker.com/linux/ubuntu/gpg
-        id: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
-        state: present
-      ignore_errors: true
+  - name: use our role to install Docker
+    include_tasks: ../../tasks/main.yml
 
-    - name: add docker apt repo
-      apt_repository:
-        repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename }} stable"
-        update_cache: yes
-      become: true
+  - name: create /etc/docker
+    file:
+      state: directory
+      path: /etc/docker
 
-    - name: install Docker apt package
-      apt:
-        pkg: docker-ce
-        state: latest
-        update_cache: yes
-      become: true
+  - name: set storage-driver to vfs via daemon.json
+    copy:
+      content: |
+        {
+          "storage-driver": "vfs"
+        }
+      dest: /etc/docker/daemon.json
 
-    - name: create /etc/docker
-      file:
-        state: directory
-        path: /etc/docker
-
-    - name: set storage-driver to vfs via daemon.json
-      copy:
-        content: |
-          {
-            "storage-driver": "vfs"
-          }
-        dest: /etc/docker/daemon.json
-
-    # ...since we need to start Docker in a complete different way
-    - name: start Docker daemon inside container see https://stackoverflow.com/a/43088716/4964553
-      shell: "/usr/bin/dockerd -H unix:///var/run/docker.sock > dockerd.log 2>&1 &"
+  # ...since we need to start Docker in a complete different way
+  - name: start Docker daemon inside container see https://stackoverflow.com/a/43088716/4964553
+    shell: "/usr/bin/dockerd -H unix:///var/run/docker.sock > dockerd.log 2>&1 &"
 ```
 
 As the `ubuntu:bionic` Docker image is sligthly stripped down compared to a "real" Ubuntu virtual machine, we need to install the `gpg` package at first.
+
+After that the Docker installation has to be executed just in the same way as on a virtual machine using Vagrant. So we simply re-use the existing Docker role here - so we´re not forced to copy code!
 
 Then really being able to run Docker-in-Docker we need to do three things:
 

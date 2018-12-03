@@ -9,26 +9,9 @@
       update_cache: true
     become: true
 
-  # We need to anticipate the installation of Docker before the role execution...
-  - name: Add Docker apt key
-    apt_key:
-      url: https://download.docker.com/linux/{{ ansible_distribution|lower }}/gpg
-      id: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
-      state: present
-    ignore_errors: true
-
-  - name: Add Docker apt repo
-    apt_repository:
-      repo: "deb [arch=amd64] https://download.docker.com/linux/{{ ansible_distribution|lower }} {{ ansible_lsb.codename }} stable"
-      update_cache: yes
-    become: true
-
-  - name: Install Docker apt package
-    apt:
-      pkg: docker-ce
-      state: latest
-      update_cache: yes
-    become: true
+    # We need to anticipate the installation of Docker before the role execution...
+  - name: use our role to install Docker
+    include_tasks: ../../tasks/main.yml
 
   - name: create /etc/docker
     file:
