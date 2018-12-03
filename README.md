@@ -3,7 +3,7 @@
 
 Example project showing how to test Ansible roles with Molecule using Testinfra and a multiscenario approach with Docker & Vagrant as infrastructure 
 
-[![asciicast](https://asciinema.org/a/213350.svg)](https://asciinema.org/a/213350)
+[![asciicast](https://asciinema.org/a/214914.svg)](https://asciinema.org/a/214914)
 
 ## TDD for Infrastructure code with Molecule!
 
