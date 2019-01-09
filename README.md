@@ -19,7 +19,18 @@ There are already two blog posts complementing this repository:
 * [Ubuntu based Docker-in-Docker builds](#ubuntu-based-docker-in-docker-builds)
 * [Docker-in-Docker with ubuntu:bionic](#docker-in-docker-with-ubuntubionic)
 * [Testing the Docker-in-Docker installation](#testing-the-docker-in-docker-installation)
-* [Molecule with AWS EC2 as the infrastructure provider](#)
+* [Molecule with AWS EC2 as the infrastructure provider](#molecule-with-aws-ec2-as-the-infrastructure-provider)
+* [Configure Molecule to use EC2](#configure-molecule-to-use-ec2)
+* [Having a look into the create.yml](#having-a-look-into-the-createyml)
+* [Install & configure AWS CLI](#install--configure-aws-cli)
+* [Configure Region & VPC subnet id](#configure-region--vpc-subnet-id)
+* [Choosing an Ubuntu 18.04 AMI](#choosing-an-ubuntu-1804-ami)
+* [Creating a EC2 instance with Molecule](#creating-a-ec2-instance-with-molecule)
+* [Run a first Test on EC2 with Molecule](#run-a-first-test-on-ec2-with-molecule)
+* [Cleaning up](#cleaning-up)
+* [Final check: molecule test](#final-check-molecule-test)
+* [Use TravisCI to execute Molecule with EC2 infrastructure](#use-travisci-to-execute-molecule-with-ec2-infrastructure)
+* [Problems with boto on Travis](#problems-with-boto-on-travis)
 
 ## TDD for Infrastructure code with Molecule!
 
@@ -469,6 +480,9 @@ Also the `verifier` section has to be enhanced to gain all the described advanta
 
 As you may noticed, the driver now uses `ec2` and the platform is already pre-configured with a concrete Amazon Machine Image (AMI) and `instance_type` etc. I just tuned the instance name to `aws-ec2-ubuntu`, like we did in our Docker and Vagrant scenarios.
 
+
+### Having a look into the create.yml
+
 The generated `create.yml` and `destroy.yml` Ansible playbooks look rather stunning - especially to AWS newbees. Let's have a look into the `create.yml`:
 
 ```yaml
@@ -830,6 +844,10 @@ If that command went well, we can have a look into our AWS EC2 management consol
 
 Our instance should have reached the state `terminated`, which is simmilar to `stopped` state - just for instances that used EBS storage (see the [AWS EC2 Instance Lifecycle chart](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-lifecycle.html) for more info).
 
+Here's a full asciinema cast of all the steps:
+
+[![asciicast](https://asciinema.org/a/220434.svg)](https://asciinema.org/a/220434)
+
 
 ### Final check: molecule test
 
@@ -879,7 +897,7 @@ install:
 script:
 - cd docker
 # Molecule Testing Travis-locally with Docker
-#- molecule test
+- molecule test
 # Molecule Testing on AWS EC2
 - molecule create --scenario-name aws-ec2-ubuntu
 - molecule converge --scenario-name aws-ec2-ubuntu
@@ -938,3 +956,5 @@ env:
 And we need to add the `BOTO_CONFIG` environment variable to the same line as the already existing variable - otherwise Travis starts multiple builds with only one variable set to each build! See the docs (https://docs.travis-ci.com/user/environment-variables/#defining-multiple-variables-per-item)
 
 > If you need to specify several environment variables for each build, put them all on the same line in the env array
+
+Now head over to Travis and have a look into the log. It should look green and somehow like this: https://travis-ci.org/jonashackt/molecule-ansible-docker-vagrant/builds/477365844
