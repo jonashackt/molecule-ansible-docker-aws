@@ -1,14 +1,14 @@
 ---
 scenario:
-  # default scenario is Docker
-  name: default
+  name: aws-ec2-ubuntu
 
 driver:
-  name: docker
+  name: ec2
 platforms:
-  - name: docker-ubuntu
-    image: ubuntu:bionic
-    privileged: true
+  - name: aws-ec2-ubuntu
+    image: ami-a5b196c0
+    instance_type: t2.micro
+    vpc_subnet_id: subnet-6456fd1f
 
 provisioner:
   name: ansible
@@ -16,7 +16,6 @@ provisioner:
     name: ansible-lint
     enabled: false
   playbooks:
-    prepare: prepare-docker-in-docker.yml
     converge: ../playbook.yml
 
 lint:

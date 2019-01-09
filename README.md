@@ -5,6 +5,18 @@ Example project showing how to test Ansible roles with Molecule using Testinfra 
 
 [![asciicast](https://asciinema.org/a/214914.svg)](https://asciinema.org/a/214914)
 
+## Table of Contents  
+* [TDD for Infrastructure code with Molecule!](#tdd-for-infrastructure-code-with-molecule)
+* [Prerequisites](#prerequisites)
+* [Project structure](#project-structure)
+* [Molecule configuration](#molecule-configuration)
+* [Execute Molecule](#execute-molecule)
+* [Multi-Scenario Molecule setup](#multi-scenario-molecule-setup)
+* [Ubuntu based Docker-in-Docker builds](#ubuntu-based-docker-in-docker-builds)
+* [Docker-in-Docker with ubuntu:bionic](#docker-in-docker-with-ubuntubionic)
+* [Testing the Docker-in-Docker installation](#testing-the-docker-in-docker-installation)
+* [Molecule with AWS EC2 as the infrastructure provider](#)
+
 ## TDD for Infrastructure code with Molecule!
 
 [Molecule](https://molecule.readthedocs.io/en/latest/#) seems to be a pretty neat TDD framework for testing Infrastructur-as-Code using Ansible. As previously announced on September 26 2018 [Ansible treats Molecule as a first class citizen](https://groups.google.com/forum/#!topic/ansible-project/ehrb6AEptzA) from now on - backed by Redhat also.
@@ -24,15 +36,15 @@ Just start here: [Molecule docs](https://molecule.readthedocs.io/en/latest/confi
 
 ## Prerequisites
 
-* `brew install ansible`
 * `brew cask install virtualbox`
 * `brew cask install vagrant`
 
-> Please don´t install molecule with homebrew on Mac, but always with pip since you only get old versions and need to manually install testinfra, ansible, flake8 and other packages
-* `pip install molecule --user`
+> Please don´t install Ansible and Molecule with homebrew on Mac, but always with pip3 since you only get old versions and need to manually install testinfra, ansible, flake8 and other packages
+* `pip3 install ansible`
+* `pip3 install molecule --user`
 
 > For using Vagrant with Molecule we also need `python-vagrant` module installed
-* `pip install python-vagrant`
+* `pip3 install python-vagrant`
 
 
 
@@ -105,6 +117,16 @@ def test_vagrant_user_is_part_of_group_docker(host):
     assert 'docker' in user_vagrant.groups
     
 ```
+
+__More Testinfra code examples:__
+
+As you´re not an in-depth Python hacker (like me), you´ll be maybe also interested in example code. Have a look at:
+
+https://github.com/philpep/testinfra#quick-start
+
+https://github.com/openmicroscopy/ansible-role-prometheus/blob/0.2.0/tests/test_default.py
+
+https://github.com/mongrelion/ansible-role-docker/blob/master/molecule/default/tests/test_default.py
 
 
 ## Molecule configuration
@@ -211,7 +233,7 @@ As Molecule has different phases, you can also explicitely run `molecule converg
 
 
 
-## Multi-Scenario Molecule setup
+# Multi-Scenario Molecule setup
 
 With Molecule we could not only test our Ansible roles against one infrastructure setup - but we can use multiple of them! We only need to leverage the power of [Molecule scenarios](https://molecule.readthedocs.io/en/latest/configuration.html#scenario).
 
@@ -220,7 +242,7 @@ To get an idea on how this works I sligthly restructured the repository. We star
 And because Docker is the default Molecule driver for testing Ansible roles I changed the name of the Vagrant scenario to `vagrant-ubuntu`. Don´t forget to install `docker-py`:
 
 ```
-pip install docker-py
+pip3 install docker-py
 ```
 
 Using `molecule test` as we´re used to will now execute the Docker (e.g. `default`) scenario. This change results in the following project structure:
@@ -272,7 +294,7 @@ All the extra steps needed to install Docker inside a Ubuntu Docker container wi
 > The prepare playbook executes actions which bring the system to a given state prior to converge. It is executed after create, and only once for the duration of the instances life. This can be used to bring instances into a particular state, prior to testing.
 
 
-#### Configure a custom prepare step
+### Configure a custom prepare step
  
 The Docker-in-Docker build is only used ([and should only be used](https://jpetazzo.github.io/2015/09/03/do-not-use-docker-in-docker-for-ci/)) inside our CI pipeline. The `prepare` step inside our Molecule test suites´s `default` Docker scenario will be only executed for testing purposes.
  
@@ -287,7 +309,7 @@ So let´s configure our `default` Docker scenario to use a `prepare.yml` which c
 ```
 
 
-#### Docker-in-Docker with ubuntu:bionic
+### Docker-in-Docker with ubuntu:bionic
 
 Now we should have a look into the [prepare-docker-in-docker.yml](docker/molecule/default/prepare-docker-in-docker.yml):
 
@@ -348,7 +370,7 @@ platforms:
 ...
 ```
 
-#### Testing the Docker-in-Docker installation
+### Testing the Docker-in-Docker installation
 
 The last step - or the first, if you leverage the power of Test-Driven-Development (TDD) - was to create a suitable testcase. This test should verify whether the Docker-in-Docker installation was successful.
 
@@ -369,13 +391,247 @@ This will verify that
 4. the Docker daemon streamed the executables output containing `Hello from Docker!` to the Docker client, which send it to the terminal
 
 
+# Molecule with AWS EC2 as the infrastructure provider
 
-## Testinfra code examples
+Now that we successfully used Vagrant & Docker as infrastructure providers for Molecule, we should now start to use a cloud provider like AWS. 
 
-As you´re not an in-depth Python hacker (like me), you´ll be maybe also interested in example code. Have a look at:
+We should be able to use [Molecule's EC2 driver](https://molecule.readthedocs.io/en/latest/configuration.html#ec2), which itself uses [Ansible's ec2 module](http://docs.ansible.com/ansible/latest/ec2_module.html) to interact with AWS.
 
-https://github.com/philpep/testinfra#quick-start
+First we need to install the [Boto Python packages](https://pypi.org/project/boto/). They will provide interfaces to Amazon Web Services:
 
-https://github.com/openmicroscopy/ansible-role-prometheus/blob/0.2.0/tests/test_default.py
+```
+pip3 install boto boto3
+```
 
-https://github.com/mongrelion/ansible-role-docker/blob/master/molecule/default/tests/test_default.py
+
+### Configure Molecule to use EC2
+
+Then we just init a new Molecule scenario inside our existing multi scenario project called `aws-ec2-ubuntu`. That should create a new directory `ec2` inside the `docker/molecule` folder.  We'll integrate the results into our multi scenario project in a second:
+
+```
+cd molecule-ansible-docker-vagrant/docker
+
+molecule init scenario --driver-name ec2 --role-name docker --scenario-name aws-ec2-ubuntu
+```
+
+Now let's dig into the generated `molecule.yml`:
+
+```yaml
+scenario:
+  name: ec2
+
+driver:
+  name: ec2
+platforms:
+  - name: instance
+    image: ami-a5b196c0
+    instance_type: t2.micro
+    vpc_subnet_id: subnet-6456fd1f
+
+provisioner:
+  name: ansible
+  lint:
+    name: ansible-lint
+    enabled: false
+  playbooks:
+    converge: ../playbook.yml
+
+lint:
+  name: yamllint
+  enabled: false
+
+verifier:
+  name: testinfra
+  directory: ../tests/
+  env:
+    # get rid of the DeprecationWarning messages of third-party libs,
+    # see https://docs.pytest.org/en/latest/warnings.html#deprecationwarning-and-pendingdeprecationwarning
+    PYTHONWARNINGS: "ignore:.*U.*mode is deprecated:DeprecationWarning"
+  lint:
+    name: flake8
+  options:
+    # show which tests where executed in test output
+    v: 1
+```
+
+As we already tuned the `molecule.yml` files for our other scenarios like `docker` and `vagrant-ubuntu`, we know what to change here. `provisioner.playbook.converge` needs to be configured, so the one `playbook.yml` could be found.
+
+Also the `verifier` section has to be enhanced to gain all the described advantages like supressed deprecation warnings and the better test result overview.
+
+As you may noticed, the driver now uses `ec2` and the platform is already pre-configured with a concrete Amazon Machine Image (AMI) and `instance_type` etc. I just tuned the instance name to `aws-ec2-ubuntu`, like we did in our Docker and Vagrant scenarios.
+
+The generated `create.yml` and `destroy.yml` Ansible playbooks look rather stunning - especially to AWS newbees. Let's have a look into the `create.yml`:
+
+```yaml
+- name: Create
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  no_log: "{{ not (lookup('env', 'MOLECULE_DEBUG') | bool or molecule_yml.provisioner.log|default(false) | bool) }}"
+  vars:
+    ssh_user: ubuntu
+    ssh_port: 22
+
+    security_group_name: molecule
+    security_group_description: Security group for testing Molecule
+    security_group_rules:
+      - proto: tcp
+        from_port: "{{ ssh_port }}"
+        to_port: "{{ ssh_port }}"
+        cidr_ip: '0.0.0.0/0'
+      - proto: icmp
+        from_port: 8
+        to_port: -1
+        cidr_ip: '0.0.0.0/0'
+    security_group_rules_egress:
+      - proto: -1
+        from_port: 0
+        to_port: 0
+        cidr_ip: '0.0.0.0/0'
+
+    keypair_name: molecule_key
+    keypair_path: "{{ lookup('env', 'MOLECULE_EPHEMERAL_DIRECTORY') }}/ssh_key"
+  tasks:
+    - name: Create security group
+      ec2_group:
+        name: "{{ security_group_name }}"
+        description: "{{ security_group_name }}"
+        rules: "{{ security_group_rules }}"
+        rules_egress: "{{ security_group_rules_egress }}"
+
+    - name: Test for presence of local keypair
+      stat:
+        path: "{{ keypair_path }}"
+      register: keypair_local
+
+    - name: Delete remote keypair
+      ec2_key:
+        name: "{{ keypair_name }}"
+        state: absent
+      when: not keypair_local.stat.exists
+
+    - name: Create keypair
+      ec2_key:
+        name: "{{ keypair_name }}"
+      register: keypair
+
+    - name: Persist the keypair
+      copy:
+        dest: "{{ keypair_path }}"
+        content: "{{ keypair.key.private_key }}"
+        mode: 0600
+      when: keypair.changed
+
+    - name: Create molecule instance(s)
+      ec2:
+        key_name: "{{ keypair_name }}"
+        image: "{{ item.image }}"
+        instance_type: "{{ item.instance_type }}"
+        vpc_subnet_id: "{{ item.vpc_subnet_id }}"
+        group: "{{ security_group_name }}"
+        instance_tags:
+          instance: "{{ item.name }}"
+        wait: true
+        assign_public_ip: true
+        exact_count: 1
+        count_tag:
+          instance: "{{ item.name }}"
+      register: server
+      with_items: "{{ molecule_yml.platforms }}"
+      async: 7200
+      poll: 0
+
+    - name: Wait for instance(s) creation to complete
+      async_status:
+        jid: "{{ item.ansible_job_id }}"
+      register: ec2_jobs
+      until: ec2_jobs.finished
+      retries: 300
+      with_items: "{{ server.results }}"
+
+    # Mandatory configuration for Molecule to function.
+
+    - name: Populate instance config dict
+      set_fact:
+        instance_conf_dict: {
+          'instance': "{{ item.instances[0].tags.instance }}",
+          'address': "{{ item.instances[0].public_ip }}",
+          'user': "{{ ssh_user }}",
+          'port': "{{ ssh_port }}",
+          'identity_file': "{{ keypair_path }}",
+          'instance_ids': "{{ item.instance_ids }}", }
+      with_items: "{{ ec2_jobs.results }}"
+      register: instance_config_dict
+      when: server.changed | bool
+
+    - name: Convert instance config dict to a list
+      set_fact:
+        instance_conf: "{{ instance_config_dict.results | map(attribute='ansible_facts.instance_conf_dict') | list }}"
+      when: server.changed | bool
+
+    - name: Dump instance config
+      copy:
+        content: "{{ instance_conf | to_json | from_json | molecule_to_yaml | molecule_header }}"
+        dest: "{{ molecule_instance_config }}"
+      when: server.changed | bool
+
+    - name: Wait for SSH
+      wait_for:
+        port: "{{ ssh_port }}"
+        host: "{{ item.address }}"
+        search_regex: SSH
+        delay: 10
+        timeout: 320
+      with_items: "{{ lookup('file', molecule_instance_config) | molecule_from_yaml }}"
+
+    - name: Wait for boot process to finish
+      pause:
+        minutes: 2
+
+``` 
+
+If we skim over the code, we notice the usage of Ansible's [ec2_group module](https://docs.ansible.com/ansible/latest/modules/ec2_group_module.html). It is used to maintains AWS EC2 security groups. Using the parameters `rules` and `rules_egress`, it configures appropriate firewall inbound and outbound rules.
+
+Thereafter Ansible's [ec2_key module](https://docs.ansible.com/ansible/latest/modules/ec2_key_module.html) is used to create a new EC2 key pair & store it locally, if non exists on your local machine already.
+
+And then the [ec2 module](https://docs.ansible.com/ansible/latest/modules/ec2_module.html) takes over, which is able to create or terminate AWS EC2 instances without the need to hassle with the GUI.
+
+Waiting for the EC2 instance to come up, the `create.yml` playbook uses the [async_status module](https://docs.ansible.com/ansible/latest/modules/async_status_module.html) on the pre-registered variable `server.results` from the `ec2` module.
+
+The following Ansible module are solely used to create an inline Ansible inventory, which is finally used to connect into the EC2 instance via SSH.
+
+The generated `destroy.yml` playbook is just the opposite to the `create.yml` playbook and tears the created EC2 instance down.
+
+
+### Run a first Test on EC2 with Molecule
+
+Now let's give our configuration a shot. Just be sure to meet some prerequisites. 
+
+First we need to sure to have the [AWS CLI installed](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html). We can also do this via pip package manager with:
+ 
+```
+pip3 install awscli
+```
+ 
+Now we should check, if AWS CLI was successfully installed. The `aws --version` command should print out sometime like:
+
+```
+$ aws --version
+aws-cli/1.16.80 Python/3.7.2 Darwin/18.2.0 botocore/1.12.70
+```
+
+Now configure the AWS CLI to use the correct credentials. [According to the AWS docs](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html#cli-quick-configuration), the fastest way to accomplish that is to run `aws configure`:
+
+```
+$ aws configure
+AWS Access Key ID [None]: AKIAIOSFODNN7EXAMPLE
+AWS Secret Access Key [None]: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+Default region name [None]: eu-central-1
+Default output format [None]: json
+```
+
+Now we should have everything prepared. Let's try to run our first Molecule test on AWS EC2 (including `--debug` so that we see what's going on):
+
+```
+molecule --debug create --scenario-name aws-ec2-ubuntu
+```
