@@ -1,7 +1,11 @@
 # molecule-ansible-docker-vagrant
 [![Build Status](https://travis-ci.org/jonashackt/molecule-ansible-docker-vagrant.svg?branch=master)](https://travis-ci.org/jonashackt/molecule-ansible-docker-vagrant)
+[![versionansible](https://img.shields.io/badge/ansible-2.7.5-brightgreen.svg)](https://docs.ansible.com/ansible/latest/index.html)
+[![versionmolecule](https://img.shields.io/badge/molecule-2.19.0-brightgreen.svg)](https://molecule.readthedocs.io/en/latest/)
+[![versiontestinfra](https://img.shields.io/badge/testinfra-1.16.0-brightgreen.svg)](https://testinfra.readthedocs.io/en/latest/)
+[![versionawscli](https://img.shields.io/badge/awscli-1.16.80-brightgreen.svg)](https://aws.amazon.com/cli/)
 
-Example project showing how to test Ansible roles with Molecule using Testinfra and a multiscenario approach with Docker & Vagrant as infrastructure 
+Example project showing how to test Ansible roles with Molecule using Testinfra and a multiscenario approach with Vagrant, Docker & AWS EC2 as the infrastructure under test. 
 
 [![asciicast](https://asciinema.org/a/214914.svg)](https://asciinema.org/a/214914)
 
