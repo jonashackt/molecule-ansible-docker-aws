@@ -856,6 +856,9 @@ So let's do it! First we need to configure TravisCI. Therefore we need to enhanc
 sudo: required
 language: python
 
+env:
+- EC2_REGION=eu-central-1
+
 services:
 - docker
 
@@ -920,11 +923,12 @@ The command "molecule --debug create --scenario-name aws-ec2-ubuntu" exited with
 
 To fix this, there are two changes needed inside our [.travis.yml](.travis.yml). We need to set `sudo: false` and use the environment variable `BOTO_CONFIG=/dev/null`:
 
-```
+```yaml
 sudo: false
 language: python
 
 env:
-  - BOTO_CONFIG="/dev/null"
+- EC2_REGION=eu-central-1
+- BOTO_CONFIG="/dev/null"
 ...
 ```

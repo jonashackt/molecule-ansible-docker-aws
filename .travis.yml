@@ -3,7 +3,8 @@ sudo: false
 language: python
 
 env:
-  - BOTO_CONFIG="/dev/null"
+- EC2_REGION=eu-central-1
+- BOTO_CONFIG="/dev/null"
 
 services:
 - docker
