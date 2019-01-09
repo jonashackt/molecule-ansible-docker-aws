@@ -921,14 +921,17 @@ ERROR:
 The command "molecule --debug create --scenario-name aws-ec2-ubuntu" exited with 2.
 ```
 
-To fix this, there are two changes needed inside our [.travis.yml](.travis.yml). We need to set `sudo: false` and use the environment variable `BOTO_CONFIG=/dev/null`:
+To fix this, there are two changes needed inside our [.travis.yml](.travis.yml). We need to set `sudo: false` and use the environment variable `BOTO_CONFIG=/dev/null`: 
 
 ```yaml
 sudo: false
 language: python
 
 env:
-- EC2_REGION=eu-central-1
-- BOTO_CONFIG="/dev/null"
+- EC2_REGION=eu-central-1 BOTO_CONFIG="/dev/null"
 ...
 ```
+
+And we need to add the `BOTO_CONFIG` environment variable to the same line as the already existing variable - otherwise Travis starts multiple builds with only one variable set to each build! See the docs (https://docs.travis-ci.com/user/environment-variables/#defining-multiple-variables-per-item)
+
+> If you need to specify several environment variables for each build, put them all on the same line in the env array
