@@ -776,3 +776,32 @@ We could have a sneak peak into our Ansible EC2 Management console under https:/
 If everything went fine, the `molecule create` command should succeed and your EC2 console should show the running EC2 instance:
 
 ![aws-ec2-management-console-instance-running](screenshots/aws-ec2-management-console-instance-running.png)
+
+Now let's try to run our Ansible role against our new EC2 instance with Molecule:
+
+```
+molecule converge --scenario-name aws-ec2-ubuntu
+```
+
+That should just work fine. We then could head over to the verify-phase:
+
+```
+molecule verify --scenario-name aws-ec2-ubuntu
+```
+
+This should successfully execute our Testinfra test suite described in [test_docker.py](docker/molecule/tests/test_docker.py) onto our EC2 instance. If everything ran fine, it should give something like:
+
+![aws-molecule-verify-success](screenshots/aws-molecule-verify-success.png)
+
+If the last test function fails with an error like:
+```
+docker: Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock
+```
+you maybe have to add `sudo ` to the `docker run hello-world` statement:
+
+```
+def test_run_hello_world_container_successfully(host):
+    hello_world_ran = host.run("sudo docker run hello-world")
+
+    assert 'Hello from Docker!' in hello_world_ran.stdout
+```
