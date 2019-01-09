@@ -411,13 +411,15 @@ pip3 install boto boto3
 
 ### Configure Molecule to use EC2
 
-Then we just init a new Molecule scenario inside our existing multi scenario project called `aws-ec2-ubuntu`. That should create a new directory `ec2` inside the `docker/molecule` folder.  We'll integrate the results into our multi scenario project in a second:
+Then we just init a new Molecule scenario inside our existing multi scenario project called `aws-ec2-ubuntu`. Therefore we can leverage Molecule's `molecule init scenario` command:
 
 ```
 cd molecule-ansible-docker-vagrant/docker
 
 molecule init scenario --driver-name ec2 --role-name docker --scenario-name aws-ec2-ubuntu
 ```
+
+That should create a new directory `ec2` inside the `docker/molecule` folder.  We'll integrate the results into our multi scenario project in a second.
 
 Now let's dig into the generated `molecule.yml`:
 
@@ -633,6 +635,20 @@ AWS Access Key ID [None]: AKIAIOSFODNN7EXAMPLE
 AWS Secret Access Key [None]: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 Default region name [None]: eu-central-1
 Default output format [None]: json
+```
+
+As there currently is a discrepancy in the UX of Molecule, where every configuration parameter is generated correctly by a `molecule init --driver-name ec2` command and picked up from `~/.aws/credentials`. __Except__ the `region` configuration from `~/.aws/config`!
+
+Running a Molecule test without setting the region correctly as environment variable, currently results [in the (already documented) error](https://github.com/ansible/molecule/issues/1570):
+
+```
+"msg": "Either region or ec2_url must be specified",
+```
+
+So for now we need to set the region manually before running our Molecule tests against EC2:
+
+```
+export EC2_REGION=eu-central-1
 ```
 
 Now we should have everything prepared. Let's try to run our first Molecule test on AWS EC2 (including `--debug` so that we see what's going on):
