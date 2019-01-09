@@ -25,7 +25,7 @@ install:
 script:
 - cd docker
 # Molecule Testing Travis-locally with Docker
-#- molecule test
+- molecule test
 # Molecule Testing on AWS EC2
 - molecule create --scenario-name aws-ec2-ubuntu
 - molecule converge --scenario-name aws-ec2-ubuntu
