@@ -23,5 +23,5 @@ script:
 - cd docker
 #- molecule test
 - molecule --debug create --scenario-name aws-ec2-ubuntu
-- molecule --debug converge --scenario-name aws-ec2-ubuntu
-- molecule --debug destroy --scenario-name aws-ec2-ubuntu
+#- molecule --debug converge --scenario-name aws-ec2-ubuntu
+#- molecule --debug destroy --scenario-name aws-ec2-ubuntu
