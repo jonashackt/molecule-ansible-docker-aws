@@ -886,3 +886,45 @@ After that, we need to configure our AWS CLI to use the correct credentials and 
 ![travisci-aws-settings-env-variables](screenshots/travisci-aws-settings-env-variables.png)
 
 The last part is to add the molecule commands to the `script` section of the `.travis.yml`. 
+
+
+### Problems with boto on Travis
+
+As https://github.com/boto/boto/issues/3717 suggests, there are currently problems with the AWS connection library boto on TravisCI. They result in errors like:
+
+```
+        "msg": "Traceback (most recent call last):\n  File \"/home/travis/.ansible/tmp/ansible-tmp-1547040777.3-69673074739502/async_wrapper.py\", line 147, in _run_module\n    (filtered_outdata, json_warnings) = _filter_non_json_lines(outdata)\n  File \"/home/travis/.ansible/tmp/ansible-tmp-1547040777.3-69673074739502/async_wrapper.py\", line 88, in _filter_non_json_lines\n    raise ValueError('No start of json char found')\nValueError: No start of json char found\n", 
+        "stderr": "Traceback (most recent call last):\n  File \"/home/travis/.ansible/tmp/ansible-tmp-1547040777.3-69673074739502/AnsiballZ_ec2.py\", line 113, in <module>\n    _ansiballz_main()\n  File \"/home/travis/.ansible/tmp/ansible-tmp-1547040777.3-69673074739502/AnsiballZ_ec2.py\", line 105, in _ansiballz_main\n    invoke_module(zipped_mod, temp_path, ANSIBALLZ_PARAMS)\n  File \"/home/travis/.ansible/tmp/ansible-tmp-1547040777.3-69673074739502/AnsiballZ_ec2.py\", line 48, in invoke_module\n    imp.load_module('__main__', mod, module, MOD_DESC)\n  File \"/tmp/ansible_ec2_payload_y3lfWH/__main__.py\", line 552, in <module>\n  File \"/home/travis/virtualenv/python2.7.14/lib/python2.7/site-packages/boto/__init__.py\", line 1216, in <module>\n    boto.plugin.load_plugins(config)\nAttributeError: 'module' object has no attribute 'plugin'\n", 
+        "stderr_lines": [
+            "Traceback (most recent call last):", 
+            "  File \"/home/travis/.ansible/tmp/ansible-tmp-1547040777.3-69673074739502/AnsiballZ_ec2.py\", line 113, in <module>", 
+            "    _ansiballz_main()", 
+            "  File \"/home/travis/.ansible/tmp/ansible-tmp-1547040777.3-69673074739502/AnsiballZ_ec2.py\", line 105, in _ansiballz_main", 
+            "    invoke_module(zipped_mod, temp_path, ANSIBALLZ_PARAMS)", 
+            "  File \"/home/travis/.ansible/tmp/ansible-tmp-1547040777.3-69673074739502/AnsiballZ_ec2.py\", line 48, in invoke_module", 
+            "    imp.load_module('__main__', mod, module, MOD_DESC)", 
+            "  File \"/tmp/ansible_ec2_payload_y3lfWH/__main__.py\", line 552, in <module>", 
+            "  File \"/home/travis/virtualenv/python2.7.14/lib/python2.7/site-packages/boto/__init__.py\", line 1216, in <module>", 
+            "    boto.plugin.load_plugins(config)", 
+            "AttributeError: 'module' object has no attribute 'plugin'"
+        ]
+    }
+    
+    PLAY RECAP *********************************************************************
+    localhost                  : ok=6    changed=4    unreachable=0    failed=1   
+    
+    
+ERROR: 
+The command "molecule --debug create --scenario-name aws-ec2-ubuntu" exited with 2.
+```
+
+To fix this, there are two changes needed inside our [.travis.yml](.travis.yml). We need to set `sudo: false` and use the environment variable `BOTO_CONFIG=/dev/null`:
+
+```
+sudo: false
+language: python
+
+env:
+  - BOTO_CONFIG="/dev/null"
+...
+```

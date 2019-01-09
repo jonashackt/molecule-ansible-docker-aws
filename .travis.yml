@@ -1,6 +1,9 @@
 ---
-sudo: required
+sudo: false
 language: python
+
+env:
+  - BOTO_CONFIG="/dev/null"
 
 services:
 - docker
