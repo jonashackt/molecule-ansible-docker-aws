@@ -9,6 +9,19 @@ install:
 - pip install molecule
 - pip install docker-py
 
+# install AWS related packages
+- pip install boto boto3
+- pip install --upgrade awscli
+# configure AWS CLI
+- aws configure set aws_access_key_id $AWS_ACCESS_KEY
+- aws configure set aws_secret_access_key $AWS_SECRET_KEY
+- aws configure set default.region $DEPLOYMENT_REGION
+# show AWS CLI config
+- aws configure list
+
 script:
 - cd docker
-- molecule test
+#- molecule test
+- molecule --debug create --scenario-name aws-ec2-ubuntu
+- molecule --debug converge --scenario-name aws-ec2-ubuntu
+- molecule --debug destroy --scenario-name aws-ec2-ubuntu

@@ -133,6 +133,8 @@ https://github.com/openmicroscopy/ansible-role-prometheus/blob/0.2.0/tests/test_
 
 https://github.com/mongrelion/ansible-role-docker/blob/master/molecule/default/tests/test_default.py
 
+https://blog.octo.com/test-your-infrastructure-topology-on-aws/
+
 
 ## Molecule configuration
 
@@ -838,3 +840,49 @@ But having everything configured and in place right now, we should be able to ru
 ```
 molecule test --scenario-name aws-ec2-ubuntu
 ```
+
+
+### Use TravisCI to execute Molecule with EC2 infrastructure
+
+My ultimate goal of the whole Molecule journey was to be able to let TravisCI create Cloud environments and execute Ansible roles on them.
+
+So we should bring all the things learned togehter now: 
+
+> Using Molecule to develop and test an Ansible role - togehter with the infrastructure provider AWS EC2 - automatically executed by TravisCI after commits or regularly with TravisCI cron jobs.
+
+So let's do it! First we need to configure TravisCI. Therefore we need to enhance our [.travis.yml](.travis.yml). As we need the same python package additions as locally, we need to install `boto`, `boto3` and `awscli`:
+
+```yaml
+sudo: required
+language: python
+
+services:
+- docker
+
+install:
+- pip install molecule
+- pip install docker-py
+
+# install AWS related packages
+- pip install boto boto3
+- pip install --upgrade awscli
+# configure AWS CLI
+- aws configure set aws_access_key_id $AWS_ACCESS_KEY
+- aws configure set aws_secret_access_key $AWS_SECRET_KEY
+- aws configure set default.region $DEPLOYMENT_REGION
+# show AWS CLI config
+- aws configure list
+
+script:
+- cd docker
+#- molecule test
+- molecule --debug create --scenario-name aws-ec2-ubuntu
+- molecule --debug converge --scenario-name aws-ec2-ubuntu
+- molecule --debug destroy --scenario-name aws-ec2-ubuntu
+```
+
+After that, we need to configure our AWS CLI to use the correct credentials and AWS region. This can be achieved by usind the `aws configure set` command. Then we need to head over to the settings tab of our TravisCI project (for the current project this can be found at https://travis-ci.org/jonashackt/molecule-ansible-docker-vagrant/settings) and insert the three environment variables `AWS_ACCESS_KEY`, `AWS_SECRET_KEY` and `DEPLOYMENT_REGION`:
+
+![travisci-aws-settings-env-variables](screenshots/travisci-aws-settings-env-variables.png)
+
+The last part is to add the molecule commands to the `script` section of the `.travis.yml`. 
