@@ -610,7 +610,7 @@ The following Ansible module are solely used to create an inline Ansible invento
 The generated `destroy.yml` playbook is just the opposite to the `create.yml` playbook and tears the created EC2 instance down.
 
 
-### Run a first Test on EC2 with Molecule
+### Configure AWS CLI, Region & VPC subnet id 
 
 Now let's give our configuration a shot. Just be sure to meet some prerequisites. 
 
@@ -650,6 +650,89 @@ So for now we need to set the region manually before running our Molecule tests 
 ```
 export EC2_REGION=eu-central-1
 ```
+
+And there's another thing to do: We need to configure the correct `vpc_subnet_id` inside our `molecule.yml` - if not, we get an error like this:
+
+```
+    "    raise self.ResponseError(response.status, response.reason, body)",
+    "boto.exception.EC2ResponseError: EC2ResponseError: 400 Bad Request",
+    "<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
+    "<Response><Errors><Error><Code>InvalidSubnetID.NotFound</Code><Message>The subnet ID 'subnet-6456fd1f' does not exist</Message></Error></Errors><RequestID>1c971ba2-0d86-4335-9445-d989e988afce</RequestID></Response>"
+]
+```
+
+We need to somehow figure out the correct VPC subnet id of our region. Therefore, you can simply use Ansible to gather that for you by using the [ec2_vpc_subnet_facts module](https://docs.ansible.com/ansible/latest/modules/ec2_vpc_subnet_facts_module.html):
+
+```
+    - name: Gather facts about all VPC subnets
+      ec2_vpc_subnet_facts:
+```
+
+This will give the correct String inside the field `subnets.id`:
+
+```
+    ok: [localhost] => {
+        "changed": false,
+        "invocation": {
+            "module_args": {
+                "aws_access_key": null,
+                ...
+            }
+        },
+        "subnets": [
+            {
+                "assign_ipv6_address_on_creation": false,
+                "availability_zone": "eu-central-1b",
+                "availability_zone_id": "euc1-az3",
+                ...
+                "id": "subnet-a2efa1d9",
+                ...
+            },
+
+```
+
+As an alternative you can use AWS CLI with `aws ec2 describe-subnets` to find the correct ID inside the field `Subnets.SubnetId`:
+
+```
+$ aws ec2 describe-subnets
+
+{
+    "Subnets": [
+        {
+            "AvailabilityZone": "eu-central-1b",
+            "AvailabilityZoneId": "euc1-az3",
+            ...
+            "SubnetId": "subnet-a2efa1d9",
+            ...
+        },
+        {
+            "AvailabilityZone": "eu-central-1c",
+            ...
+        },
+        {
+            "AvailabilityZone": "eu-central-1a",
+            ...
+        }
+    ]
+}
+```
+
+Now head over to your [molecule.yml](docker/molecule/aws-ec2-ubuntu/molecule.yml) and edit the `vpc_subnet_id` to contain the correct value:
+
+```
+scenario:
+  name: aws-ec2-ubuntu
+
+driver:
+  name: ec2
+platforms:
+  - name: aws-ec2-ubuntu
+    image: ami-a5b196c0
+    instance_type: t2.micro
+    vpc_subnet_id: subnet-a2efa1d9
+```
+
+### Run a first Test on EC2 with Molecule
 
 Now we should have everything prepared. Let's try to run our first Molecule test on AWS EC2 (including `--debug` so that we see what's going on):
 

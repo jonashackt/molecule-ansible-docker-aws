@@ -8,7 +8,7 @@ platforms:
   - name: aws-ec2-ubuntu
     image: ami-a5b196c0
     instance_type: t2.micro
-    vpc_subnet_id: subnet-6456fd1f
+    vpc_subnet_id: subnet-a2efa1d9
 
 provisioner:
   name: ansible
