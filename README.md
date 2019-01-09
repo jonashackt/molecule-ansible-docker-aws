@@ -730,7 +730,36 @@ platforms:
     image: ami-a5b196c0
     instance_type: t2.micro
     vpc_subnet_id: subnet-a2efa1d9
+...
 ```
+
+
+### Choosing an Ubuntu 18.04 AMI
+
+[As stated here[(https://askubuntu.com/a/1031156/451114), Amazon has a "official" Ubuntu 18.04 AMI - but this one isn't available under the free tier right now. 
+
+But the official image is just the same as from Canonical, which could be found with the [ubuntu Amazon EC2 AMI Locator](https://cloud-images.ubuntu.com/locator/ec2/):
+
+Fill in your region - e.g. for me this is `eu-central-1` - together with the desired Ubuntu version - like `18.04 LTS` - and the site should filter all available AMI images in this region:
+
+![ubuntu-Amazon-EC2-AMI-Locator](screenshots/ubuntu-Amazon-EC2-AMI-Locator.png)
+
+Now choose the AMI id with the __Instance Type__ `hvm:ebs-ssd`, which means that our EC2 instance will use Amazon Elastic Block Storage memory. Only this instance type is eligible for the free tier. In our region the the correct AMI id for Ubuntu 18.04 is `ami-080d06f90eb293a27`. We need to configure this inside our [molecule.yml](docker/molecule/aws-ec2-ubuntu/molecule.yml):
+
+```
+scenario:
+  name: aws-ec2-ubuntu
+
+driver:
+  name: ec2
+platforms:
+  - name: aws-ec2-ubuntu
+    image: ami-080d06f90eb293a27
+    instance_type: t2.micro
+    vpc_subnet_id: subnet-a2efa1d9
+...
+```
+
 
 ### Run a first Test on EC2 with Molecule
 
@@ -739,3 +768,11 @@ Now we should have everything prepared. Let's try to run our first Molecule test
 ```
 molecule --debug create --scenario-name aws-ec2-ubuntu
 ```
+
+We could have a sneak peak into our Ansible EC2 Management console under https://eu-central-1.console.aws.amazon.com/ec2/v2/home?region=eu-central-1. We should see our EC2 instance starting up:
+
+![aws-ec2-management-console-instance-startup](screenshots/aws-ec2-management-console-instance-startup.png)
+
+If everything went fine, the `molecule create` command should succeed and your EC2 console should show the running EC2 instance:
+
+![aws-ec2-management-console-instance-running](screenshots/aws-ec2-management-console-instance-running.png)
