@@ -610,7 +610,7 @@ The following Ansible module are solely used to create an inline Ansible invento
 The generated `destroy.yml` playbook is just the opposite to the `create.yml` playbook and tears the created EC2 instance down.
 
 
-### Configure AWS CLI, Region & VPC subnet id 
+### Install & configure AWS CLI
 
 Now let's give our configuration a shot. Just be sure to meet some prerequisites. 
 
@@ -636,6 +636,8 @@ AWS Secret Access Key [None]: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 Default region name [None]: eu-central-1
 Default output format [None]: json
 ```
+
+### Configure Region & VPC subnet id 
 
 As there currently is a discrepancy in the UX of Molecule, where every configuration parameter is generated correctly by a `molecule init --driver-name ec2` command and picked up from `~/.aws/credentials`. __Except__ the `region` configuration from `~/.aws/config`!
 
@@ -761,7 +763,8 @@ platforms:
 ```
 
 
-### Run a first Test on EC2 with Molecule
+### Creating a EC2 instance with Molecule
+
 
 Now we should have everything prepared. Let's try to run our first Molecule test on AWS EC2 (including `--debug` so that we see what's going on):
 
@@ -776,6 +779,10 @@ We could have a sneak peak into our Ansible EC2 Management console under https:/
 If everything went fine, the `molecule create` command should succeed and your EC2 console should show the running EC2 instance:
 
 ![aws-ec2-management-console-instance-running](screenshots/aws-ec2-management-console-instance-running.png)
+
+
+
+### Run a first Test on EC2 with Molecule
 
 Now let's try to run our Ansible role against our new EC2 instance with Molecule:
 
@@ -804,4 +811,30 @@ def test_run_hello_world_container_successfully(host):
     hello_world_ran = host.run("sudo docker run hello-world")
 
     assert 'Hello from Docker!' in hello_world_ran.stdout
+```
+
+
+### Cleaning up
+
+Finally it's time to clean up. Let's run a `molecule destroy` command to tear down or EC2 instance:
+
+```
+molecule --debug destroy --scenario-name aws-ec2-ubuntu
+```
+
+If that command went well, we can have a look into our AWS EC2 management console again:
+
+![aws-ec2-management-console-instance-terminated](screenshots/aws-ec2-management-console-instance-terminated.png)
+
+Our instance should have reached the state `terminated`, which is simmilar to `stopped` state - just for instances that used EBS storage (see the [AWS EC2 Instance Lifecycle chart](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-lifecycle.html) for more info).
+
+
+### Final check: molecule test
+
+As you may remember, Molecule provides the consecutive list of steps that run one by one. For introductory reasons we choosed to execute each step manually.
+
+But having everything configured and in place right now, we should be able to run the command that summarizes all the others: `molecule test`:
+
+```
+molecule test --scenario-name aws-ec2-ubuntu
 ```
