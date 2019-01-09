@@ -878,10 +878,13 @@ install:
 
 script:
 - cd docker
+# Molecule Testing Travis-locally with Docker
 #- molecule test
-- molecule --debug create --scenario-name aws-ec2-ubuntu
-- molecule --debug converge --scenario-name aws-ec2-ubuntu
-- molecule --debug destroy --scenario-name aws-ec2-ubuntu
+# Molecule Testing on AWS EC2
+- molecule create --scenario-name aws-ec2-ubuntu
+- molecule converge --scenario-name aws-ec2-ubuntu
+- molecule verify --scenario-name aws-ec2-ubuntu
+- molecule destroy --scenario-name aws-ec2-ubuntu
 ```
 
 After that, we need to configure our AWS CLI to use the correct credentials and AWS region. This can be achieved by usind the `aws configure set` command. Then we need to head over to the settings tab of our TravisCI project (for the current project this can be found at https://travis-ci.org/jonashackt/molecule-ansible-docker-vagrant/settings) and insert the three environment variables `AWS_ACCESS_KEY`, `AWS_SECRET_KEY` and `DEPLOYMENT_REGION`:

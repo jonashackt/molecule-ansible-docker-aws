@@ -27,7 +27,7 @@ script:
 # Molecule Testing Travis-locally with Docker
 #- molecule test
 # Molecule Testing on AWS EC2
-- molecule --debug create --scenario-name aws-ec2-ubuntu
-- molecule --debug converge --scenario-name aws-ec2-ubuntu
-- molecule --debug verify --scenario-name aws-ec2-ubuntu
-- molecule --debug destroy --scenario-name aws-ec2-ubuntu
+- molecule create --scenario-name aws-ec2-ubuntu
+- molecule converge --scenario-name aws-ec2-ubuntu
+- molecule verify --scenario-name aws-ec2-ubuntu
+- molecule destroy --scenario-name aws-ec2-ubuntu
