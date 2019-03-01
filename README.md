@@ -437,13 +437,13 @@ cd molecule-ansible-docker-vagrant/docker
 molecule init scenario --driver-name ec2 --role-name docker --scenario-name aws-ec2-ubuntu
 ```
 
-That should create a new directory `ec2` inside the `docker/molecule` folder.  We'll integrate the results into our multi scenario project in a second.
+That should create a new directory `aws-ec2-ubuntu` inside the `docker/molecule` folder.  We'll integrate the results into our multi scenario project in a second.
 
 Now let's dig into the generated `molecule.yml`:
 
 ```yaml
 scenario:
-  name: ec2
+  name: aws-ec2-ubuntu
 
 driver:
   name: ec2
