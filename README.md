@@ -12,6 +12,7 @@ Example project showing how to test Ansible roles with Molecule using Testinfra 
 There are already two blog posts complementing this repository:
 * [Test-driven infrastructure development with Ansible & Molecule](https://blog.codecentric.de/en/2018/12/test-driven-infrastructure-ansible-molecule/)
 * [Continuous Infrastructure with Ansible, Molecule & TravisCI](https://blog.codecentric.de/en/2018/12/test-driven-infrastructure-ansible-molecule/)
+* [Continuous cloud infrastructure with Ansible, Molecule & TravisCI on AWS](https://blog.codecentric.de/en/2019/01/ansible-molecule-travisci-aws/)
 
 ## Table of Contents  
 * [TDD for Infrastructure code with Molecule!](#tdd-for-infrastructure-code-with-molecule)
