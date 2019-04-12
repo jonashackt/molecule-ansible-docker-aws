@@ -60,5 +60,9 @@ workflows:
       - schedule:
           # 16:30 every friday (see https://en.wikipedia.org/wiki/Cron)
           cron: "30 16 * * 5"
+          filters:
+            branches:
+              only:
+                - master
     jobs:
       - build

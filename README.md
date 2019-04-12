@@ -1094,7 +1094,7 @@ Now head over to CircleCI and have a look into the log. It should look green and
 
 As the docs at https://circleci.com/docs/2.0/triggers/#scheduled-builds state, we need to add the `workflows` section inside our [.circleci/config.yml](.circleci/config.yml) to be able to use cron-scheduled builds. First we introduce a `on-commit:` workflow, which will just be triggered by a normal git commit/push. Nothing new here.
 
-But the second workflow item `weekly-schedule:` gets us where we wanted to be: using the `cron` trigger we can configure to run our Molecule tests e.g. once on friday 04:30PM every week:
+But the second workflow item `weekly-schedule:` gets us where we wanted to be: using the `cron` trigger we can configure to run our Molecule tests e.g. once on friday 04:45 PM every week:
 
 ```yaml
 workflows:
@@ -1106,7 +1106,11 @@ workflows:
     triggers:
       - schedule:
           # 16:30 every friday (see https://en.wikipedia.org/wiki/Cron)
-          cron: "30 16 * * 5"
+          cron: "45 16 * * 5"
+          filters:
+            branches:
+              only:
+                - master
     jobs:
       - build
 ```
