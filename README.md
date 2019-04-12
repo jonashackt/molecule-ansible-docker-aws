@@ -56,7 +56,6 @@ Just start here: [Molecule docs](https://molecule.readthedocs.io/en/latest/confi
 
 ## Prerequisites
 
-* `brew install ansible`
 * `brew cask install virtualbox`
 * `brew cask install vagrant`
 
