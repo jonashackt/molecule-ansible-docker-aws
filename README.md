@@ -1012,9 +1012,9 @@ jobs:
       - run:
           name: configure AWS CLI
           command: |
-            aws configure set aws_access_key_id $AWS_ACCESS_KEY
-            aws configure set aws_secret_access_key $AWS_SECRET_KEY
-            aws configure set default.region $DEPLOYMENT_REGION
+            aws configure set aws_access_key_id ${AWS_ACCESS_KEY}
+            aws configure set aws_secret_access_key ${AWS_SECRET_KEY}
+            aws configure set default.region ${EC2_REGION}
             aws configure list
 
       - run:

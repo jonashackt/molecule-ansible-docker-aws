@@ -34,8 +34,8 @@ jobs:
       - run:
           name: configure AWS CLI
           command: |
-            aws configure set aws_access_key_id $AWS_ACCESS_KEY
-            aws configure set aws_secret_access_key $AWS_SECRET_KEY
+            aws configure set aws_access_key_id ${AWS_ACCESS_KEY}
+            aws configure set aws_secret_access_key ${AWS_SECRET_KEY}
             aws configure set default.region ${EC2_REGION}
             aws configure list
 
@@ -43,7 +43,7 @@ jobs:
           name: Run Molecule Testing on AWS EC2
           command: |
             cd docker
-            molecule --debug create --scenario-name aws-ec2-ubuntu
+            molecule create --scenario-name aws-ec2-ubuntu
             molecule converge --scenario-name aws-ec2-ubuntu
             molecule verify --scenario-name aws-ec2-ubuntu
             molecule destroy --scenario-name aws-ec2-ubuntu
