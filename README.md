@@ -1020,6 +1020,7 @@ jobs:
       - run:
           name: Run Molecule Testing on AWS EC2
           command: |
+            cd docker
             molecule create --scenario-name aws-ec2-ubuntu
             molecule converge --scenario-name aws-ec2-ubuntu
             molecule verify --scenario-name aws-ec2-ubuntu
