@@ -22,6 +22,7 @@ jobs:
           command: |
             pip install molecule docker-py
             pip list
+            molecule --version
 
       - run:
           name: Run Molecule Testing CircleCI-locally with Docker
