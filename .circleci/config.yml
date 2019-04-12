@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/buildpack-deps:bionic
+      - image: circleci/python:3.6.1
 
     environment:
       EC2_REGION: eu-central-1
@@ -13,16 +13,9 @@ jobs:
       - checkout
 
       - run:
-          name: Install Python pip into Ubuntu Bionic CircleCI image
-          command: |
-            sudo apt install python-pip
-
-      - run:
           name: Install Molecule dependencies
           command: |
-            pip install molecule docker-py
-            pip list
-            molecule --version
+            sudo pip install molecule docker-py
 
       - run:
           name: Run Molecule Testing CircleCI-locally with Docker
@@ -33,8 +26,8 @@ jobs:
       - run:
           name: Install Molecule AWS dependencies
           command: |
-            pip install boto boto3
-            pip install --upgrade awscli
+            sudo pip install boto boto3
+            sudo pip install --upgrade awscli
 
       - run:
           name: configure AWS CLI
