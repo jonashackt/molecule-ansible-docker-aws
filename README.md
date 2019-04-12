@@ -1065,4 +1065,26 @@ jobs:
             molecule test
 ```
 
+### "msg": "Error connecting: Error while fetching server API version: ('Connection aborted.', FileNotFoundError(2, 'No such file or directory'))"
+
+Molecule needs a Docker service available. Since CircleCI is mostly using pure Docker-based images to run it's CI jobs, there's no Docker service inside the Docker containers available. But there's help! [The docs state](https://circleci.com/docs/2.0/building-docker-images/):
+
+> If your job requires docker or docker-compose commands, add the setup_remote_docker step into your .circleci/config.yml
+
+We need to use `- setup_remote_docker`
+
+```yaml
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.6.1
+...
+    steps:
+      - checkout
+      
+      - setup_remote_docker: 
+          docker_layer_caching: true
+```
+
 Now head over to CircleCI and have a look into the log. It should look green and somehow like this: https://circleci.com/gh/jonashackt/molecule-ansible-docker-vagrant/3
