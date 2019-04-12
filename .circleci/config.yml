@@ -58,8 +58,8 @@ workflows:
   weekly-schedule:
     triggers:
       - schedule:
-          # 16:30 every friday (see https://en.wikipedia.org/wiki/Cron)
-          cron: "30 16 * * 5"
+          # 17:15 every friday (see https://crontab.guru/)
+          cron: "15 17 * * 5"
           filters:
             branches:
               only:

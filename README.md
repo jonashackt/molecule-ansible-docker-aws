@@ -38,6 +38,7 @@ There are already two blog posts complementing this repository:
 * [Use TravisCI to execute Molecule with EC2 infrastructure](#use-travisci-to-execute-molecule-with-ec2-infrastructure)
 * [Problems with boto on Travis](#problems-with-boto-on-travis)
 * [Use CircleCI to execute Molecule with EC2 infrastructure](#use-circleci-to-execute-molecule-with-ec2-infrastructure)
+* [Schedule regular CircleCI builds with workflow triggers & cron](#schedule-regular-circleci-builds-with-workflow-triggers--cron)
 
 ## TDD for Infrastructure code with Molecule!
 
@@ -1088,7 +1089,10 @@ jobs:
           docker_layer_caching: true
 ```
 
-Now head over to CircleCI and have a look into the log. It should look green and somehow like this: https://circleci.com/gh/jonashackt/molecule-ansible-docker-vagrant/11
+Now head over to CircleCI and have a look into the log. It should look green and somehow like this: https://circleci.com/gh/jonashackt/molecule-ansible-docker-vagrant/16 :
+
+![circleci-aws-full-run-docker-aws](screenshots/circleci-aws-full-run-docker-aws.png)
+
 
 ### Schedule regular CircleCI builds with workflow triggers & cron
 
