@@ -47,3 +47,18 @@ jobs:
             molecule converge --scenario-name aws-ec2-ubuntu
             molecule verify --scenario-name aws-ec2-ubuntu
             molecule destroy --scenario-name aws-ec2-ubuntu
+
+# To use a scheduled execution in CircleCI, we need to introduce a workflow
+# see https://circleci.com/docs/2.0/triggers/#scheduled-builds
+workflows:
+  version: 2
+  on-commit:
+    jobs:
+      - build
+  weekly-schedule:
+    triggers:
+      - schedule:
+          # 16:30 every friday (see https://en.wikipedia.org/wiki/Cron)
+          cron: "30 16 * * 5"
+    jobs:
+      - build

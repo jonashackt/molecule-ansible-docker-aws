@@ -1,10 +1,10 @@
 # molecule-ansible-docker-vagrant
 [![Build Status](https://travis-ci.org/jonashackt/molecule-ansible-docker-vagrant.svg?branch=master)](https://travis-ci.org/jonashackt/molecule-ansible-docker-vagrant)
 [![CircleCI](https://circleci.com/gh/jonashackt/molecule-ansible-docker-vagrant.svg?style=svg)](https://circleci.com/gh/jonashackt/molecule-ansible-docker-vagrant)
-[![versionansible](https://img.shields.io/badge/ansible-2.7.5-brightgreen.svg)](https://docs.ansible.com/ansible/latest/index.html)
-[![versionmolecule](https://img.shields.io/badge/molecule-2.19.0-brightgreen.svg)](https://molecule.readthedocs.io/en/latest/)
-[![versiontestinfra](https://img.shields.io/badge/testinfra-1.16.0-brightgreen.svg)](https://testinfra.readthedocs.io/en/latest/)
-[![versionawscli](https://img.shields.io/badge/awscli-1.16.80-brightgreen.svg)](https://aws.amazon.com/cli/)
+[![versionansible](https://img.shields.io/badge/ansible-2.7.9-brightgreen.svg)](https://docs.ansible.com/ansible/latest/index.html)
+[![versionmolecule](https://img.shields.io/badge/molecule-2.20.0-brightgreen.svg)](https://molecule.readthedocs.io/en/latest/)
+[![versiontestinfra](https://img.shields.io/badge/testinfra-1.19.0-brightgreen.svg)](https://testinfra.readthedocs.io/en/latest/)
+[![versionawscli](https://img.shields.io/badge/awscli-1.16.130-brightgreen.svg)](https://aws.amazon.com/cli/)
 
 Example project showing how to test Ansible roles with Molecule using Testinfra and a multiscenario approach with Vagrant, Docker & AWS EC2 as the infrastructure under test. 
 
@@ -1088,4 +1088,27 @@ jobs:
           docker_layer_caching: true
 ```
 
-Now head over to CircleCI and have a look into the log. It should look green and somehow like this: https://circleci.com/gh/jonashackt/molecule-ansible-docker-vagrant/3
+Now head over to CircleCI and have a look into the log. It should look green and somehow like this: https://circleci.com/gh/jonashackt/molecule-ansible-docker-vagrant/11
+
+### Schedule regular CircleCI builds with workflow triggers & cron
+
+As the docs at https://circleci.com/docs/2.0/triggers/#scheduled-builds state, we need to add the `workflows` section inside our [.circleci/config.yml](.circleci/config.yml) to be able to use cron-scheduled builds. First we introduce a `on-commit:` workflow, which will just be triggered by a normal git commit/push. Nothing new here.
+
+But the second workflow item `weekly-schedule:` gets us where we wanted to be: using the `cron` trigger we can configure to run our Molecule tests e.g. once on friday 04:30PM every week:
+
+```yaml
+workflows:
+  version: 2
+  on-commit:
+    jobs:
+      - build
+  weekly-schedule:
+    triggers:
+      - schedule:
+          # 16:30 every friday (see https://en.wikipedia.org/wiki/Cron)
+          cron: "30 16 * * 5"
+    jobs:
+      - build
+```
+
+Now we should see our builds triggered by this cron regularly!
