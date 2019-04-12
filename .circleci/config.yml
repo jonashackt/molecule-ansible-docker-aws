@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/python:3.6.1
+      - image: circleci/buildpack-deps:bionic
 
     environment:
       EC2_REGION: eu-central-1
@@ -11,8 +11,11 @@ jobs:
 
     steps:
       - checkout
-      - run: pip install molecule
-      - run: pip install docker-py
+
+      - run:
+          name: Install Python pip into Ubuntu Bionic CircleCI image
+          command: |
+            apt install python-pip
 
       - run:
           name: Install Molecule dependencies

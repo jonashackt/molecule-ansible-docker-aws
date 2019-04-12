@@ -990,8 +990,6 @@ jobs:
 
     steps:
       - checkout
-      - run: pip install molecule
-      - run: pip install docker-py
 
       - run:
           name: Install Molecule dependencies
@@ -1035,7 +1033,37 @@ After that, we need to configure our AWS CLI to use the correct credentials and 
 
 The last part is to add the molecule commands to our `.circleci/config.yml`. 
 
+### CircleCI gives Permission denied error at pip install
 
+Using `circleci/python` Docker image it seems that you can't simply use `pip install xyz`:
 
+```
+PermissionError: [Errno 13] Permission denied: '/usr/local/lib/python3.6/site-packages/ptyprocess'
+```
+
+This error is also [reported here](https://discuss.circleci.com/t/circleci-python-docker-images-disallow-pip-install-due-to-directory-ownership/12504). To avoid this error, we need to switch our CircleCI Docker image. After having a look into the list of [available Docker images](circleci/buildpack-deps), I choose a `buildpack-deps` image, since we don't need a full programming language supported. Now not having Python pip pre-installed, we also need to install it with `apt-get install python-pip` first:
+
+```yaml
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/buildpack-deps:bionic
+...
+    steps:
+      - checkout
+
+      - run:
+          name: Install Python pip into Ubuntu Bionic CircleCI image
+          command: |
+            apt install python-pip
+          
+      - run:
+          name: Install Molecule dependencies
+          command: |
+            pip install molecule
+            pip install docker-py
+
+```
 
 Now head over to CircleCI and have a look into the log. It should look green and somehow like this: https://circleci.com/gh/jonashackt/molecule-ansible-docker-vagrant/3
