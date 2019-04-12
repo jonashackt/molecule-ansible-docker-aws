@@ -1,0 +1,49 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.6.1
+
+    environment:
+      EC2_REGION: eu-central-1
+
+    working_directory: ~/molecule-ansible-docker-vagrant
+
+    steps:
+      - checkout
+      - run: pip install molecule
+      - run: pip install docker-py
+
+      - run:
+          name: Install Molecule dependencies
+          command: |
+            pip install molecule
+            pip install docker-py
+
+      - run:
+          name: Run Molecule Testing CircleCI-locally with Docker
+          command: |
+            cd docker
+            molecule test
+
+      - run:
+          name: Install Molecule AWS dependencies
+          command: |
+            pip install boto boto3
+            pip install --upgrade awscli
+
+      - run:
+          name: configure AWS CLI
+          command: |
+            aws configure set aws_access_key_id $AWS_ACCESS_KEY
+            aws configure set aws_secret_access_key $AWS_SECRET_KEY
+            aws configure set default.region ${EC2_REGION}
+            aws configure list
+
+      - run:
+          name: Run Molecule Testing on AWS EC2
+          command: |
+            molecule create --scenario-name aws-ec2-ubuntu
+            molecule converge --scenario-name aws-ec2-ubuntu
+            molecule verify --scenario-name aws-ec2-ubuntu
+            molecule destroy --scenario-name aws-ec2-ubuntu

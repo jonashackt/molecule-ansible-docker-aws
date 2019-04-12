@@ -1,5 +1,6 @@
 # molecule-ansible-docker-vagrant
 [![Build Status](https://travis-ci.org/jonashackt/molecule-ansible-docker-vagrant.svg?branch=master)](https://travis-ci.org/jonashackt/molecule-ansible-docker-vagrant)
+[![CircleCI](https://circleci.com/gh/jonashackt/molecule-ansible-docker-vagrant.svg?style=svg)](https://circleci.com/gh/jonashackt/molecule-ansible-docker-vagrant)
 [![versionansible](https://img.shields.io/badge/ansible-2.7.5-brightgreen.svg)](https://docs.ansible.com/ansible/latest/index.html)
 [![versionmolecule](https://img.shields.io/badge/molecule-2.19.0-brightgreen.svg)](https://molecule.readthedocs.io/en/latest/)
 [![versiontestinfra](https://img.shields.io/badge/testinfra-1.16.0-brightgreen.svg)](https://testinfra.readthedocs.io/en/latest/)
@@ -36,6 +37,7 @@ There are already two blog posts complementing this repository:
 * [Final check: molecule test](#final-check-molecule-test)
 * [Use TravisCI to execute Molecule with EC2 infrastructure](#use-travisci-to-execute-molecule-with-ec2-infrastructure)
 * [Problems with boto on Travis](#problems-with-boto-on-travis)
+* [Use CircleCI to execute Molecule with EC2 infrastructure](#use-circleci-to-execute-molecule-with-ec2-infrastructure)
 
 ## TDD for Infrastructure code with Molecule!
 
@@ -864,7 +866,7 @@ molecule test --scenario-name aws-ec2-ubuntu
 ```
 
 
-### Use TravisCI to execute Molecule with EC2 infrastructure
+## Use TravisCI to execute Molecule with EC2 infrastructure
 
 My ultimate goal of the whole Molecule journey was to be able to let TravisCI create Cloud environments and execute Ansible roles on them.
 
@@ -962,3 +964,78 @@ And we need to add the `BOTO_CONFIG` environment variable to the same line as th
 > If you need to specify several environment variables for each build, put them all on the same line in the env array
 
 Now head over to Travis and have a look into the log. It should look green and somehow like this: https://travis-ci.org/jonashackt/molecule-ansible-docker-vagrant/builds/477365844
+
+
+## Use CircleCI to execute Molecule with EC2 infrastructure
+
+As TravisCI is just one example of a cloud CI provider, let's use another one also - so let's just pick [CircleCI](https://circleci.com), let's go with this CI tool!  
+
+> Using Molecule to develop and test an Ansible role - togehter with the infrastructure provider AWS EC2 - automatically executed by CircleCI after commits or regularly with CircleCI scheduled jobs.
+
+
+
+So let's do it! First we need to configure CircleCI. Therefore we need to create a [.circleci/config.yml](.circleci/config.yml). As we need the same python package additions as locally, we need to install `boto`, `boto3` and `awscli`:
+
+```yaml
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.6.1
+
+    environment:
+      EC2_REGION: eu-central-1
+
+    working_directory: ~/molecule-ansible-docker-vagrant
+
+    steps:
+      - checkout
+      - run: pip install molecule
+      - run: pip install docker-py
+
+      - run:
+          name: Install Molecule dependencies
+          command: |
+            pip install molecule
+            pip install docker-py
+
+      - run:
+          name: Run Molecule Testing CircleCI-locally with Docker
+          command: |
+            cd docker
+            molecule test
+
+      - run:
+          name: Install Molecule AWS dependencies
+          command: |
+            pip install boto boto3
+            pip install --upgrade awscli
+
+      - run:
+          name: configure AWS CLI
+          command: |
+            aws configure set aws_access_key_id $AWS_ACCESS_KEY
+            aws configure set aws_secret_access_key $AWS_SECRET_KEY
+            aws configure set default.region $DEPLOYMENT_REGION
+            aws configure list
+
+      - run:
+          name: Run Molecule Testing on AWS EC2
+          command: |
+            molecule create --scenario-name aws-ec2-ubuntu
+            molecule converge --scenario-name aws-ec2-ubuntu
+            molecule verify --scenario-name aws-ec2-ubuntu
+            molecule destroy --scenario-name aws-ec2-ubuntu
+
+```
+
+After that, we need to configure our AWS CLI to use the correct credentials and AWS region. This can be achieved by usind the `aws configure set` command. Then we need to head over to the settings tab of our CircleCI project (for the current project this can be found at https://circleci.com/gh/jonashackt/molecule-ansible-docker-vagrant/edit#env-vars) and insert the three environment variables `AWS_ACCESS_KEY` & `AWS_SECRET_KEY`:
+
+![circleci-aws-settings-env-variables](screenshots/circleci-aws-settings-env-variables.png)
+
+The last part is to add the molecule commands to our `.circleci/config.yml`. 
+
+
+
+
+Now head over to CircleCI and have a look into the log. It should look green and somehow like this: https://circleci.com/gh/jonashackt/molecule-ansible-docker-vagrant/3
