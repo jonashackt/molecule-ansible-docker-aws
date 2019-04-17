@@ -6,7 +6,7 @@ driver:
   name: ec2
 platforms:
   - name: aws-ec2-ubuntu
-    image: ami-080d06f90eb293a27
+    image: ami-054e21e355db24124
     instance_type: t2.micro
     vpc_subnet_id: subnet-a2efa1d9
 
