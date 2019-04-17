@@ -1109,8 +1109,8 @@ workflows:
   weekly-schedule:
     triggers:
       - schedule:
-          # 16:30 every friday (see https://en.wikipedia.org/wiki/Cron)
-          cron: "45 16 * * 5"
+          # 17:55 every friday (see https://en.wikipedia.org/wiki/Cron)
+          cron: "55 17 * * 5"
           filters:
             branches:
               only:
@@ -1119,4 +1119,8 @@ workflows:
       - build
 ```
 
-Now we should see our builds triggered by this cron regularly!
+Now we should see our builds triggered by this cron regularly:
+
+![circleci-cron-weekly-schedule](screenshots/circleci-cron-weekly-schedule.png)
+
+Just mind the `UTC+2` timezone - for me, configuring `17:55` actually means, that my job will be scheduled to run at `19:55` - so don't think your config is wrong, maybe you're just in another timezone :)
