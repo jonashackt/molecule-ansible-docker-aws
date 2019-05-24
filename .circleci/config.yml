@@ -28,7 +28,7 @@ jobs:
       - run:
           name: Install Molecule AWS dependencies
           command: |
-            sudo pip install boto boto3
+            sudo pip install boto boto3 paramiko
             sudo pip install --upgrade awscli
 
       - run:
