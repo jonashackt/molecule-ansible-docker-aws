@@ -9,6 +9,7 @@ services:
 - docker
 
 install:
+- pip install ansible==2.7.11
 - pip install testinfra molecule docker
 
 # install AWS related packages
