@@ -2,7 +2,7 @@
 [![Build Status](https://travis-ci.org/jonashackt/molecule-ansible-docker-vagrant.svg?branch=master)](https://travis-ci.org/jonashackt/molecule-ansible-docker-vagrant)
 [![CircleCI](https://circleci.com/gh/jonashackt/molecule-ansible-docker-vagrant.svg?style=svg)](https://circleci.com/gh/jonashackt/molecule-ansible-docker-vagrant)
 [![versionansible](https://img.shields.io/badge/ansible-2.7.9-brightgreen.svg)](https://docs.ansible.com/ansible/latest/index.html)
-[![versionmolecule](https://img.shields.io/badge/molecule-2.20.0-brightgreen.svg)](https://molecule.readthedocs.io/en/latest/)
+[![versionmolecule](https://img.shields.io/badge/molecule-2.20.1-brightgreen.svg)](https://molecule.readthedocs.io/en/latest/)
 [![versiontestinfra](https://img.shields.io/badge/testinfra-1.19.0-brightgreen.svg)](https://testinfra.readthedocs.io/en/latest/)
 [![versionawscli](https://img.shields.io/badge/awscli-1.16.130-brightgreen.svg)](https://aws.amazon.com/cli/)
 
@@ -264,10 +264,10 @@ With Molecule we could not only test our Ansible roles against one infrastructur
 
 To get an idea on how this works I sligthly restructured the repository. We started out with the Vagrant driver / scenario. Now after also implementing a Docker driver in this repository on it´s own: https://github.com/jonashackt/molecule-ansible-docker I integrated it into this repository.
 
-And because Docker is the default Molecule driver for testing Ansible roles I changed the name of the Vagrant scenario to `vagrant-ubuntu`. Don´t forget to install `docker-py`:
+And because Docker is the default Molecule driver for testing Ansible roles I changed the name of the Vagrant scenario to `vagrant-ubuntu`. Don´t forget to install `docker`:
 
 ```
-pip3 install docker-py
+pip3 install docker
 ```
 
 Using `molecule test` as we´re used to will now execute the Docker (e.g. `default`) scenario. This change results in the following project structure:
@@ -888,8 +888,7 @@ services:
 - docker
 
 install:
-- pip install molecule
-- pip install docker-py
+- pip install molecule docker
 
 # install AWS related packages
 - pip install boto boto3
@@ -995,8 +994,7 @@ jobs:
       - run:
           name: Install Molecule dependencies
           command: |
-            pip install molecule
-            pip install docker-py
+            pip install molecule docker
 
       - run:
           name: Run Molecule Testing CircleCI-locally with Docker
@@ -1058,7 +1056,7 @@ jobs:
       - run:
           name: Install Molecule dependencies
           command: |
-            sudo pip install molecule docker-py
+            sudo pip install molecule docker
 
       - run:
           name: Run Molecule Testing CircleCI-locally with Docker

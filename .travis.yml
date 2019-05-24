@@ -9,8 +9,7 @@ services:
 - docker
 
 install:
-- pip install molecule
-- pip install docker-py
+- pip install molecule docker
 
 # install AWS related packages
 - pip install boto boto3

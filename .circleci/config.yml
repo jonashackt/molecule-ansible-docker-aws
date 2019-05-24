@@ -17,7 +17,7 @@ jobs:
       - run:
           name: Install Molecule dependencies
           command: |
-            sudo pip install molecule docker-py
+            sudo pip install molecule docker
 
       - run:
           name: Run Molecule Testing CircleCI-locally with Docker
