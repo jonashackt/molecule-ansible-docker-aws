@@ -19,6 +19,9 @@ jobs:
           command: |
             sudo pip install ansible==2.7.11
             sudo pip install testinfra molecule docker
+            ansible --version
+            molecule --version
+            pip list
 
       - run:
           name: Run Molecule Testing CircleCI-locally with Docker
