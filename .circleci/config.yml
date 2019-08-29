@@ -17,8 +17,7 @@ jobs:
       - run:
           name: Install Molecule dependencies
           command: |
-            sudo pip install ansible==2.7.11
-            sudo pip install molecule docker
+            sudo pip install ansible molecule docker
 
       - run:
           name: Run Molecule Testing CircleCI-locally with Docker

@@ -1,10 +1,10 @@
 # molecule-ansible-docker-vagrant
 [![Build Status](https://travis-ci.org/jonashackt/molecule-ansible-docker-vagrant.svg?branch=master)](https://travis-ci.org/jonashackt/molecule-ansible-docker-vagrant)
 [![CircleCI](https://circleci.com/gh/jonashackt/molecule-ansible-docker-vagrant.svg?style=svg)](https://circleci.com/gh/jonashackt/molecule-ansible-docker-vagrant)
-[![versionansible](https://img.shields.io/badge/ansible-2.7.11-brightgreen.svg)](https://docs.ansible.com/ansible/latest/index.html)
-[![versionmolecule](https://img.shields.io/badge/molecule-2.20.1-brightgreen.svg)](https://molecule.readthedocs.io/en/latest/)
-[![versiontestinfra](https://img.shields.io/badge/testinfra-1.19.0-brightgreen.svg)](https://testinfra.readthedocs.io/en/latest/)
-[![versionawscli](https://img.shields.io/badge/awscli-1.16.130-brightgreen.svg)](https://aws.amazon.com/cli/)
+[![versionansible](https://img.shields.io/badge/ansible-2.8.4-brightgreen.svg)](https://docs.ansible.com/ansible/latest/index.html)
+[![versionmolecule](https://img.shields.io/badge/molecule-2.22-brightgreen.svg)](https://molecule.readthedocs.io/en/latest/)
+[![versiontestinfra](https://img.shields.io/badge/testinfra-3.1.0-brightgreen.svg)](https://testinfra.readthedocs.io/en/latest/)
+[![versionawscli](https://img.shields.io/badge/awscli-1.16.228-brightgreen.svg)](https://aws.amazon.com/cli/)
 
 Example project showing how to test Ansible roles with Molecule using Testinfra and a multiscenario approach with Vagrant, Docker & AWS EC2 as the infrastructure under test. 
 
