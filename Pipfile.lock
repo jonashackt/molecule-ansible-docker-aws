@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "202beb5352708e461367ac02eb14c044c9de052879fcc08fe6967f9afa0d053d"
+            "sha256": "f649df35d2cd68a1ed8b90a5c8584cce84023e0356b5d3c9a412b5f8a753f848"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -66,11 +66,11 @@
         },
         "awscli": {
             "hashes": [
-                "sha256:801c5823474f06589b2b45da11fbe27ce1a6bcf8d17120bdfaa4124f3b8cd56d",
-                "sha256:d8b2ccf1b2608aab58e0f4a3e31d1d55f9c729dba675565cb57f3bb9d3508403"
+                "sha256:3f07e174869ad70629c2e3936476dd9eaa971b46eb732f7904460d1101f98abf",
+                "sha256:f8e5da32149295c1fb756873d46dbe386fabe29bc1560b35f9eb147812d38ee8"
             ],
             "index": "pypi",
-            "version": "==1.16.278"
+            "version": "==1.16.279"
         },
         "bcrypt": {
             "hashes": [
@@ -112,10 +112,10 @@
         },
         "botocore": {
             "hashes": [
-                "sha256:48ad5efd98e0570df13a73e6463da2a9d9422f47a943b6ef74f950695c23dbb0",
-                "sha256:d789f30a5def264b9d21a917aeadc4e5fc2b6a03a61f222befcfaf80eaba86e5"
+                "sha256:174399fb3e95b965afb2f33ab0d71448d60f336c5eaf9654e4436b44ca7aaa0b",
+                "sha256:a6e4a62667437f01a70e7f2e5c569320d520b2364c45084ec40de143bc0e23a4"
             ],
-            "version": "==1.13.14"
+            "version": "==1.13.15"
         },
         "cerberus": {
             "hashes": [
@@ -688,11 +688,11 @@
         },
         "urllib3": {
             "hashes": [
-                "sha256:3de946ffbed6e6746608990594d08faac602528ac7015ac28d33cee6a45b7398",
-                "sha256:9a107b99a5393caf59c7aa3c1249c16e6879447533d0887f4336dde834c7be86"
+                "sha256:a8a318824cc77d1fd4b2bec2ded92646630d7fe8619497b142c84a9e6f5a7293",
+                "sha256:f3c5fd51747d450d4dcf6f923c81f78f811aab8205fda64b0aba34a4e48b0745"
             ],
             "markers": "python_version >= '3.4'",
-            "version": "==1.25.6"
+            "version": "==1.25.7"
         },
         "virtualenv": {
             "hashes": [
