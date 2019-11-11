@@ -1,10 +1,10 @@
 # molecule-ansible-docker-vagrant
 [![Build Status](https://travis-ci.org/jonashackt/molecule-ansible-docker-vagrant.svg?branch=master)](https://travis-ci.org/jonashackt/molecule-ansible-docker-vagrant)
 [![CircleCI](https://circleci.com/gh/jonashackt/molecule-ansible-docker-vagrant.svg?style=svg)](https://circleci.com/gh/jonashackt/molecule-ansible-docker-vagrant)
-[![versionansible](https://img.shields.io/badge/ansible-2.8.4-brightgreen.svg)](https://docs.ansible.com/ansible/latest/index.html)
-[![versionmolecule](https://img.shields.io/badge/molecule-2.22-brightgreen.svg)](https://molecule.readthedocs.io/en/latest/)
-[![versiontestinfra](https://img.shields.io/badge/testinfra-3.1.0-brightgreen.svg)](https://testinfra.readthedocs.io/en/latest/)
-[![versionawscli](https://img.shields.io/badge/awscli-1.16.228-brightgreen.svg)](https://aws.amazon.com/cli/)
+[![versionansible](https://img.shields.io/github/pipenv/locked/dependency-version/jonashackt/molecule-ansible-docker-vagrant/ansible?color=brightgreen)](https://docs.ansible.com/ansible/latest/index.html)
+[![versionmolecule](https://img.shields.io/github/pipenv/locked/dependency-version/jonashackt/molecule-ansible-docker-vagrant/molecule?color=brightgreen)](https://molecule.readthedocs.io/en/latest/)
+[![versiontestinfra](https://img.shields.io/github/pipenv/locked/dependency-version/jonashackt/molecule-ansible-docker-vagrant/testinfra?color=brightgreen)](https://testinfra.readthedocs.io/en/latest/)
+[![versionawscli](https://img.shields.io/github/pipenv/locked/dependency-version/jonashackt/molecule-ansible-docker-vagrant/awscli?color=brightgreen)](https://aws.amazon.com/cli/)
 
 Example project showing how to test Ansible roles with Molecule using Testinfra and a multiscenario approach with Vagrant, Docker & AWS EC2 as the infrastructure under test. 
 
@@ -23,22 +23,22 @@ There are already two blog posts complementing this repository:
 * [Execute Molecule](#execute-molecule)
 * [Multi-Scenario Molecule setup](#multi-scenario-molecule-setup)
 * [Ubuntu based Docker-in-Docker builds](#ubuntu-based-docker-in-docker-builds)
-* [Docker-in-Docker with ubuntu:bionic](#docker-in-docker-with-ubuntubionic)
-* [Testing the Docker-in-Docker installation](#testing-the-docker-in-docker-installation)
+  * [Docker-in-Docker with ubuntu:bionic](#docker-in-docker-with-ubuntubionic)
+  * [Testing the Docker-in-Docker installation](#testing-the-docker-in-docker-installation)
 * [Molecule with AWS EC2 as the infrastructure provider](#molecule-with-aws-ec2-as-the-infrastructure-provider)
-* [Configure Molecule to use EC2](#configure-molecule-to-use-ec2)
-* [Having a look into the create.yml](#having-a-look-into-the-createyml)
-* [Install & configure AWS CLI](#install--configure-aws-cli)
-* [Configure Region & VPC subnet id](#configure-region--vpc-subnet-id)
-* [Choosing an Ubuntu 18.04 AMI](#choosing-an-ubuntu-1804-ami)
-* [Creating a EC2 instance with Molecule](#creating-a-ec2-instance-with-molecule)
-* [Run a first Test on EC2 with Molecule](#run-a-first-test-on-ec2-with-molecule)
-* [Cleaning up](#cleaning-up)
-* [Final check: molecule test](#final-check-molecule-test)
+  * [Configure Molecule to use EC2](#configure-molecule-to-use-ec2)
+  * [Having a look into the create.yml](#having-a-look-into-the-createyml)
+  * [Install & configure AWS CLI](#install--configure-aws-cli)
+  * [Configure Region & VPC subnet id](#configure-region--vpc-subnet-id)
+  * [Choosing an Ubuntu 18.04 AMI](#choosing-an-ubuntu-1804-ami)
+  * [Creating a EC2 instance with Molecule](#creating-a-ec2-instance-with-molecule)
+  * [Run a first Test on EC2 with Molecule](#run-a-first-test-on-ec2-with-molecule)
+  * [Cleaning up](#cleaning-up)
+  * [Final check: molecule test](#final-check-molecule-test)
 * [Use TravisCI to execute Molecule with EC2 infrastructure](#use-travisci-to-execute-molecule-with-ec2-infrastructure)
-* [Problems with boto on Travis](#problems-with-boto-on-travis)
+  * [Problems with boto on Travis](#problems-with-boto-on-travis)
 * [Use CircleCI to execute Molecule with EC2 infrastructure](#use-circleci-to-execute-molecule-with-ec2-infrastructure)
-* [Schedule regular CircleCI builds with workflow triggers & cron](#schedule-regular-circleci-builds-with-workflow-triggers--cron)
+  * [Schedule regular CircleCI builds with workflow triggers & cron](#schedule-regular-circleci-builds-with-workflow-triggers--cron)
 
 ## TDD for Infrastructure code with Molecule!
 
@@ -63,11 +63,29 @@ Just start here: [Molecule docs](https://molecule.readthedocs.io/en/latest/confi
 * `brew cask install vagrant`
 
 > Please don´t install Ansible and Molecule with homebrew on Mac, but always with pip3 since you only get old versions and need to manually install testinfra, ansible, flake8 and other packages
-* `pip3 install ansible`
-* `pip3 install molecule --user`
+
+And as we learned with [pulumi-python-aws-ansible](https://github.com/jonashackt/pulumi-python-aws-ansible) and escpecially in [Replace direct usage of virtualenv and pip with pipenv](https://github.com/jonashackt/pulumi-python-aws-ansible#replace-direct-usage-of-virtualenv-and-pip-with-pipenv), we should use a great Python dependency management tool like [pipenv](https://github.com/pypa/pipenv) instead of no or non-pinned (`requirements.txt`) dependencies.
+
+Therefore let's install `pipenv`:
+
+```
+pip3 install pipenv
+``` 
+
+Then create a virtual environment for the current project (pinned to Python 3.7+):
+
+```
+pipenv shell --python 3.7
+```
+
+And finally install needed pip packages with:
+
+```
+pipenv install ansible molecule
+```
 
 > For using Vagrant with Molecule we also need `python-vagrant` module installed
-* `pip3 install python-vagrant`
+* `pipenv install python-vagrant`
 
 
 
@@ -640,7 +658,7 @@ Now let's give our configuration a shot. Just be sure to meet some prerequisites
 First we need to sure to have the [AWS CLI installed](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html). We can also do this via pip package manager with:
  
 ```
-pip3 install awscli
+pipenv install awscli
 ```
  
 Now we should check, if AWS CLI was successfully installed. The `aws --version` command should print out sometime like:
@@ -1084,8 +1102,9 @@ jobs:
       - checkout
       
       - setup_remote_docker: 
-          docker_layer_caching: true
 ```
+
+> Don't use `docker_layer_caching: true`, if you only have the free tier available (see https://github.com/jonashackt/molecule-ansible-docker-vagrant/issues/5)!!
 
 Now head over to CircleCI and have a look into the log. It should look green and somehow like this: https://circleci.com/gh/jonashackt/molecule-ansible-docker-vagrant/16 :
 
