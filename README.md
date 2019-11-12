@@ -1173,8 +1173,6 @@ jobs:
             pipenv install
 ```
 
-Don't forget to activate the `pipenv` shell with a `pipenv shell` -> the docs don't mention that one clearly enough (because otherwise the commands like `molecule` etc wont be able to find, [see this build](https://circleci.com/gh/jonashackt/molecule-ansible-docker-vagrant/81)!
-
 This gets us (maybe) into the following error:
 
 ```
@@ -1186,6 +1184,14 @@ An error occurred while installing psutil==5.6.5 ; sys_platform != 'win32' and s
 This seems to be [a knows issue](https://github.com/giampaolo/psutil/issues/1143#issuecomment-334694641), if `python-dev` package isn't available, no PIP packages could be build locally.
 
 So let's add a `sudo apt-get install python-dev` to our [.circleci/config.yml](.circleci/config.yml).
+
+
+Now using pipenv, we can't simply activate the `pipenv` shell with a `pipenv shell` -> this will stop our CircleCI builds right in the middle ([see this build](https://circleci.com/gh/jonashackt/molecule-ansible-docker-vagrant/84))
+ 
+The docs don't mention that one clearly enough - __BUT__ otherwise the commands like `molecule` etc wont be able to find, [see this build](https://circleci.com/gh/jonashackt/molecule-ansible-docker-vagrant/81)!
+
+The solution is to run every command with a prefixed `pipenv run` - like `pipenv run molecule test`. 
+
 
 
 ### Schedule regular CircleCI builds with workflow triggers & cron
