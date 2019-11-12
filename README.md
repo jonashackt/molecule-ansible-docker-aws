@@ -1,4 +1,4 @@
-# molecule-ansible-docker-vagrant
+# molecule-ansible-docker-aws
 [![Build Status](https://travis-ci.org/jonashackt/molecule-ansible-docker-vagrant.svg?branch=master)](https://travis-ci.org/jonashackt/molecule-ansible-docker-vagrant)
 [![CircleCI](https://circleci.com/gh/jonashackt/molecule-ansible-docker-vagrant.svg?style=svg)](https://circleci.com/gh/jonashackt/molecule-ansible-docker-vagrant)
 [![versionansible](https://img.shields.io/github/pipenv/locked/dependency-version/jonashackt/molecule-ansible-docker-vagrant/ansible?color=brightgreen)](https://docs.ansible.com/ansible/latest/index.html)
