@@ -1031,7 +1031,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/python:3.6.1
+      - image: circleci/python:3.7.5
 
     environment:
       EC2_REGION: eu-central-1
@@ -1098,7 +1098,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/python:3.6.1
+      - image: circleci/python:3.7.5
 ...
     steps:
       - checkout
@@ -1128,7 +1128,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/python:3.6.1
+      - image: circleci/python:3.7.5
 ...
     steps:
       - checkout  
@@ -1153,7 +1153,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/python:3.8.0b1
+      - image: circleci/python:3.7.5
 
     environment:
       EC2_REGION: eu-central-1
@@ -1165,12 +1165,24 @@ jobs:
       - setup_remote_docker
 
       - run:
-          name: Install all dependencies with pipenv
+          name: Install all dependencies with pipenv (incl. python-dev installation for pip packages, that need to be build & have a Python.h present)
           command: |
+            sudo apt-get install python-dev
             sudo pip install pipenv
             pipenv install
+```
+
+This gets us (maybe) into the following error:
 
 ```
+An error occurred while installing psutil==5.6.5 ; sys_platform != 'win32' and sys_platform != 'cygwin'
+...
+'    psutil/_psutil_common.c:9:10: fatal error: Python.h: No such file or directory', '     #include <Python.h>', '              ^~~~~~~~~~', '    compilation terminated.', "    error: command 'x86_64-linux-gnu-gcc' failed with exit status 1", '    ----------------------------------------', 'ERROR: Command errored out with exit status 1: /home/circleci/.local/share/virtualenvs/molecule-ansible-docker-vagrant-082rgMyr/bin/python3.7 -u -c \'import sys, setuptools, tokenize; sys.argv[0] = \'"\'"\'/tmp/pip-install-fecrj6wj/psutil/setup.py\'"\'"\'; __file__=\'"\'"\'/tmp/pip-install-fecrj6wj/psutil/setup.py\'"\'"\';f=getattr(tokenize, \'"\'"\'open\'"\'"\', open)(__file__);code=f.read().replace(\'"\'"\'\\r\\n\'"\'"\', \'"\'"\'\\n\'"\'"\');f.close();exec(compile(code, __file__, \'"\'"\'exec\'"\'"\'))\' install --record /tmp/pip-record-iium4npj/install-record.txt --single-version-externally-managed --compile --install-headers /home/circleci/.local/share/virtualenvs/molecule-ansible-docker-vagrant-082rgMyr/include/site/python3.7/psutil Check the logs for full command output.']
+```
+
+This seems to be [a knows issue](https://github.com/giampaolo/psutil/issues/1143#issuecomment-334694641), if `python-dev` package isn't available, no PIP packages could be build locally.
+
+So let's add a `sudo apt-get install python-dev` to our [.circleci/config.yml](.circleci/config.yml).
 
 
 ### Schedule regular CircleCI builds with workflow triggers & cron
