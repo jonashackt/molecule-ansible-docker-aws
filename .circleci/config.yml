@@ -14,21 +14,16 @@ jobs:
       - setup_remote_docker
 
       - run:
-          name: Install Molecule dependencies
+          name: Install all dependencies with pipenv
           command: |
-            sudo pip install ansible molecule docker
+            sudo pip install pipenv
+            pipenv install
 
       - run:
           name: Run Molecule Testing CircleCI-locally with Docker
           command: |
             cd docker
             molecule test
-
-      - run:
-          name: Install Molecule AWS dependencies
-          command: |
-            sudo pip install boto boto3
-            sudo pip install --upgrade awscli
 
       - run:
           name: configure AWS CLI

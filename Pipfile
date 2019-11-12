@@ -12,6 +12,7 @@ testinfra = "==3.2.0"
 python-vagrant = "==0.5.15"
 awscli = "==1.16.279"
 boto3 = "==1.10.14"
+docker = "==4.1.0"
 
 [requires]
 python_version = "3.7"

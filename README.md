@@ -37,7 +37,9 @@ There are already two blog posts complementing this repository:
   * [Final check: molecule test](#final-check-molecule-test)
 * [Use TravisCI to execute Molecule with EC2 infrastructure](#use-travisci-to-execute-molecule-with-ec2-infrastructure)
   * [Problems with boto on Travis](#problems-with-boto-on-travis)
+  * [Use pipenv with TravisCI](#use-pipenv-with-travisci-1)
 * [Use CircleCI to execute Molecule with EC2 infrastructure](#use-circleci-to-execute-molecule-with-ec2-infrastructure)
+  * [Use pipenv with CircleCI](#use-pipenv-with-circleci)
   * [Schedule regular CircleCI builds with workflow triggers & cron](#schedule-regular-circleci-builds-with-workflow-triggers--cron)
 
 ## TDD for Infrastructure code with Molecule!
@@ -1129,9 +1131,8 @@ jobs:
       - image: circleci/python:3.6.1
 ...
     steps:
-      - checkout
-      
-      - setup_remote_docker: 
+      - checkout  
+      - setup_remote_docker 
 ```
 
 > Don't use `docker_layer_caching: true`, if you only have the free tier available (see https://github.com/jonashackt/molecule-ansible-docker-vagrant/issues/5)!!
@@ -1139,6 +1140,37 @@ jobs:
 Now head over to CircleCI and have a look into the log. It should look green and somehow like this: https://circleci.com/gh/jonashackt/molecule-ansible-docker-vagrant/16 :
 
 ![circleci-aws-full-run-docker-aws](screenshots/circleci-aws-full-run-docker-aws.png)
+
+
+### Use pipenv with CircleCI
+
+As we already use `pipenv` with our local project setup and with TravisCI, CircleCI builds should also depend on this great dependency-lock supporting Python build tool.
+
+And [in the examples](https://circleci.com/docs/2.0/language-python/#install-dependencies) there's already the part we need instead of `pip install XYZ` commands:
+
+```yaml
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.8.0b1
+
+    environment:
+      EC2_REGION: eu-central-1
+
+    working_directory: ~/molecule-ansible-docker-vagrant
+
+    steps:
+      - checkout
+      - setup_remote_docker
+
+      - run:
+          name: Install all dependencies with pipenv
+          command: |
+            sudo pip install pipenv
+            pipenv install
+
+```
 
 
 ### Schedule regular CircleCI builds with workflow triggers & cron
