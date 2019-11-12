@@ -12,12 +12,14 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-
+      # Install all dependencies with pipenv - incl. python-dev installation for pip packages, that need to be build & have a Python.h present
+      # also activate pipenv shell - otherwise no commands (like molecule) will be found later
       - run:
           name: Install all dependencies with pipenv
           command: |
             sudo apt-get install python-dev
             sudo pip install pipenv
+            pipenv shell
             pipenv install
 
       - run:

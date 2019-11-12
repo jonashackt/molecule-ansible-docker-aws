@@ -1169,8 +1169,11 @@ jobs:
           command: |
             sudo apt-get install python-dev
             sudo pip install pipenv
+            pipenv shell
             pipenv install
 ```
+
+Don't forget to activate the `pipenv` shell with a `pipenv shell` -> the docs don't mention that one clearly enough (because otherwise the commands like `molecule` etc wont be able to find, [see this build](https://circleci.com/gh/jonashackt/molecule-ansible-docker-vagrant/81)!
 
 This gets us (maybe) into the following error:
 
