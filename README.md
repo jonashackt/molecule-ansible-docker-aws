@@ -15,6 +15,11 @@ There are already two blog posts complementing this repository:
 * [Continuous Infrastructure with Ansible, Molecule & TravisCI](https://blog.codecentric.de/en/2018/12/test-driven-infrastructure-ansible-molecule/)
 * [Continuous cloud infrastructure with Ansible, Molecule & TravisCI on AWS](https://blog.codecentric.de/en/2019/01/ansible-molecule-travisci-aws/)
 
+...and some articles in the german iX Magazin:
+
+[![ix-2019-04](screenshots/ix-2019-04.png)](https://www.heise.de/select/ix/2019/4/)
+[![ix-2019-09](screenshots/ix-2019-09.png)](https://www.heise.de/select/ix/2019/9/)
+
 ## Table of Contents  
 * [TDD for Infrastructure code with Molecule!](#tdd-for-infrastructure-code-with-molecule)
 * [Prerequisites](#prerequisites)
