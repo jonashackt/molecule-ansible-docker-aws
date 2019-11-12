@@ -9,11 +9,12 @@ services:
 - docker
 
 install:
-- pip install ansible molecule docker
+# Install pipenv dependency manager
+- pip install pipenv
+# Install required (and locked) dependecies from Pipfile.lock. pipenv is smart enough to recognise the existing
+# virtualenv without a prior pipenv shell command (see https://medium.com/@dirk.avery/quirks-of-pipenv-on-travis-ci-and-appveyor-10d6adb6c55b)
+- pipenv install
 
-# install AWS related packages
-- pip install boto boto3
-- pip install --upgrade awscli
 # configure AWS CLI
 - aws configure set aws_access_key_id $AWS_ACCESS_KEY
 - aws configure set aws_secret_access_key $AWS_SECRET_KEY

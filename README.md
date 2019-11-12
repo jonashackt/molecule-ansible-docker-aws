@@ -983,6 +983,36 @@ And we need to add the `BOTO_CONFIG` environment variable to the same line as th
 
 Now head over to Travis and have a look into the log. It should look green and somehow like this: https://travis-ci.org/jonashackt/molecule-ansible-docker-vagrant/builds/477365844
 
+### Use pipenv with TravisCI
+
+As described in [Replace direct usage of virtualenv and pip with pipenv](https://github.com/jonashackt/pulumi-python-aws-ansible#replace-direct-usage-of-virtualenv-and-pip-with-pipenv), we use the great Python dependency management tool like [pipenv](https://github.com/pypa/pipenv) instead of no or non-pinned (`requirements.txt`) dependencies. So we should also use it with TravisCI!
+
+And as TravisCI has the needed `virtualenv` already installed per default in it's `python` machines, we only need to do (and replace the `pip install XYZ` commands):
+
+```yaml
+  # Install pipenv dependency manager
+  - pip install pipenv
+  # Install required (and locked) dependecies from Pipfile.lock. pipenv is smart enough to recognise the existing 
+  # virtualenv without a prior pipenv shell command (see https://medium.com/@dirk.avery/quirks-of-pipenv-on-travis-ci-and-appveyor-10d6adb6c55b)
+  - pipenv install
+```
+
+
+### Use pipenv with TravisCI
+
+As described in [Replace direct usage of virtualenv and pip with pipenv](https://github.com/jonashackt/pulumi-python-aws-ansible#replace-direct-usage-of-virtualenv-and-pip-with-pipenv), we use the great Python dependency management tool like [pipenv](https://github.com/pypa/pipenv) instead of no or non-pinned (`requirements.txt`) dependencies. So we should also use it with TravisCI!
+
+And as TravisCI has the needed `virtualenv` already installed per default in it's `python` machines, we only need to do (and replace the `pip install XYZ` commands):
+
+```yaml
+  # Install pipenv dependency manager
+  - pip install pipenv
+  # Install required (and locked) dependecies from Pipfile.lock. pipenv is smart enough to recognise the existing 
+  # virtualenv without a prior pipenv shell command (see https://medium.com/@dirk.avery/quirks-of-pipenv-on-travis-ci-and-appveyor-10d6adb6c55b)
+  - pipenv install
+```
+
+
 
 ## Use CircleCI to execute Molecule with EC2 infrastructure
 
