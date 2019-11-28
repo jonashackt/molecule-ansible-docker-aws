@@ -9,5 +9,8 @@
   },
   "pipenv": {
     "enabled": true
+  },
+  "circleci": {
+    "enabled": false
   }
 }
