@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "ca329432b0ba304c93fe7815ca9d3191957596717221e909a1ab46cae7f30d01"
+            "sha256": "71124e4a2a9f97ebdbeb69260ed50bf818dfdc563449df73ab4b85cd8fedc112"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -18,17 +18,17 @@
     "default": {
         "ansible": {
             "hashes": [
-                "sha256:d87cb25df02284d59226ff1d935d7075a175f31d0db83564c2f1ca28bbbd4cb4"
+                "sha256:2f83f8ccc50640aa41a24f6e7757ac06b0ee6189fdcaacab68851771d3b42f3a"
             ],
             "index": "pypi",
-            "version": "==2.9.1"
+            "version": "==2.9.2"
         },
         "ansible-lint": {
             "hashes": [
-                "sha256:9430ea6e654ba4bf5b9c6921efc040f46cda9c4fd2896a99ff71d21037bcb123",
-                "sha256:c1b442b01091eca13ef11d98c3376e9489ba5b69a8467828ca86044f384bc0a1"
+                "sha256:b9fc9a6564f5d60a4284497f966f38ef78f0e2505edbe2bd1225f1ade31c2d8a",
+                "sha256:eb925d8682d70563ccb80e2aca7b3edf84fb0b768cea3edc6846aac7abdc414a"
             ],
-            "version": "==4.1.0"
+            "version": "==4.2.0"
         },
         "anyconfig": {
             "hashes": [
@@ -290,10 +290,10 @@
         },
         "identify": {
             "hashes": [
-                "sha256:4f1fe9a59df4e80fcb0213086fcf502bc1765a01ea4fe8be48da3b65afd2a017",
-                "sha256:d8919589bd2a5f99c66302fec0ef9027b12ae150b0b0213999ad3f695fc7296e"
+                "sha256:7782115794ec28b011702815d9f5e532244560cd2bf0789c4f09381d43befd90",
+                "sha256:9e7521e9abeaede4d2d1092a106e418c65ddf6b3182b43930bcb3c8cfb974488"
             ],
-            "version": "==1.4.7"
+            "version": "==1.4.8"
         },
         "idna": {
             "hashes": [
@@ -304,11 +304,11 @@
         },
         "importlib-metadata": {
             "hashes": [
-                "sha256:b044f07694ef14a6683b097ba56bd081dbc7cdc7c7fe46011e499dfecc082f21",
-                "sha256:e6ac600a142cf2db707b1998382cc7fc3b02befb7273876e01b8ad10b9652742"
+                "sha256:1a299d126ea54757010a3b0f796400142eb19556141c880992fedf83687640d4",
+                "sha256:1cfe62b59c518d49dbf4ba81807b9e2bad025a5d14c31f201b0fe6404ccaf96e"
             ],
             "markers": "python_version < '3.8'",
-            "version": "==1.1.0"
+            "version": "==1.1.1"
         },
         "jinja2": {
             "hashes": [
@@ -613,6 +613,7 @@
                 "sha256:0db639b1b2742dae666c6fc009b8d1931ef15c9276ef31c0673cc6dcf766cf40",
                 "sha256:412a6f5cfdc0525dee6a27c08f5415c7fd832a7afcb7a0ed7319628aed23d408"
             ],
+            "markers": "python_version >= '3.7'",
             "version": "==0.16.5"
         },
         "ruamel.yaml.clib": {
