@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "063080b5eb08c39b2073c2d0e9d42ee987e2290a7865dcb03ed0a1ca7bda040a"
+            "sha256": "ed950c87645f14be5241425ac1ea83bd615581867fddbb88ab6a99aad5ad4646"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -59,11 +59,11 @@
         },
         "awscli": {
             "hashes": [
-                "sha256:7ab73a6d01855ab38f039d2473a7e40b7654fc1ce31a9e68f378d855d77412ef",
-                "sha256:fb2260653e4397e7f5aee3c9ea2d9582ef4fdccdf75c17e1f85e44dbf6d21bf2"
+                "sha256:83723d751a63701d88796c4a33925278d42cddabe264a009ad7d3fb1ecd6e865",
+                "sha256:e904b405bafdd0c88cb315f402e6d44076d315d12d0097fd4f6371806e309240"
             ],
             "index": "pypi",
-            "version": "==1.16.298"
+            "version": "==1.16.299"
         },
         "bcrypt": {
             "hashes": [
@@ -113,10 +113,10 @@
         },
         "botocore": {
             "hashes": [
-                "sha256:55c82a4eda277ae145691783c064b0d6600e60e80bd379ca07eaef1cfe34a148",
-                "sha256:7350d9bcaec0ec3127f808bfb75fa0114b5b6b09a485b0dba66d739c3654521b"
+                "sha256:592948fa0d04577610c06185f50e213ca666472c32ec22eccf21d9b505341722",
+                "sha256:64db64cbb461a5970dcfed63a6d82729fce7850739f2322ff0fccf88e9259ecf"
             ],
-            "version": "==1.13.34"
+            "version": "==1.13.35"
         },
         "cerberus": {
             "hashes": [
@@ -388,10 +388,10 @@
         },
         "more-itertools": {
             "hashes": [
-                "sha256:57cc732766f26ddc424a4ed76d837677777a03f557c7ebeecb7e2be2888ce702",
-                "sha256:a293dbdad9d4d22e1e70832b8dcab72aac20805f0fa0575aec27cab8841e09ff"
+                "sha256:b84b238cce0d9adad5ed87e745778d20a3f8487d0f0cb8b8a586816c7496458d",
+                "sha256:c833ef592a0324bcc6a60e48440da07645063c453880c9477ceb22490aec1564"
             ],
-            "version": "==8.0.1"
+            "version": "==8.0.2"
         },
         "nodeenv": {
             "hashes": [
