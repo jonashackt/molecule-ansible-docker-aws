@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "0fd5efa451f761eecc1fd88c06cf70094af28df83b0abdd2d3b924aee37e25f3"
+            "sha256": "5f597caab4b55fc6fda15c04051ec063456ef994986bcc28b65cfa7b8c2d570a"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -59,11 +59,11 @@
         },
         "awscli": {
             "hashes": [
-                "sha256:23f63c65f967982a54441a2922a631244597dc75ebd99e4053e51ffa81a6fee2",
-                "sha256:3632fb1db2538128509a7b5e89f2a2c4ea3426bec139944247bddc4d79bf7603"
+                "sha256:05287fda0a9c601521fe5a3deb4b405a677198215de6076e4f3004af3a20c8cd",
+                "sha256:c579cc90da0693a21faf1fc817534d2d1fa591340125e9f61ea844fc1a7fa017"
             ],
             "index": "pypi",
-            "version": "==1.16.308"
+            "version": "==1.16.309"
         },
         "bcrypt": {
             "hashes": [
@@ -113,10 +113,10 @@
         },
         "botocore": {
             "hashes": [
-                "sha256:49791fada1e15bb2aafb36a16c2c2d568279c9274e0ad6a9ac7fbc0f6cb17f57",
-                "sha256:a4409008c32a3305b9c469c5cc92edb5b79d6fcbf6f56fe126886b545f0a4f3f"
+                "sha256:88ee646f7a0fe6a418681c6f119a590fae23d8439c48c2aec6878f7f89430b1f",
+                "sha256:f48ba1ef04b25323c1d27fa6399795baa0ca9d316911b87be4d33acda5cef07c"
             ],
-            "version": "==1.13.44"
+            "version": "==1.13.45"
         },
         "cerberus": {
             "hashes": [
@@ -206,10 +206,10 @@
         },
         "cookiecutter": {
             "hashes": [
-                "sha256:1316a52e1c1f08db0c9efbf7d876dbc01463a74b155a0d83e722be88beda9a3e",
-                "sha256:ed8f54a8fc79b6864020d773ce11539b5f08e4617f353de1f22d23226f6a0d36"
+                "sha256:479997e1c26c51bbbaf04097ef7d82b1d91cfb03f570cb5fb5ca265c88db04ae",
+                "sha256:910e6c423da42c45c2614d6676485d4872c4ed1bd9531cfff59280977f98fbf5"
             ],
-            "version": "==1.6.0"
+            "version": "==1.7.0"
         },
         "cryptography": {
             "hashes": [
