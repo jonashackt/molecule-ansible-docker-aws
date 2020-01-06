@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "45c4eca6d75ccec152398ede97b886f66e3f4a816b2f3d59630350c392066a74"
+            "sha256": "fd2825b33da4bcc0a3d5cbb9cfa5189fd14bc7312ddcba5ac2c588ffcfc806cf"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -59,11 +59,11 @@
         },
         "awscli": {
             "hashes": [
-                "sha256:cce3744e16966daf9170537fd6adcb0b69a3cfdc8a784d4c7c2e0d7c3c9929fe",
-                "sha256:dedc2fa80fe9ff637a9f6d711fef461227e1e8d5e360f641f3c1a88c4ed1e121"
+                "sha256:72162b078e785d5468fff79891aefa32bbf821d7f086abe6bd36f066ec6b2d0f",
+                "sha256:d3174a342ca00eeb2e20e632a79f115c0ffa1787fc2d06a5c050204e76402eca"
             ],
             "index": "pypi",
-            "version": "==1.16.310"
+            "version": "==1.16.311"
         },
         "bcrypt": {
             "hashes": [
@@ -113,10 +113,10 @@
         },
         "botocore": {
             "hashes": [
-                "sha256:1f42f1cc304ec5793c5031a81dc30dfbdf21dcf2d53c11d6c2644236835c1bb5",
-                "sha256:79f22d99bf990ad6be760602713d537f0658d572bc04bc007c60b2c8c55d4286"
+                "sha256:a5187cc5ec9558890ce5522a3c7e73c812cbae31c6d905d13a868e861a771272",
+                "sha256:b7d1001208a0c514ced7b126606dae360ca5e0141cc9496d37f83a2c89ebd915"
             ],
-            "version": "==1.13.46"
+            "version": "==1.13.47"
         },
         "cerberus": {
             "hashes": [
@@ -401,10 +401,10 @@
         },
         "packaging": {
             "hashes": [
-                "sha256:28b924174df7a2fa32c1953825ff29c61e2f5e082343165438812f00d3a7fc47",
-                "sha256:d9551545c6d761f3def1677baf08ab2a3ca17c56879e70fecba2fc4dde4ed108"
+                "sha256:aec3fdbb8bc9e4bb65f0634b9f551ced63983a529d6a8931817d52fdd0816ddb",
+                "sha256:fe1d8331dfa7cc0a883b49d75fc76380b2ab2734b220fbb87d774e4fd4b851f8"
             ],
-            "version": "==19.2"
+            "version": "==20.0"
         },
         "paramiko": {
             "hashes": [
