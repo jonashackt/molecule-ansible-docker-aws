@@ -39,11 +39,11 @@ jobs:
           name: Run Molecule Testing on AWS EC2
           command: |
             cd docker
-            pipenv run molecule destroy --scenario-name aws-ec2-ubuntu
-            pipenv run molecule create --scenario-name aws-ec2-ubuntu
-            pipenv run molecule converge --scenario-name aws-ec2-ubuntu
-            pipenv run molecule verify --scenario-name aws-ec2-ubuntu
-            pipenv run molecule destroy --scenario-name aws-ec2-ubuntu
+            pipenv run molecule --debug destroy --scenario-name aws-ec2-ubuntu
+            pipenv run molecule --debug create --scenario-name aws-ec2-ubuntu
+            pipenv run molecule --debug converge --scenario-name aws-ec2-ubuntu
+            pipenv run molecule --debug verify --scenario-name aws-ec2-ubuntu
+            pipenv run molecule --debug destroy --scenario-name aws-ec2-ubuntu
 
 # To use a scheduled execution in CircleCI, we need to introduce a workflow
 # see https://circleci.com/docs/2.0/triggers/#scheduled-builds
