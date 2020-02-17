@@ -21,11 +21,11 @@ jobs:
             sudo pip install pipenv
             pipenv install
 
-      - run:
-          name: Run Molecule Testing CircleCI-locally with Docker
-          command: |
-            cd docker
-            pipenv run molecule test
+#      - run:
+#          name: Run Molecule Testing CircleCI-locally with Docker
+#          command: |
+#            cd docker
+#            pipenv run molecule test
 
       - run:
           name: configure AWS CLI
