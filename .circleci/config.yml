@@ -21,11 +21,11 @@ jobs:
             sudo pip install pipenv
             pipenv install
 
-#      - run:
-#          name: Run Molecule Testing CircleCI-locally with Docker
-#          command: |
-#            cd docker
-#            pipenv run molecule test
+      - run:
+          name: Run Molecule Testing CircleCI-locally with Docker
+          command: |
+            cd docker
+            pipenv run molecule test
 
       - run:
           name: configure AWS CLI
@@ -35,15 +35,15 @@ jobs:
             pipenv run aws configure set default.region ${EC2_REGION}
             pipenv run aws configure list
 
-      - run:
-          name: Run Molecule Testing on AWS EC2
-          command: |
-            cd docker
-            pipenv run molecule --debug destroy --scenario-name aws-ec2-ubuntu
-            pipenv run molecule --debug create --scenario-name aws-ec2-ubuntu
-            pipenv run molecule --debug converge --scenario-name aws-ec2-ubuntu
-            pipenv run molecule --debug verify --scenario-name aws-ec2-ubuntu
-            pipenv run molecule --debug destroy --scenario-name aws-ec2-ubuntu
+#      - run:
+#          name: Run Molecule Testing on AWS EC2
+#          command: |
+#            cd docker
+#            pipenv run molecule --debug destroy --scenario-name aws-ec2-ubuntu
+#            pipenv run molecule --debug create --scenario-name aws-ec2-ubuntu
+#            pipenv run molecule --debug converge --scenario-name aws-ec2-ubuntu
+#            pipenv run molecule --debug verify --scenario-name aws-ec2-ubuntu
+#            pipenv run molecule --debug destroy --scenario-name aws-ec2-ubuntu
 
 # To use a scheduled execution in CircleCI, we need to introduce a workflow
 # see https://circleci.com/docs/2.0/triggers/#scheduled-builds
