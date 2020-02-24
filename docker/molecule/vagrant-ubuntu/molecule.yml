@@ -15,7 +15,7 @@ platforms:
 provisioner:
   name: ansible
   playbooks:
-    converge: ../playbook.yml
+    converge: ../converge.yml
 
 verifier:
   name: testinfra

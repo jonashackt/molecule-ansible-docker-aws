@@ -10,7 +10,7 @@ provisioner:
   name: ansible
   playbooks:
     prepare: prepare-docker-in-docker.yml
-    converge: ../playbook.yml
+    converge: ../converge.yml
 
 verifier:
   name: testinfra
