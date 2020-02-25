@@ -50,7 +50,7 @@ script:
   - cd docker
 
   # Molecule Testing Travis-locally with Vagrant
-  - sudo molecule --debug create --scenario-name vagrant-ubuntu
+  - sudo -H molecule --debug create --scenario-name vagrant-ubuntu
   #- molecule --debug converge --scenario-name vagrant-ubuntu
   #- molecule --debug verify --scenario-name vagrant-ubuntu
   #- molecule --debug destroy --scenario-name vagrant-ubuntu
