@@ -1,6 +1,9 @@
 ---
 sudo: false
 language: python
+# configure python version (see https://docs.travis-ci.com/user/languages/python/#specifying-python-versions)
+python:
+  - "3.7"
 
 env:
   - EC2_REGION=eu-central-1 BOTO_CONFIG="/dev/null" VAGRANT_DEFAULT_PROVIDER=libvirt"
