@@ -51,7 +51,7 @@ script:
 
   # Molecule Testing Travis-locally with Vagrant
   - sudo -H pipenv run molecule --debug create --scenario-name vagrant-ubuntu
-  - cat /root/.cache/molecule/docker/vagrant-ubuntu/vagrant-vagrant-ubuntu.err'
+  - cat /root/.cache/molecule/docker/vagrant-ubuntu/vagrant-vagrant-ubuntu.err
   #- molecule --debug converge --scenario-name vagrant-ubuntu
   #- molecule --debug verify --scenario-name vagrant-ubuntu
   #- molecule --debug destroy --scenario-name vagrant-ubuntu
