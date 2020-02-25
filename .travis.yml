@@ -37,11 +37,11 @@ install:
 
   ### AWS configuration
   # configure AWS CLI
-  - sudo aws configure set aws_access_key_id $AWS_ACCESS_KEY
-  - sudo aws configure set aws_secret_access_key $AWS_SECRET_KEY
-  - sudo aws configure set default.region $DEPLOYMENT_REGION
+  - aws configure set aws_access_key_id $AWS_ACCESS_KEY
+  - aws configure set aws_secret_access_key $AWS_SECRET_KEY
+  - aws configure set default.region $DEPLOYMENT_REGION
   # show AWS CLI config
-  - sudo aws configure list
+  - aws configure list
 
 script:
   - cd docker
