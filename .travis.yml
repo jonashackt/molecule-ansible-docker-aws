@@ -47,10 +47,10 @@ script:
   - cd docker
 
   # Molecule Testing Travis-locally with Vagrant
-  - molecule create --scenario-name vagrant-ubuntu
-  - molecule converge --scenario-name vagrant-ubuntu
-  - molecule verify --scenario-name vagrant-ubuntu
-  - molecule destroy --scenario-name vagrant-ubuntu
+  - molecule --debug create --scenario-name vagrant-ubuntu
+  - molecule --debug converge --scenario-name vagrant-ubuntu
+  - molecule --debug verify --scenario-name vagrant-ubuntu
+  - molecule --debug destroy --scenario-name vagrant-ubuntu
 
   # Molecule Testing Travis-locally with Docker
   - molecule test
