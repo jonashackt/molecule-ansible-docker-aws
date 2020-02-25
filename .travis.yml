@@ -50,10 +50,10 @@ script:
   - cd docker
 
   # Molecule Testing Travis-locally with Vagrant
-  - sudo -E molecule --debug create --scenario-name vagrant-ubuntu
+  - sudo -H pipenv run molecule --debug create --scenario-name vagrant-ubuntu
   #- molecule --debug converge --scenario-name vagrant-ubuntu
   #- molecule --debug verify --scenario-name vagrant-ubuntu
   #- molecule --debug destroy --scenario-name vagrant-ubuntu
 
   # Molecule Testing Travis-locally with Docker
-  - sudo -E molecule test
+  - sudo -H pipenv run molecule test
