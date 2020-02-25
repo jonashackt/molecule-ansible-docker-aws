@@ -30,18 +30,18 @@ install:
 
   ### This projects pip deps
   # Install pipenv dependency manager
-  - pip install pipenv
+  - sudo pip install pipenv
   # Install required (and locked) dependecies from Pipfile.lock. pipenv is smart enough to recognise the existing
   # virtualenv without a prior pipenv shell command (see https://medium.com/@dirk.avery/quirks-of-pipenv-on-travis-ci-and-appveyor-10d6adb6c55b)
-  - pipenv install
+  - sudo pipenv install
 
   ### AWS configuration
   # configure AWS CLI
-  - aws configure set aws_access_key_id $AWS_ACCESS_KEY
-  - aws configure set aws_secret_access_key $AWS_SECRET_KEY
-  - aws configure set default.region $DEPLOYMENT_REGION
+  - sudo aws configure set aws_access_key_id $AWS_ACCESS_KEY
+  - sudo aws configure set aws_secret_access_key $AWS_SECRET_KEY
+  - sudo aws configure set default.region $DEPLOYMENT_REGION
   # show AWS CLI config
-  - aws configure list
+  - sudo aws configure list
 
 script:
   - cd docker
@@ -54,4 +54,4 @@ script:
   #- molecule --debug destroy --scenario-name vagrant-ubuntu
 
   # Molecule Testing Travis-locally with Docker
-  - molecule test
+  - sudo molecule test
