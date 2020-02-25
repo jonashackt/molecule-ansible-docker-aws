@@ -1330,3 +1330,22 @@ env:
 ```
 
 We have to remind ourselves to not create a new line but concatenate the variable with the others, since Travis would create completely other environments/builds, which we don't really want.
+
+We also need to execute Vagrant with `sudo`, otherwise we'll run into the [known permission denied errors](https://github.com/jonashackt/vagrant-travisci-libvrt#prevent-errors-like-the-home-directory-you-specified-is-not-accessible).
+
+I also experienced `pipenv` not running inside my job, but instead given the following error message:
+
+```
+The directory '/home/travis/.cache/pipenv/http' or its parent directory is not owned by the current user and the cache has been disabled. Please check the permissions and owner of that directory. If executing pip with sudo, you may want sudo's -H flag.
+The directory '/home/travis/.cache/pipenv' or its parent directory is not owned by the current user and caching wheels has been disabled. check the permissions and owner of that directory. If executing pip with sudo, you may want sudo's -H flag.
+Ignoring ruamel.yaml: markers 'python_version >= "3.7"' don't match your environment
+``` 
+
+So we need to install `pipenv` via `pip` using the `sudo -H` option - the same applies to the `pipenv install` command:
+
+```yaml
+# Install pipenv dependency manager
+- sudo -H pip install pipenv
+# Install required (and locked) dependecies from Pipfile.lock
+- sudo -H pipenv install
+```
