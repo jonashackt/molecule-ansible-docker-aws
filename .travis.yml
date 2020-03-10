@@ -1,4 +1,5 @@
 ---
+dist: bionic
 sudo: false
 language: python
 # configure python version (see https://docs.travis-ci.com/user/languages/python/#specifying-python-versions)
