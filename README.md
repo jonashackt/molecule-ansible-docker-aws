@@ -1325,7 +1325,7 @@ sudo: false
 language: python
 
 env:
-- EC2_REGION=eu-central-1 BOTO_CONFIG="/dev/null VAGRANT_DEFAULT_PROVIDER=libvirt"
+- EC2_REGION=eu-central-1 BOTO_CONFIG="/dev/null" VAGRANT_DEFAULT_PROVIDER=libvirt
 
 ```
 

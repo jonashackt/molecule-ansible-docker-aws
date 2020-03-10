@@ -6,7 +6,7 @@ python:
   - "3.7"
 
 env:
-  - EC2_REGION=eu-central-1 BOTO_CONFIG="/dev/null" VAGRANT_DEFAULT_PROVIDER=libvirt"
+  - EC2_REGION=eu-central-1 BOTO_CONFIG="/dev/null" VAGRANT_DEFAULT_PROVIDER=libvirt
 
 services:
   - docker
@@ -47,6 +47,9 @@ install:
   - aws configure list
 
 script:
+  # Test Vagrant execution works
+  - sudo vagrant up --provider=libvirt
+  - sudo vagrant ssh -c "echo 'hello world!'"
   - cd docker
 
   # Molecule Testing Travis-locally with Vagrant
