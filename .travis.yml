@@ -1,13 +1,12 @@
 ---
 dist: bionic
-sudo: false
 language: python
 # configure python version (see https://docs.travis-ci.com/user/languages/python/#specifying-python-versions)
 python:
   - "3.7"
 
 env:
-  - EC2_REGION=eu-central-1 BOTO_CONFIG="/dev/null" VAGRANT_DEFAULT_PROVIDER=libvirt
+  - VAGRANT_DEFAULT_PROVIDER=libvirt
 
 services:
   - docker
@@ -38,14 +37,6 @@ install:
   - sudo -H pip install pipenv
   # Install required (and locked) dependecies from Pipfile.lock
   - sudo -H pipenv install
-
-  ### AWS configuration
-  # configure AWS CLI
-  - aws configure set aws_access_key_id $AWS_ACCESS_KEY
-  - aws configure set aws_secret_access_key $AWS_SECRET_KEY
-  - aws configure set default.region $DEPLOYMENT_REGION
-  # show AWS CLI config
-  - aws configure list
 
 script:
   # Test Vagrant execution works, even without --provider=libvirt - since we use VAGRANT_DEFAULT_PROVIDER=libvirt
