@@ -57,6 +57,8 @@ script:
   - sudo -H pipenv run molecule --debug create --scenario-name vagrant-libvirt-ubuntu
   - sudo cat /root/.cache/molecule/docker/vagrant-libvirt-ubuntu/vagrant-vagrant-libvirt-ubuntu.out
   - sudo cat /root/.cache/molecule/docker/vagrant-libvirt-ubuntu/vagrant-vagrant-libvirt-ubuntu.err
+  - sudo cat /root/.cache/molecule/docker/vagrant-libvirt-ubuntu/Vagrantfile
+  - sudo cat /root/.cache/molecule/docker/vagrant-libvirt-ubuntu/vagrant.yml
   - sudo -H pipenv run molecule --debug destroy --scenario-name vagrant-libvirt-ubuntu
 
   - sudo -H pipenv run molecule --debug create --scenario-name vagrant-ubuntu
