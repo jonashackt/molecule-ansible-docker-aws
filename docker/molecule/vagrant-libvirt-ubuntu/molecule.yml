@@ -1,19 +1,17 @@
 ---
 scenario:
-  name: vagrant-ubuntu
+  name: vagrant-libvirt-ubuntu
 
 driver:
   name: vagrant
   provider:
-    name: virtualbox
+    name: libvirt
 
 platforms:
-  - name: vagrant-ubuntu
+  - name: vagrant-libvirt-ubuntu
     box: generic/ubuntu1804
     memory: 512
     cpus: 1
-    #provider_raw_config_args:
-    #- "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected' ]"
 
 provisioner:
   name: ansible

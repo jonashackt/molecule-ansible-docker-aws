@@ -51,10 +51,17 @@ script:
 
   # Molecule Testing Travis-locally with Vagrant
   - sudo -H pipenv run molecule --debug create --scenario-name vagrant-ubuntu
+  - cat /root/.cache/molecule/docker/vagrant-ubuntu/vagrant-vagrant-ubuntu.out
   - cat /root/.cache/molecule/docker/vagrant-ubuntu/vagrant-vagrant-ubuntu.err
+  - sudo -H pipenv run molecule --debug destroy --scenario-name vagrant-ubuntu
+
+  - sudo -H pipenv run molecule --debug create --scenario-name vagrant-ubuntu
+  - cat /root/.cache/molecule/docker/vagrant-libvirt-ubuntu/vagrant-vagrant-libvirt-ubuntu.out
+  - cat /root/.cache/molecule/docker/vagrant-libvirt-ubuntu/vagrant-vagrant-libvirt-ubuntu.err
+  - sudo -H pipenv run molecule --debug destroy --scenario-name vagrant-ubuntu
   #- molecule --debug converge --scenario-name vagrant-ubuntu
   #- molecule --debug verify --scenario-name vagrant-ubuntu
   #- molecule --debug destroy --scenario-name vagrant-ubuntu
 
   # Molecule Testing Travis-locally with Docker
-  - sudo -H pipenv run molecule test
+  #- sudo -H pipenv run molecule test

@@ -1300,7 +1300,7 @@ script:
 
 The installation of Vagrant & libvirt/KVM is exactly the same as in the https://github.com/jonashackt/vagrant-travisci-libvrt
 
-But in the `script` section, there's a difference! We can simply tell Vagrant to use the provider `libvirt` with `vagrant up --provider=libvirt`, since we're using Molecule which itself controls Vagrant.
+But in the `script` section, there's a difference! We can't simply tell Vagrant to use the provider `libvirt` with `vagrant up --provider=libvirt`, since we're using Molecule which itself controls Vagrant.
 
 So we need another method to tell Vagrant to run with `libvirt`. There is the option of configuring Molecule directly in the [molecule.yml](docker/molecule/vagrant-ubuntu/molecule.yml) file with:
 
@@ -1348,4 +1348,58 @@ So we need to install `pipenv` via `pip` using the `sudo -H` option - the same a
 - sudo -H pip install pipenv
 # Install required (and locked) dependecies from Pipfile.lock
 - sudo -H pipenv install
+```
+
+### Introduce a separate Vagrant Molecule scenario for libvirt
+
+As we need to change the Vagrant Box.
+
+We need a separate Molecule scenario using libvirt as the Vagrant provider - see the [molecule.yml](docker/molecule/vagrant-libvirt-ubuntu/molecule.yml):
+
+```yaml
+---
+scenario:
+  name: vagrant-libvirt-ubuntu
+
+driver:
+  name: vagrant
+  provider:
+    name: libvirt
+
+platforms:
+  - name: vagrant-libvirt-ubuntu
+    box: generic/ubuntu1804
+    memory: 512
+    cpus: 1
+
+provisioner:
+  name: ansible
+  lint:
+    name: ansible-lint
+    enabled: false
+  playbooks:
+    converge: ../playbook.yml
+
+lint:
+  name: yamllint
+  enabled: false
+verifier:
+  name: testinfra
+  directory: ../tests/
+  env:
+    # get rid of the DeprecationWarning messages of third-party libs,
+    # see https://docs.pytest.org/en/latest/warnings.html#deprecationwarning-and-pendingdeprecationwarning
+    PYTHONWARNINGS: "ignore:.*U.*mode is deprecated:DeprecationWarning"
+  lint:
+    name: flake8
+  options:
+    # show which tests where executed in test output
+    v: 1
+
+```
+
+Let's fire it up with:
+
+```
+pipenv run molecule --debug create --scenario-name vagrant-libvirt-ubuntu 
 ```
