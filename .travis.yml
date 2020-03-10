@@ -48,8 +48,8 @@ install:
   - aws configure list
 
 script:
-  # Test Vagrant execution works
-  - sudo vagrant up --provider=libvirt
+  # Test Vagrant execution works, even without --provider=libvirt - since we use VAGRANT_DEFAULT_PROVIDER=libvirt
+  - sudo vagrant up
   - sudo vagrant ssh -c "echo 'hello world!'"
   - cd docker
 
