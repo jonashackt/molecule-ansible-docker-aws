@@ -31,6 +31,7 @@ install:
 
   # Install vagrant-libvirt Vagrant plugin
   - sudo vagrant plugin install vagrant-libvirt
+  - sudo vagrant plugin list
 
   ### This projects pip deps
   # Install pipenv dependency manager
