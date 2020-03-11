@@ -8,8 +8,8 @@ python:
 env:
   - VAGRANT_DEFAULT_PROVIDER=libvirt
 
-services:
-  - docker
+#services:
+ # - docker
 
 # Cache the big Vagrant boxes
 cache:
@@ -32,6 +32,8 @@ install:
   # Install vagrant-libvirt Vagrant plugin
   - sudo vagrant plugin install vagrant-libvirt
   - sudo vagrant plugin list
+  - sudo virsh list --all
+  - virsh list --all
 
   ### This projects pip deps
   # Install pipenv dependency manager
