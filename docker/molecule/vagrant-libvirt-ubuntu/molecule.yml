@@ -12,6 +12,11 @@ platforms:
     box: generic/ubuntu1804
     memory: 512
     cpus: 1
+    provider_raw_config_args:
+      - 'nic_model_type = "virtio"'
+      - 'disk_bus = "virtio"'
+      - 'volume_cache = "none"'
+      - 'storage :file, bus: "virtio", cache: "none"'
 
 provisioner:
   name: ansible

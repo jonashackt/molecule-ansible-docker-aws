@@ -1447,6 +1447,18 @@ Now we should be able to fire up our Molecule Vagrant test based on `libvirt`:
 pipenv run molecule --debug create --scenario-name vagrant-libvirt-ubuntu 
 ```
 
+Final problem: https://discourse.brew.sh/t/failed-to-connect-socket-to-var-run-libvirt-libvirt-sock-no-such-file-or-directory/1297
+
+As simple `vagrant up` with libirt doesn't work right now:
+
+```
+vagrant up --provider=libvirt
+Bringing machine 'ubuntu' up with 'libvirt' provider...
+Error while connecting to libvirt: Error making a connection to libvirt URI qemu:///system?no_verify=1&keyfile=/Users/jonashecht/.ssh/id_rsa&socket=/var/run/libvirt/libvirt-sock:
+Call to virConnectOpen failed: Socket-Erstellung zu '/var/run/libvirt/libvirt-sock' fehlgeschlagen: No such file or directory
+```
+
+
 
 # Links
 
