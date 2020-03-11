@@ -32,8 +32,8 @@ install:
   - sudo apt update && sudo apt install software-properties-common
   - sudo add-apt-repository ppa:deadsnakes/ppa -y && sudo apt update
   - sudo apt install python3.7
-  - sudo python3 ––version
-  - curl -skL https://bootstrap.pypa.io/get-pip.py | sudo -H python3
+  - sudo python3.7 ––version
+  - curl -skL https://bootstrap.pypa.io/get-pip.py | sudo -H python3.7
 
   # Install required (and locked) dependecies with pipenv
   - sudo -H pip3 install pipenv
