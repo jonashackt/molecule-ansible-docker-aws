@@ -32,7 +32,7 @@ install:
   - sudo vagrant plugin list
 
   # Install required (and locked) dependecies with pipenv
-  - sudo -H pip install pipenv
+  - sudo -H pip3 install pipenv
   - sudo -H pipenv install
 
 script:
