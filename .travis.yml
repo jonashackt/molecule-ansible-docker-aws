@@ -43,6 +43,7 @@ script:
   # Test Vagrant execution works, even without --provider=libvirt - since we use VAGRANT_DEFAULT_PROVIDER=libvirt
   - sudo vagrant up
   - sudo vagrant ssh -c "echo 'hello world!'"
+  - sudo vagrant suspend
   - cd docker
 
   # Molecule Testing Travis-locally with Vagrant
