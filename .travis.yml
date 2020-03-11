@@ -1,9 +1,6 @@
 ---
 dist: bionic
-language: python
-# configure python version (see https://docs.travis-ci.com/user/languages/python/#specifying-python-versions)
-python:
-  - "3.7"
+language: minimal
 
 env:
   - VAGRANT_DEFAULT_PROVIDER=libvirt
@@ -31,8 +28,12 @@ install:
   - sudo vagrant plugin install vagrant-libvirt
   - sudo vagrant plugin list
 
+  # Install Python 3 for usage together with sudo into our minimal Travis build image
+  - sudo apt-get -y purge python3-openssl && sudo apt-get -y autoremove
+  - sudo apt-get update && sudo apt-get install -y ca-certificates curl gcc iproute2 pwgen python3 python3-dev sudo
+  - curl -skL https://bootstrap.pypa.io/get-pip.py | sudo -H python3
+
   # Install required (and locked) dependecies with pipenv
-  - pip3 --version
   - sudo -H pip3 install pipenv
   - sudo -H pipenv install
 

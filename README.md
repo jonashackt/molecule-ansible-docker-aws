@@ -51,6 +51,7 @@ There are already two blog posts complementing this repository:
 * [Upgrade to Molecule v3](#upgrade-to-molecule-v3)
 * [Use Vagrant on TravisCI to execute Molecule](#use-vagrant-on-travisci-to-execute-molecule)
   * [Using VirtualBox locally furthermore - but switching to libvirt on TravisCI](#using-virtualbox-locally-furthermore---but-switching-to-libvirt-on-travisci)
+  * [Install Python 3 for sudo access & pipenv based on Python 3](#install-python-3-for-sudo-access--pipenv-based-on-python-3)
   * [Run our Molecule Vagrant Scenario](#run-our-molecule-vagrant-scenario)
 
 ## TDD for Infrastructure code with Molecule!
@@ -1292,6 +1293,96 @@ The installation of Vagrant & libvirt/KVM is exactly the same as in the https://
 
 We also need to execute Vagrant with `sudo`, otherwise we'll run into the [known permission denied errors](https://github.com/jonashackt/vagrant-travisci-libvrt#prevent-errors-like-the-home-directory-you-specified-is-not-accessible).
 
+
+## Install Python 3 for sudo access & pipenv based on Python 3
+
+If you try to go the fast path and use a Travis Python build image (as described in the docs: https://docs.travis-ci.com/user/languages/python/), you'll run into a dead end!
+
+Because if we use the Python image (even in 3.x!)
+
+```yaml
+dist: bionic
+language: python
+# configure python version (see https://docs.travis-ci.com/user/languages/python/#specifying-python-versions)
+python:
+  - "3.7"
+``` 
+
+we will not get a Python 3 based `pip` to install our `pipenv` on, if we use `sudo pip install`! This is [because Python 3 is only installed as a separate virtualenv for each version](https://docs.travis-ci.com/user/languages/python/#travis-ci-uses-isolated-virtualenvs).
+
+But as our Molecule project's dependencies need Python 3.4 as a minimum, we'll [run into errors like](https://travis-ci.org/github/jonashackt/molecule-ansible-docker-aws/builds/661102534):
+
+```
+$ sudo -H pipenv install
+  Pipfile.lock (fa3b18) out of date, updating to (1357e7)...
+  Locking [dev-packages] dependencies...
+  Locking [packages] dependencies...
+FAIL
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/pipenv/resolver.py", line 126, in <module>
+    main()
+  File "/usr/local/lib/python2.7/dist-packages/pipenv/resolver.py", line 119, in main
+    parsed.requirements_dir, parsed.packages)
+  File "/usr/local/lib/python2.7/dist-packages/pipenv/resolver.py", line 85, in _main
+    requirements_dir=requirements_dir,
+  File "/usr/local/lib/python2.7/dist-packages/pipenv/resolver.py", line 69, in resolve
+    req_dir=requirements_dir
+  File "/usr/local/lib/python2.7/dist-packages/pipenv/utils.py", line 726, in resolve_deps
+    req_dir=req_dir,
+  File "/usr/local/lib/python2.7/dist-packages/pipenv/utils.py", line 480, in actually_resolve_deps
+    resolved_tree = resolver.resolve()
+  File "/usr/local/lib/python2.7/dist-packages/pipenv/utils.py", line 385, in resolve
+    results = self.resolver.resolve(max_rounds=environments.PIPENV_MAX_ROUNDS)
+  File "/usr/local/lib/python2.7/dist-packages/pipenv/patched/piptools/resolver.py", line 102, in resolve
+    has_changed, best_matches = self._resolve_one_round()
+  File "/usr/local/lib/python2.7/dist-packages/pipenv/patched/piptools/resolver.py", line 206, in _resolve_one_round
+    for dep in self._iter_dependencies(best_match):
+  File "/usr/local/lib/python2.7/dist-packages/pipenv/patched/piptools/resolver.py", line 301, in _iter_dependencies
+    dependencies = self.repository.get_dependencies(ireq)
+  File "/usr/local/lib/python2.7/dist-packages/pipenv/patched/piptools/repositories/pypi.py", line 234, in get_dependencies
+    legacy_results = self.get_legacy_dependencies(ireq)
+  File "/usr/local/lib/python2.7/dist-packages/pipenv/patched/piptools/repositories/pypi.py", line 426, in get_legacy_dependencies
+    results, ireq = self.resolve_reqs(download_dir, ireq, wheel_cache)
+  File "/usr/local/lib/python2.7/dist-packages/pipenv/patched/piptools/repositories/pypi.py", line 297, in resolve_reqs
+    results = resolver._resolve_one(reqset, ireq)
+  File "/usr/local/lib/python2.7/dist-packages/pipenv/patched/notpip/_internal/resolve.py", line 274, in _resolve_one
+    self.requires_python = check_dist_requires_python(dist, absorb=False)
+  File "/usr/local/lib/python2.7/dist-packages/pipenv/patched/notpip/_internal/utils/packaging.py", line 62, in check_dist_requires_python
+    '.'.join(map(str, sys.version_info[:3])),)
+pipenv.patched.notpip._internal.exceptions.UnsupportedPythonVersion: testinfra requires Python '>=3.4' but the running Python is 2.7.17
+```
+
+Also trying to use Python 3 explicitely with the command `sudo pip3 install` will result in error (whereas `pip3 install` without the `sudo` works perfectly fine):
+
+```
+$ sudo pip3 install pipenv
+sudo: pip3: command not found
+```
+
+So we need to choose a different TravisCI build image for our needs here! Let's simply use [the minimal based image](https://docs.travis-ci.com/user/languages/minimal-and-generic/), which should also run faster.
+
+```yaml
+dist: bionic
+language: minimal
+``` 
+
+Now of course we don't have Python or pip available - so we need to install them ourselves inside the [.travis.yml](.travis.yml) `install:` section:
+
+```
+  # Install Python 3 for usage together with sudo into our minimal Travis build image
+  - sudo apt-get -y purge python3-openssl && sudo apt-get -y autoremove
+  - sudo apt-get update && sudo apt-get install -y ca-certificates curl gcc iproute2 pwgen python3 python3-dev sudo
+  - curl -skL https://bootstrap.pypa.io/get-pip.py | sudo -H python3
+```
+
+With this we should be able to use Python 3.x together with `sudo pip`, which we directly use to install `pipenv`:
+
+```yaml
+  # Install required (and locked) dependecies with pipenv
+  - sudo -H pip install pipenv
+  - sudo -H pipenv install
+```
+
 I also experienced `pipenv` not running inside my job, but instead given the following error message:
 
 ```
@@ -1300,13 +1391,8 @@ The directory '/home/travis/.cache/pipenv' or its parent directory is not owned 
 Ignoring ruamel.yaml: markers 'python_version >= "3.7"' don't match your environment
 ``` 
 
-So we need to install `pipenv` via `pip` using the `sudo -H` option - the same applies to the `pipenv install` command:
+So we need to install `pipenv` via `pip` using the `sudo -H` option - the same applies to the `pipenv install` command.
 
-```yaml
-  # Install required (and locked) dependecies with pipenv
-  - sudo -H pip install pipenv
-  - sudo -H pipenv install
-```
 
 
 ### Using VirtualBox locally furthermore - but switching to libvirt on TravisCI
