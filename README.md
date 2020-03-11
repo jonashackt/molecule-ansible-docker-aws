@@ -1368,11 +1368,12 @@ language: minimal
 
 Now of course we don't have Python or pip available - so we need to install them ourselves inside the [.travis.yml](.travis.yml) `install:` section:
 
-```
+```yaml
   # Install Python 3 for usage together with sudo into our minimal Travis build image
-  - sudo apt-get -y purge python3-openssl && sudo apt-get -y autoremove
-  - sudo apt-get update && sudo apt-get install -y ca-certificates curl gcc iproute2 pwgen python3 python3-dev sudo
-  - curl -skL https://bootstrap.pypa.io/get-pip.py | sudo -H python3
+  - sudo apt update && sudo apt install software-properties-common
+  - sudo add-apt-repository ppa:deadsnakes/ppa -y && sudo apt update
+  - sudo apt install python3.7
+  - curl -skL https://bootstrap.pypa.io/get-pip.py | sudo -H python3.7
 ```
 
 With this we should be able to use Python 3.x together with `sudo pip`, which we directly use to install `pipenv`:
