@@ -5,6 +5,7 @@
 [![versionansible](https://img.shields.io/github/pipenv/locked/dependency-version/jonashackt/molecule-ansible-docker-aws/ansible?color=brightgreen)](https://docs.ansible.com/ansible/latest/index.html)
 [![versionmolecule](https://img.shields.io/github/pipenv/locked/dependency-version/jonashackt/molecule-ansible-docker-aws/molecule?color=brightgreen)](https://molecule.readthedocs.io/en/latest/)
 [![versiontestinfra](https://img.shields.io/github/pipenv/locked/dependency-version/jonashackt/molecule-ansible-docker-aws/testinfra?color=brightgreen)](https://testinfra.readthedocs.io/en/latest/)
+[![versionmolecule-vagrant](https://img.shields.io/github/pipenv/locked/dependency-version/jonashackt/molecule-ansible-docker-aws/molecule-vagrant?color=brightgreen)](https://github.com/ansible-community/molecule-vagrant)
 [![versionawscli](https://img.shields.io/github/pipenv/locked/dependency-version/jonashackt/molecule-ansible-docker-aws/awscli?color=brightgreen)](https://aws.amazon.com/cli/)
 
 Example project showing how to test Ansible roles with Molecule using Testinfra and a multiscenario approach with Vagrant, Docker & AWS EC2 as the infrastructure under test. 
@@ -47,7 +48,10 @@ There are already two blog posts complementing this repository:
 * [Use CircleCI to execute Molecule with EC2 infrastructure](#use-circleci-to-execute-molecule-with-ec2-infrastructure)
   * [Use pipenv with CircleCI](#use-pipenv-with-circleci)
   * [Schedule regular CircleCI builds with workflow triggers & cron](#schedule-regular-circleci-builds-with-workflow-triggers--cron)
+* [Upgrade to Molecule v3](#upgrade-to-molecule-v3)
 * [Use Vagrant on TravisCI to execute Molecule](#use-vagrant-on-travisci-to-execute-molecule)
+  * [Using VirtualBox locally furthermore - but switching to libvirt on TravisCI](#using-virtualbox-locally-furthermore---but-switching-to-libvirt-on-travisci)
+  * [Run our Molecule Vagrant Scenario](#run-our-molecule-vagrant-scenario)
 
 ## TDD for Infrastructure code with Molecule!
 
@@ -1232,6 +1236,23 @@ Now we should see our builds triggered by this cron regularly:
 
 Just mind the `UTC+2` timezone - for me, configuring `17:55` actually means, that my job will be scheduled to run at `19:55` - so don't think your config is wrong, maybe you're just in another timezone :)
 
+
+## Upgrade to Molecule v3
+
+With Molecule 3.x our project and especially the `molecule.yml` needs some refinement. [Here's an good overview](https://github.com/ansible-community/molecule/issues/2560).
+
+Especially the `lint` sections and the `scenario-name` has to go - the latter is derived from the directory name and is thus not doubled anymore. The linting is now configured separately ([see this commit](https://github.com/jonashackt/molecule-ansible-docker-aws/commit/74b0ad7ac011e27bacfcf2e3d5d8ada257d393cb)). 
+
+Additionally now only `Docker`, `Podman` and `Delegated` are supposed to be core-providers. All other providers are now regarded as community-supported providers. For us as Molecule users this means, we need to install separate dependencies - since these providers now also have their own GitHub repo (see https://github.com/ansible-community/molecule-vagrant for example).
+
+To use Vagrant, we need to add a new dependency to our [Pipfile](Pipfile):
+
+```
+molecule-vagrant = "==0.2"
+testinfra = "==4.1.0"
+```
+
+As we Testinfra is now also not longer installed by default, we should also add it explicitely. 
 
 
 ## Use Vagrant on TravisCI to execute Molecule
