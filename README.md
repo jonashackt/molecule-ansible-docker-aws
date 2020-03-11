@@ -5,6 +5,7 @@
 [![versionansible](https://img.shields.io/github/pipenv/locked/dependency-version/jonashackt/molecule-ansible-docker-aws/ansible?color=brightgreen)](https://docs.ansible.com/ansible/latest/index.html)
 [![versionmolecule](https://img.shields.io/github/pipenv/locked/dependency-version/jonashackt/molecule-ansible-docker-aws/molecule?color=brightgreen)](https://molecule.readthedocs.io/en/latest/)
 [![versiontestinfra](https://img.shields.io/github/pipenv/locked/dependency-version/jonashackt/molecule-ansible-docker-aws/testinfra?color=brightgreen)](https://testinfra.readthedocs.io/en/latest/)
+[![versionmolecule-vagrant](https://img.shields.io/github/pipenv/locked/dependency-version/jonashackt/molecule-ansible-docker-aws/molecule-vagrant?color=brightgreen)](https://github.com/ansible-community/molecule-vagrant)
 [![versionawscli](https://img.shields.io/github/pipenv/locked/dependency-version/jonashackt/molecule-ansible-docker-aws/awscli?color=brightgreen)](https://aws.amazon.com/cli/)
 
 Example project showing how to test Ansible roles with Molecule using Testinfra and a multiscenario approach with Vagrant, Docker & AWS EC2 as the infrastructure under test. 
@@ -47,6 +48,10 @@ There are already two blog posts complementing this repository:
 * [Use CircleCI to execute Molecule with EC2 infrastructure](#use-circleci-to-execute-molecule-with-ec2-infrastructure)
   * [Use pipenv with CircleCI](#use-pipenv-with-circleci)
   * [Schedule regular CircleCI builds with workflow triggers & cron](#schedule-regular-circleci-builds-with-workflow-triggers--cron)
+* [Upgrade to Molecule v3](#upgrade-to-molecule-v3)
+* [Use Vagrant on TravisCI to execute Molecule](#use-vagrant-on-travisci-to-execute-molecule)
+  * [Using VirtualBox locally furthermore - but switching to libvirt on TravisCI](#using-virtualbox-locally-furthermore---but-switching-to-libvirt-on-travisci)
+  * [Run our Molecule Vagrant Scenario](#run-our-molecule-vagrant-scenario)
 
 ## TDD for Infrastructure code with Molecule!
 
@@ -1230,3 +1235,137 @@ Now we should see our builds triggered by this cron regularly:
 ![circleci-cron-weekly-schedule](screenshots/circleci-cron-weekly-schedule.png)
 
 Just mind the `UTC+2` timezone - for me, configuring `17:55` actually means, that my job will be scheduled to run at `19:55` - so don't think your config is wrong, maybe you're just in another timezone :)
+
+
+## Upgrade to Molecule v3
+
+With Molecule 3.x our project and especially the `molecule.yml` needs some refinement. [Here's an good overview](https://github.com/ansible-community/molecule/issues/2560).
+
+Especially the `lint` sections and the `scenario-name` has to go - the latter is derived from the directory name and is thus not doubled anymore. The linting is now configured separately ([see this commit](https://github.com/jonashackt/molecule-ansible-docker-aws/commit/74b0ad7ac011e27bacfcf2e3d5d8ada257d393cb)). 
+
+Additionally now only `Docker`, `Podman` and `Delegated` are supposed to be core-providers. All other providers are now regarded as community-supported providers. For us as Molecule users this means, we need to install separate dependencies - since these providers now also have their own GitHub repo (see https://github.com/ansible-community/molecule-vagrant for example).
+
+To use Vagrant, we need to add a new dependency to our [Pipfile](Pipfile):
+
+```
+molecule-vagrant = "==0.2"
+testinfra = "==4.1.0"
+```
+
+As we Testinfra is now also not longer installed by default, we should also add it explicitely. 
+
+
+## Use Vagrant on TravisCI to execute Molecule
+
+Well that one was on my list for a long time (and I guess not only on my list, [Ansible famous geerlingguy couldn't believe his ears also](https://github.com/ansible-community/molecule-vagrant/issues/8#issuecomment-589795115)), but it is now possible to __run a full-blown Vagrant Box on TravisCI__. I had to create a example project for that, see it in action if you like: https://github.com/jonashackt/vagrant-travisci-libvrt
+
+So now we should be able to do this with Molecule too, right?!
+
+Therefore, let's have a look into our [.travis.yml](.travis.yml), where we only run our Docker-in-Docker tests right now. Because we need to install and configure Vagrant there also:
+
+```yaml
+...
+
+# Cache the big Vagrant boxes
+cache:
+  directories:
+    - /home/travis/.vagrant.d/boxes
+    - /home/travis/.cache/pipenv
+
+install:
+  ### Vagrant installation
+  # Install libvrt & KVM (see https://github.com/alvistack/ansible-role-virtualbox/blob/master/.travis.yml)
+  - sudo apt-get update && sudo apt-get install -y bridge-utils dnsmasq-base ebtables libvirt-bin libvirt-dev qemu-kvm qemu-utils ruby-dev
+
+  # Download Vagrant & Install Vagrant package
+  - sudo wget -nv https://releases.hashicorp.com/vagrant/2.2.7/vagrant_2.2.7_x86_64.deb
+  - sudo dpkg -i vagrant_2.2.7_x86_64.deb
+  - sudo vagrant --version
+
+  # Install vagrant-libvirt Vagrant plugin
+  - sudo vagrant plugin install vagrant-libvirt
+  - sudo vagrant plugin list
+...
+```
+
+The installation of Vagrant & libvirt/KVM is exactly the same as in the https://github.com/jonashackt/vagrant-travisci-libvrt
+
+We also need to execute Vagrant with `sudo`, otherwise we'll run into the [known permission denied errors](https://github.com/jonashackt/vagrant-travisci-libvrt#prevent-errors-like-the-home-directory-you-specified-is-not-accessible).
+
+I also experienced `pipenv` not running inside my job, but instead given the following error message:
+
+```
+The directory '/home/travis/.cache/pipenv/http' or its parent directory is not owned by the current user and the cache has been disabled. Please check the permissions and owner of that directory. If executing pip with sudo, you may want sudo's -H flag.
+The directory '/home/travis/.cache/pipenv' or its parent directory is not owned by the current user and caching wheels has been disabled. check the permissions and owner of that directory. If executing pip with sudo, you may want sudo's -H flag.
+Ignoring ruamel.yaml: markers 'python_version >= "3.7"' don't match your environment
+``` 
+
+So we need to install `pipenv` via `pip` using the `sudo -H` option - the same applies to the `pipenv install` command:
+
+```yaml
+  # Install required (and locked) dependecies with pipenv
+  - sudo -H pip install pipenv
+  - sudo -H pipenv install
+```
+
+
+### Using VirtualBox locally furthermore - but switching to libvirt on TravisCI
+
+VirtualBox is [one of the three default Vagrant providers](https://www.vagrantup.com/docs/providers/) (+ Hyper-V & Docker) - and it is widely used in projects and blog posts. Additionally many folks use MacOS on their development machines, so I don't want to switch the virtualization provider for my Molecule tests locally.
+
+Since TravisCI only supports the `libvirt/KVM` provider (see the not-working https://github.com/jonashackt/vagrant-travisci), we __need to use libvirt/KVM with TravisCI__.
+
+As we already have a VirtualBox based Molecule scenario [vagrant-ubuntu](docker/molecule/vagrant-ubuntu), wouldn't it be great to be able to use this scenario with VirtualBox locally - and with libvirt/KVM on TravisCI?!
+
+There is the option of configuring Molecule directly in the [molecule.yml](docker/molecule/vagrant-ubuntu/molecule.yml) file with:
+
+```yaml
+...
+driver:
+  name: vagrant
+  provider:
+    name: libvirt
+...
+```
+
+But in this case, we wouldn't be able to use VirtualBox as our local provider. We also can't simply tell Vagrant to use the provider `libvirt` with `vagrant up --provider=libvirt`, since we're using Molecule which itself controls Vagrant.
+
+So we need another method to tell Vagrant to run with `libvirt` only on TravisCI.
+
+Luckily there's another option described in the [vagrant-libvirt Plugin docs](https://github.com/vagrant-libvirt/vagrant-libvirt#start-vm), where we could use an environment variable `VAGRANT_DEFAULT_PROVIDER=libvirt`. So let's enhance our [.travis.yml](.travis.yml):
+
+```yaml
+env:
+- VAGRANT_DEFAULT_PROVIDER=libvirt
+
+```
+
+### Run our Molecule Vagrant Scenario
+
+Since we need to use `sudo` for executing Vagrant without errors, we also sticked to it while installing our Python dependencies with `pipenv`.
+
+To have those deps available, we also need to execute Molecule using `sudo`. Using `sudo pipenv run molecule` should do the trick, right?
+
+__NO!__ That's not enough. I really gave away lot's and lot's of hours debugging this! You'll run into errors like the following:
+
+```
+$ sudo cat /root/.cache/molecule/docker/vagrant-libvirt-ubuntu/vagrant-vagrant-libvirt-ubuntu.err
+### 2020-03-11 12:23:54 ###
+### 2020-03-11 12:23:54 ###
+The provider 'libvirt' could not be found, but was requested to
+back the machine 'vagrant-libvirt-ubuntu'. Please use a provider that exists.
+Vagrant knows about the following providers: hyperv, docker, virtualbox
+```
+
+So even using `sudo` doesn't solve the problem here! We need to consider the `sudo -E` switch. This will preserve the user environment when running the commands. Therefore successfully spinning up a Vagrant environment with Molecule on TravisCI only works with `sudo -E pipenv run molecule create --scenario-name vagrant-ubuntu`. You can see Travis' full `script` section here:
+
+```yaml
+script:
+  - cd docker
+
+  # Molecule Testing Travis-locally with Vagrant
+  - sudo -E pipenv run molecule create --scenario-name vagrant-ubuntu
+  - sudo -E pipenv run molecule converge --scenario-name vagrant-ubuntu
+  - sudo -E pipenv run molecule verify --scenario-name vagrant-ubuntu
+  - sudo -E pipenv run molecule destroy --scenario-name vagrant-ubuntu
+```

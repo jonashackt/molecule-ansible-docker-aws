@@ -1,10 +1,6 @@
----
-scenario:
-  # default scenario is Docker
-  name: default
-
 driver:
   name: docker
+
 platforms:
   - name: docker-ubuntu
     image: ubuntu:bionic
@@ -12,16 +8,9 @@ platforms:
 
 provisioner:
   name: ansible
-  lint:
-    name: ansible-lint
-    enabled: false
   playbooks:
     prepare: prepare-docker-in-docker.yml
-    converge: ../playbook.yml
-
-lint:
-  name: yamllint
-  enabled: false
+    converge: ../converge.yml
 
 verifier:
   name: testinfra
@@ -30,8 +19,6 @@ verifier:
     # get rid of the DeprecationWarning messages of third-party libs,
     # see https://docs.pytest.org/en/latest/warnings.html#deprecationwarning-and-pendingdeprecationwarning
     PYTHONWARNINGS: "ignore:.*U.*mode is deprecated:DeprecationWarning"
-  lint:
-    name: flake8
   options:
     # show which tests where executed in test output
     v: 1

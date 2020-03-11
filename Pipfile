@@ -7,13 +7,14 @@ verify_ssl = true
 
 [packages]
 ansible = "==2.9.6"
-molecule = "==2.22"
-testinfra = "==3.4.0"
+molecule = "==3.0.2"
+testinfra = "==4.1.0"
 python-vagrant = "==0.5.15"
 awscli = "==1.16.313"
 boto = "==2.49.0"
 boto3 = "==1.10.49"
 docker = "==4.2.0"
+molecule-vagrant = "==0.2"
 
 [requires]
 python_version = "3.7"

@@ -1,33 +1,48 @@
 ---
-sudo: false
+dist: bionic
 language: python
+# configure python version (see https://docs.travis-ci.com/user/languages/python/#specifying-python-versions)
+python:
+  - "3.7"
 
 env:
-- EC2_REGION=eu-central-1 BOTO_CONFIG="/dev/null"
+  - VAGRANT_DEFAULT_PROVIDER=libvirt
 
 services:
-- docker
+  - docker
+
+# Cache the big Vagrant boxes
+cache:
+  directories:
+    - /home/travis/.vagrant.d/boxes
+    - /home/travis/.cache/pipenv
 
 install:
-# Install pipenv dependency manager
-- pip install pipenv
-# Install required (and locked) dependecies from Pipfile.lock. pipenv is smart enough to recognise the existing
-# virtualenv without a prior pipenv shell command (see https://medium.com/@dirk.avery/quirks-of-pipenv-on-travis-ci-and-appveyor-10d6adb6c55b)
-- pipenv install
+  ### Vagrant installation
+  # Install libvrt & KVM (see https://github.com/alvistack/ansible-role-virtualbox/blob/master/.travis.yml)
+  - sudo apt-get update && sudo apt-get install -y bridge-utils dnsmasq-base ebtables libvirt-bin libvirt-dev qemu-kvm qemu-utils ruby-dev
 
-# configure AWS CLI
-- aws configure set aws_access_key_id $AWS_ACCESS_KEY
-- aws configure set aws_secret_access_key $AWS_SECRET_KEY
-- aws configure set default.region $DEPLOYMENT_REGION
-# show AWS CLI config
-- aws configure list
+  # Download Vagrant & Install Vagrant package
+  - sudo wget -nv https://releases.hashicorp.com/vagrant/2.2.7/vagrant_2.2.7_x86_64.deb
+  - sudo dpkg -i vagrant_2.2.7_x86_64.deb
+  - sudo vagrant --version
+
+  # Install vagrant-libvirt Vagrant plugin
+  - sudo vagrant plugin install vagrant-libvirt
+  - sudo vagrant plugin list
+
+  # Install required (and locked) dependecies with pipenv
+  - sudo -H pip install pipenv
+  - sudo -H pipenv install
 
 script:
-- cd docker
-# Molecule Testing Travis-locally with Docker
-- molecule test
-# Molecule Testing on AWS EC2
-#- molecule create --scenario-name aws-ec2-ubuntu
-#- molecule converge --scenario-name aws-ec2-ubuntu
-#- molecule verify --scenario-name aws-ec2-ubuntu
-#- molecule destroy --scenario-name aws-ec2-ubuntu
+  - cd docker
+
+  # Molecule Testing Travis-locally with Docker
+  - sudo -E pipenv run molecule test
+
+  # Molecule Testing Travis-locally with Vagrant
+  - sudo -E pipenv run molecule create --scenario-name vagrant-ubuntu
+  - sudo -E pipenv run molecule converge --scenario-name vagrant-ubuntu
+  - sudo -E pipenv run molecule verify --scenario-name vagrant-ubuntu
+  - sudo -E pipenv run molecule destroy --scenario-name vagrant-ubuntu
