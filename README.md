@@ -1242,15 +1242,7 @@ So now we should be able to do this with Molecule too, right?!
 Therefore, let's have a look into our [.travis.yml](.travis.yml), where we only run our Docker-in-Docker tests right now. Because we need to install and configure Vagrant there also:
 
 ```yaml
----
-sudo: false
-language: python
-
-env:
-- EC2_REGION=eu-central-1 BOTO_CONFIG="/dev/null"
-
-services:
-- docker
+...
 
 # Cache the big Vagrant boxes
 cache:
@@ -1265,37 +1257,13 @@ install:
 # Download Vagrant & Install Vagrant package
 - sudo wget -nv https://releases.hashicorp.com/vagrant/2.2.7/vagrant_2.2.7_x86_64.deb
 - sudo dpkg -i vagrant_2.2.7_x86_64.deb
-
-# Vagrant correctly installed?
 - vagrant --version
 
 # Install vagrant-libvirt Vagrant plugin
 - sudo vagrant plugin install vagrant-libvirt
+- sudo vagrant plugin list
 
-### This projects pip deps
-# Install pipenv dependency manager
-- pip install pipenv
-# Install required (and locked) dependecies from Pipfile.lock. pipenv is smart enough to recognise the existing
-# virtualenv without a prior pipenv shell command (see https://medium.com/@dirk.avery/quirks-of-pipenv-on-travis-ci-and-appveyor-10d6adb6c55b)
-- pipenv install
-
-### AWS configuration
-# configure AWS CLI
-- aws configure set aws_access_key_id $AWS_ACCESS_KEY
-- aws configure set aws_secret_access_key $AWS_SECRET_KEY
-- aws configure set default.region $DEPLOYMENT_REGION
-# show AWS CLI config
-- aws configure list
-
-script:
-- cd docker
-# Molecule Testing Travis-locally with Docker
-- molecule test
-# Molecule Testing Travis-locally with Vagrant
-- molecule create --scenario-name vagrant-ubuntu
-- molecule converge --scenario-name vagrant-ubuntu
-- molecule verify --scenario-name vagrant-ubuntu
-- molecule destroy --scenario-name vagrant-ubuntu
+...
 ```
 
 The installation of Vagrant & libvirt/KVM is exactly the same as in the https://github.com/jonashackt/vagrant-travisci-libvrt
@@ -1398,68 +1366,3 @@ verifier:
 
 ```
 
-Before using it locally, [we need to install libvirt and QEMU/KVM according to the docs](https://github.com/vagrant-libvirt/vagrant-libvirt#installation).
-
-On Mac OS we can [simply use `homebrew` like this post describes](https://lunar.computer/posts/vagrant-libvirt-macos/):
-
-```shell script
-brew install libiconv gcc libvirt
-```
-
-Then run the libvirt service with
-
-```
-brew services start libvirt
-```
-
-Now we should be able to install the [vagrant-libvirt plugin](https://github.com/vagrant-libvirt/vagrant-libvirt#installation), but with some additions (cause otherwise we'll run into errors like `extconf.rb:73:in '<main>': libvirt library not found in default locations (RuntimeError)`):
-
-First, check the ruby version Vagrant uses with:
-
-```
-$ /opt/vagrant/embedded/bin/ruby --version
-ruby 2.4.4p296 (2018-03-28 revision 63013) [x86_64-darwin13]
-```
-
-For me this is `2.4.4`, so insert the version and run:
-
-```
-$ CONFIGURE_ARGS='with-ldflags=-L/opt/vagrant/embedded/lib with-libvirt-include=/usr/local/include/libvirt with-libvirt-lib=/usr/local/lib' \
-GEM_HOME=~/.vagrant.d/gems/2.4.4 \
-GEM_PATH=$GEM_HOME:/opt/vagrant/embedded/gems \
-PATH=/opt/vagrant/embedded/bin:$PATH \
-vagrant plugin install vagrant-libvirt
-```
-
-This should install `libvirt` successfully:
-
-```
-Installing the 'vagrant-libvirt' plugin. This can take a few minutes...
-Building native extensions.  This could take a while...
-Fetching: fog-libvirt-0.7.0.gem (100%)
-Fetching: vagrant-libvirt-0.0.45.gem (100%)
-Installed the plugin 'vagrant-libvirt (0.0.45)'!
-```
-
-Now we should be able to fire up our Molecule Vagrant test based on `libvirt`:
-
-```
-pipenv run molecule --debug create --scenario-name vagrant-libvirt-ubuntu 
-```
-
-Final problem: https://discourse.brew.sh/t/failed-to-connect-socket-to-var-run-libvirt-libvirt-sock-no-such-file-or-directory/1297
-
-As simple `vagrant up` with libirt doesn't work right now:
-
-```
-vagrant up --provider=libvirt
-Bringing machine 'ubuntu' up with 'libvirt' provider...
-Error while connecting to libvirt: Error making a connection to libvirt URI qemu:///system?no_verify=1&keyfile=/Users/jonashecht/.ssh/id_rsa&socket=/var/run/libvirt/libvirt-sock:
-Call to virConnectOpen failed: Socket-Erstellung zu '/var/run/libvirt/libvirt-sock' fehlgeschlagen: No such file or directory
-```
-
-
-
-# Links
-
-Install `libvirt` and `vagrant-libvirt` on MacOS: https://lunar.computer/posts/vagrant-libvirt-macos/

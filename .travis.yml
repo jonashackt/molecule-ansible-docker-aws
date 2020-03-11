@@ -5,6 +5,9 @@ language: python
 python:
   - "3.7"
 
+env:
+  - VAGRANT_DEFAULT_PROVIDER=libvirt
+
 services:
   - docker
 
@@ -35,11 +38,14 @@ install:
 script:
   - cd docker
 
+  # check, if VirtualBox config also runs with VAGRANT_DEFAULT_PROVIDER=libvirt
+  - sudo -E pipenv run molecule --debug create --scenario-name vagrant-ubuntu
+
   # Molecule Testing Travis-locally with Docker
   - sudo -E pipenv run molecule test
 
   # Molecule Testing Travis-locally with Vagrant
-  - sudo -E pipenv run molecule --debug create --scenario-name vagrant-libvirt-ubuntu
-  - sudo -E pipenv run molecule --debug converge --scenario-name vagrant-libvirt-ubuntu
-  - sudo -E pipenv run molecule --debug verify --scenario-name vagrant-libvirt-ubuntu
-  - sudo -E pipenv run molecule --debug destroy --scenario-name vagrant-libvirt-ubuntu
+  - sudo -E pipenv run molecule create --scenario-name vagrant-libvirt-ubuntu
+  - sudo -E pipenv run molecule converge --scenario-name vagrant-libvirt-ubuntu
+  - sudo -E pipenv run molecule verify --scenario-name vagrant-libvirt-ubuntu
+  - sudo -E pipenv run molecule destroy --scenario-name vagrant-libvirt-ubuntu
