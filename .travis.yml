@@ -30,7 +30,7 @@ install:
 
   # Install Python 3 for usage together with sudo into our minimal Travis build image
   - sudo apt update && sudo apt install software-properties-common
-  - sudo add-apt-repository ppa:deadsnakes/ppa && sudo apt update
+  - sudo add-apt-repository ppa:deadsnakes/ppa -y && sudo apt update
   - sudo apt install python3.7
   - sudo python ––version
   - curl -skL https://bootstrap.pypa.io/get-pip.py | sudo -H python3
