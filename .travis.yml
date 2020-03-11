@@ -40,6 +40,8 @@ install:
 
 script:
   # Test Vagrant execution works, even without --provider=libvirt - since we use VAGRANT_DEFAULT_PROVIDER=libvirt
+  - vagrant up
+  - vagrant ssh -c "echo 'hello world!'"
   - sudo vagrant up
   - sudo vagrant ssh -c "echo 'hello world!'"
   - sudo vagrant suspend
