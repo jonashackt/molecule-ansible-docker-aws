@@ -5,8 +5,8 @@ language: python
 python:
   - "3.7"
 
-#services:
- # - docker
+services:
+  - docker
 
 # Cache the big Vagrant boxes
 cache:
@@ -22,48 +22,24 @@ install:
   # Download Vagrant & Install Vagrant package
   - sudo wget -nv https://releases.hashicorp.com/vagrant/2.2.7/vagrant_2.2.7_x86_64.deb
   - sudo dpkg -i vagrant_2.2.7_x86_64.deb
-
-  # Vagrant correctly installed?
   - sudo vagrant --version
 
   # Install vagrant-libvirt Vagrant plugin
   - sudo vagrant plugin install vagrant-libvirt
   - sudo vagrant plugin list
-  - sudo virsh list --all
-  - virsh list --all
 
-  ### This projects pip deps
-  # Install pipenv dependency manager
+  # Install required (and locked) dependecies with pipenv
   - sudo -H pip install pipenv
-  # Install required (and locked) dependecies from Pipfile.lock
   - sudo -H pipenv install
 
 script:
-  # Test Vagrant execution works, even without --provider=libvirt - since we use VAGRANT_DEFAULT_PROVIDER=libvirt
-  - vagrant up
-  - vagrant ssh -c "echo 'hello world!'"
-  - sudo vagrant up
-  - sudo vagrant ssh -c "echo 'hello world!'"
-  - sudo vagrant suspend
   - cd docker
 
-  # Molecule Testing Travis-locally with Vagrant
-  - sudo -H pipenv run molecule --debug create --scenario-name vagrant-libvirt-ubuntu
-  - sudo cat /root/.cache/molecule/docker/vagrant-libvirt-ubuntu/vagrant-vagrant-libvirt-ubuntu.out
-  - sudo cat /root/.cache/molecule/docker/vagrant-libvirt-ubuntu/vagrant-vagrant-libvirt-ubuntu.err
-  - sudo cat /root/.cache/molecule/docker/vagrant-libvirt-ubuntu/Vagrantfile
-  - sudo cat /root/.cache/molecule/docker/vagrant-libvirt-ubuntu/vagrant.yml
-  - sudo -H pipenv run molecule --debug destroy --scenario-name vagrant-libvirt-ubuntu
-  - sudo -E pipenv run molecule --debug create --scenario-name vagrant-libvirt-ubuntu
-  - sudo -H -E pipenv run molecule --debug create --scenario-name vagrant-libvirt-ubuntu
-
-#  - sudo -H pipenv run molecule --debug create --scenario-name vagrant-ubuntu
-#  - sudo cat /root/.cache/molecule/docker/vagrant-ubuntu/vagrant-vagrant-ubuntu.out
-#  - sudo cat /root/.cache/molecule/docker/vagrant-ubuntu/vagrant-vagrant-ubuntu.err
-#  - sudo -H pipenv run molecule --debug destroy --scenario-name vagrant-ubuntu
-  #- molecule --debug converge --scenario-name vagrant-ubuntu
-  #- molecule --debug verify --scenario-name vagrant-ubuntu
-  #- molecule --debug destroy --scenario-name vagrant-ubuntu
-
   # Molecule Testing Travis-locally with Docker
-  #- sudo -H pipenv run molecule test
+  - sudo -E pipenv run molecule test
+
+  # Molecule Testing Travis-locally with Vagrant
+  - sudo -E pipenv run molecule --debug create --scenario-name vagrant-libvirt-ubuntu
+  - sudo -E pipenv run molecule --debug converge --scenario-name vagrant-libvirt-ubuntu
+  - sudo -E pipenv run molecule --debug verify --scenario-name vagrant-libvirt-ubuntu
+  - sudo -E pipenv run molecule --debug destroy --scenario-name vagrant-libvirt-ubuntu
