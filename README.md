@@ -1359,20 +1359,11 @@ $ sudo pip3 install pipenv
 sudo: pip3: command not found
 ```
 
-So we need to choose a different TravisCI build image for our needs here! Let's simply use [the minimal based image](https://docs.travis-ci.com/user/languages/minimal-and-generic/), which should also run faster.
+So we need to install Python 3 for sudo access also. Let's do this inside the [.travis.yml](.travis.yml) `install:` section. As we use the `dist: bionic` which is Ubuntu Bionic 18.04, [we already have a Python 3.x installation build in](https://askubuntu.com/a/865569/451114) we can simply upgrade:
 
 ```yaml
-dist: bionic
-language: minimal
-``` 
-
-Now of course we don't have Python or pip available - so we need to install them ourselves inside the [.travis.yml](.travis.yml) `install:` section:
-
-```yaml
-  # Install Python 3 for usage together with sudo into our minimal Travis build image
-  - sudo apt update && sudo apt install software-properties-common
-  - sudo add-apt-repository ppa:deadsnakes/ppa -y && sudo apt update
-  - sudo apt install python3.7
+  # Install Python 3 for usage together with sudo into our Travis build image
+  - sudo apt-get install python3.7
   - curl -skL https://bootstrap.pypa.io/get-pip.py | sudo -H python3.7
 ```
 

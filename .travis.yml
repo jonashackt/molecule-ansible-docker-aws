@@ -31,7 +31,7 @@ install:
   - sudo vagrant plugin install vagrant-libvirt
   - sudo vagrant plugin list
 
-  # Install Python 3 for usage together with sudo into our minimal Travis build image
+  # Install Python 3 for usage together with sudo into our Travis build image
   - sudo apt-get install python3.7
   - curl -skL https://bootstrap.pypa.io/get-pip.py | sudo -H python3.7
 
