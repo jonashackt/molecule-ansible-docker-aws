@@ -40,7 +40,7 @@ script:
   - cd docker
 
   # Molecule Testing Travis-locally with Docker
-  - sudo -E pipenv run molecule test
+  - sudo -E molecule test
 
   # Molecule Testing Travis-locally with Vagrant
   - sudo -E pipenv run molecule create --scenario-name vagrant-ubuntu
