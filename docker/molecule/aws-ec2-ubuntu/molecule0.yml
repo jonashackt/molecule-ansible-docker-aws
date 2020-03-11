@@ -1,31 +1,18 @@
 ---
-scenario:
-  name: vagrant-ubuntu
-
 driver:
-  name: vagrant
-  provider:
-    name: virtualbox
+  name: ec2
 
 platforms:
-  - name: vagrant-ubuntu
-    box: generic/ubuntu1804
-    memory: 512
-    cpus: 1
-    #provider_raw_config_args:
-    #- "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected' ]"
+  - name: aws-ec2-ubuntu
+    image: ami-009c174642dba28e4
+    instance_type: t2.micro
+    vpc_subnet_id: subnet-a2efa1d9
 
 provisioner:
   name: ansible
-  lint:
-    name: ansible-lint
-    enabled: false
   playbooks:
-    converge: ../playbook.yml
+    converge: ../converge.yml
 
-lint:
-  name: yamllint
-  enabled: false
 verifier:
   name: testinfra
   directory: ../tests/
@@ -33,8 +20,6 @@ verifier:
     # get rid of the DeprecationWarning messages of third-party libs,
     # see https://docs.pytest.org/en/latest/warnings.html#deprecationwarning-and-pendingdeprecationwarning
     PYTHONWARNINGS: "ignore:.*U.*mode is deprecated:DeprecationWarning"
-  lint:
-    name: flake8
   options:
     # show which tests where executed in test output
     v: 1
