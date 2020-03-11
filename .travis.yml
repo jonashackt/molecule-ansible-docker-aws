@@ -1,6 +1,9 @@
 ---
 dist: bionic
-language: minimal
+language: python
+# configure python version (see https://docs.travis-ci.com/user/languages/python/#specifying-python-versions)
+python:
+  - "3.7"
 
 env:
   - VAGRANT_DEFAULT_PROVIDER=libvirt
@@ -40,7 +43,7 @@ script:
   - cd docker
 
   # Molecule Testing Travis-locally with Docker
-  - sudo -E molecule test
+  - sudo -E pipenv run molecule test
 
   # Molecule Testing Travis-locally with Vagrant
   - sudo -E pipenv run molecule create --scenario-name vagrant-ubuntu
