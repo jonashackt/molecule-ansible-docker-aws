@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "44bbbb6df0e931ac3156ffd3d1aa4d4592a75f520fb515157f52301b4fb8260c"
+            "sha256": "18019f004158e047411a119f8886d464446d47dc9772cfde4945de6c23470875"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -53,11 +53,11 @@
         },
         "awscli": {
             "hashes": [
-                "sha256:05c841cd190124d9be21f573f91484c36b026f32306f3ae48fda8b0d19c6011a",
-                "sha256:34282823f04c5a683224fb46967dfa1dad3fe04074f35efd7d17e1b45dd5fc51"
+                "sha256:2aacbd81311df3f7a4d20ee7521f8bce78caef3e4c5f84e419b1bf036c6da96a",
+                "sha256:dc302ba80d3059bb6a68062708fcf7a8759e30537564b6236e2b09cdbab0d65b"
             ],
             "index": "pypi",
-            "version": "==1.18.20"
+            "version": "==1.18.21"
         },
         "bcrypt": {
             "hashes": [
@@ -99,10 +99,10 @@
         },
         "botocore": {
             "hashes": [
-                "sha256:4aabdfb65e1f3eb6d35fe5d921a9b6fd2880ea0ec39ad874af762192b6c40825",
-                "sha256:babe0e84fc8ba1d8b349acf2cd98d5b15d8974912d393ad149ff2b385097a062"
+                "sha256:4aaf6c94bcaace260138d32eae144be1b5d2ddce9ef0f395da32c68e106ff20f",
+                "sha256:86f7f1c489887f9e3c2ede598e2a30f8bd259c11e8ebe25e897e40231b3f4bc8"
             ],
-            "version": "==1.15.20"
+            "version": "==1.15.21"
         },
         "cerberus": {
             "hashes": [
@@ -179,10 +179,10 @@
         },
         "click-help-colors": {
             "hashes": [
-                "sha256:f41ae922e649a9b48119a66109532613ccd0d414f628eafddb897bbf6f577bd1",
-                "sha256:fa574d591ee1d80e6da035df9f471cf0248060c177ff8f99008e45b8401c7fe2"
+                "sha256:0d841a4058ec88c47f93ff6f32547a055f8e0a0273f6bd6cb3e08430f195131d",
+                "sha256:119e5faf69cfc919c995c5962326ac8fd87f11e56a371af594e3dfd8458f4c6e"
             ],
-            "version": "==0.7"
+            "version": "==0.8"
         },
         "colorama": {
             "hashes": [
@@ -518,10 +518,10 @@
         },
         "pytest": {
             "hashes": [
-                "sha256:48c891b40d391ec824477c13d10d5eadf698c83a1671aba491f6db222035d6da",
-                "sha256:76418969e4b9db462a393f1baa13eeb39ba32eccf6013657f4f8295baa234842"
+                "sha256:0e5b30f5cb04e887b91b1ee519fa3d89049595f428c1db76e73bd7f17b09b172",
+                "sha256:84dde37075b8805f3d1f392cc47e38a0e59518fb46a431cfdaf7cf1ce805f970"
             ],
-            "version": "==5.4.0"
+            "version": "==5.4.1"
         },
         "python-dateutil": {
             "hashes": [
