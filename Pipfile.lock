@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "20d7688639e57b66e25155eacf539f56153b352075ade6e22eb7c010dbb8cb83"
+            "sha256": "a438212aa659b96912687a97fd095d32c7c8803bc6f131ca9a7bfee5ecfe3f93"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -53,11 +53,11 @@
         },
         "awscli": {
             "hashes": [
-                "sha256:3625001cbdce33259b48f12c556a8d1dfec7ab2a6924f454a0ead6d77fdbb585",
-                "sha256:8b42e7673936ac3247fcd6b0228f9f9631988c95e4bf770d28236f09e7412589"
+                "sha256:05c841cd190124d9be21f573f91484c36b026f32306f3ae48fda8b0d19c6011a",
+                "sha256:34282823f04c5a683224fb46967dfa1dad3fe04074f35efd7d17e1b45dd5fc51"
             ],
             "index": "pypi",
-            "version": "==1.18.19"
+            "version": "==1.18.20"
         },
         "bcrypt": {
             "hashes": [
@@ -99,10 +99,10 @@
         },
         "botocore": {
             "hashes": [
-                "sha256:19c11d11aa4f5eee6a21aef85d311dd758dc6df59306e72176c980c3259db71f",
-                "sha256:914059286a560ccca6c5c9fa7edd8de8533176090230676193a2e3fbcf214a9e"
+                "sha256:4aabdfb65e1f3eb6d35fe5d921a9b6fd2880ea0ec39ad874af762192b6c40825",
+                "sha256:babe0e84fc8ba1d8b349acf2cd98d5b15d8974912d393ad149ff2b385097a062"
             ],
-            "version": "==1.15.19"
+            "version": "==1.15.20"
         },
         "cerberus": {
             "hashes": [
@@ -518,10 +518,10 @@
         },
         "pytest": {
             "hashes": [
-                "sha256:0d5fe9189a148acc3c3eb2ac8e1ac0742cb7618c084f3d228baaec0c254b318d",
-                "sha256:ff615c761e25eb25df19edddc0b970302d2a9091fbce0e7213298d85fb61fef6"
+                "sha256:48c891b40d391ec824477c13d10d5eadf698c83a1671aba491f6db222035d6da",
+                "sha256:76418969e4b9db462a393f1baa13eeb39ba32eccf6013657f4f8295baa234842"
             ],
-            "version": "==5.3.5"
+            "version": "==5.4.0"
         },
         "python-dateutil": {
             "hashes": [
