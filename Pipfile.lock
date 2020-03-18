@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "94226160b2219d1591c20260c35c29f21bf906f06195f7dcb453060ee566387f"
+            "sha256": "816c71b07bb706c09338e7ab63ef5a4affe730b1300417c2dd3b2e9a8f08c14d"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -53,11 +53,11 @@
         },
         "awscli": {
             "hashes": [
-                "sha256:142ee7c178110bfab3c6438ad873d7e2ba5f2e2a6655c313ae453e67a73adf6a",
-                "sha256:cdb9699b3e85581a47708bf10d70995cf05e7660255037ccfeda17a2dbdde833"
+                "sha256:2f73f15d4ba6a2c398625dfd74bafbe62f85b641aa23c1773def02342c639ed3",
+                "sha256:4cb1a19f1be3c6e588e1006609104950336c702e04565461581f500f3f6129a4"
             ],
             "index": "pypi",
-            "version": "==1.18.23"
+            "version": "==1.18.24"
         },
         "bcrypt": {
             "hashes": [
@@ -99,10 +99,10 @@
         },
         "botocore": {
             "hashes": [
-                "sha256:5b6bf68bd484fbf83e27f56a0a92e38cee223b689121c1184a0292311b88f888",
-                "sha256:e4fc86574043b20267f863b9168bd1c9ed50a53f0f7222ce8c99f64355174515"
+                "sha256:85f1c3f402925a1b896ff198b01cb55e34e7bd28f7ce5ff3450bcfe69376bddd",
+                "sha256:d27c2b800be3eb20dac1a539ddee268acdeb07f2abd3f326e2d88b528017e7ad"
             ],
-            "version": "==1.15.23"
+            "version": "==1.15.24"
         },
         "cerberus": {
             "hashes": [
@@ -632,10 +632,10 @@
         },
         "virtualenv": {
             "hashes": [
-                "sha256:10750cac3b5a9e6eed54d0f1f8222c550dc47f84609c95cbc504d44a58a048b8",
-                "sha256:8512e83f1d90f8e481024d58512ac9c053bf16f54d9138520a0929396820dd78"
+                "sha256:0a854711f2dcae9a644f105d36f5cc6814cd61db47de8c01b8f315d61214afe4",
+                "sha256:a7ac634372748fa4e63e956f8e6981442747fcb4a209876b34e1ff5018d3cfe3"
             ],
-            "version": "==20.0.10"
+            "version": "==20.0.11"
         },
         "wcwidth": {
             "hashes": [
