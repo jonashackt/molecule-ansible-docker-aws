@@ -11,7 +11,7 @@ molecule = "==3.0.2"
 testinfra = "==5.0.0"
 python-vagrant = "==0.5.15"
 awscli = "==1.18.29"
-boto3 = "==1.12.28"
+boto3 = "==1.12.29"
 docker = "==4.2.0"
 molecule-vagrant = "==0.2"
 
