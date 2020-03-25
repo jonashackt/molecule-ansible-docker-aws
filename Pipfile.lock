@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "49becf13ca547701fbeca48d8ec4193235f615abd6de3183fb240f6a6d0ba0ca"
+            "sha256": "9775a8baaa94153bfc0f314200def1cc69c51e35c512bd52c8093cd933551847"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -53,11 +53,11 @@
         },
         "awscli": {
             "hashes": [
-                "sha256:4904af54aa15941ba4bc0f82ec5af49dc58fb9b5c673389f380917cd455fceb0",
-                "sha256:dcdcd44661eb8dc423468f991971ece747078028baca99382fec34293697b79e"
+                "sha256:92102230a35c7c858eabcc18bfaa50a8656769c73eb2f3bc50a6ee93c394c35e",
+                "sha256:aa71dea2b5ceb4d8eaba1650c8be278415f52bffa5c6771face5f3925049476f"
             ],
             "index": "pypi",
-            "version": "==1.18.28"
+            "version": "==1.18.29"
         },
         "bcrypt": {
             "hashes": [
@@ -99,10 +99,10 @@
         },
         "botocore": {
             "hashes": [
-                "sha256:21674f491f6bdc886179de644d00dec05276fac292117f86685513006d83fe0a",
-                "sha256:74f81aca90cdbe084bcfa19589bd2c6470bb47dd1fd9635bf5484ecf7577fd61"
+                "sha256:7bcae36b3b9449b2137069701e7a877980d63bc331f6c6d77d2c7db42202ebe5",
+                "sha256:d49caf1dae7dd903c2af443dbafd76dcf3902d87236a83f8b64e77aa556d1c6b"
             ],
-            "version": "==1.15.28"
+            "version": "==1.15.29"
         },
         "cerberus": {
             "hashes": [
@@ -290,11 +290,11 @@
         },
         "importlib-metadata": {
             "hashes": [
-                "sha256:06f5b3a99029c7134207dd882428a66992a9de2bef7c2b699b5641f9886c3302",
-                "sha256:b97607a1a18a5100839aec1dc26a1ea17ee0d93b20b0f008d80a5a050afb200b"
+                "sha256:0095bf45caca7a93685cbb9e5ef49f0ed37f848639df8f4684f07229aa7a8322",
+                "sha256:dd381cddc02a58a23667ef675164ad70848d82966d3a8fddea96dcfb51064803"
             ],
             "markers": "python_version < '3.8'",
-            "version": "==1.5.0"
+            "version": "==1.5.1"
         },
         "jinja2": {
             "hashes": [
@@ -633,10 +633,10 @@
         },
         "virtualenv": {
             "hashes": [
-                "sha256:87831f1070534b636fea2241dd66f3afe37ac9041bcca6d0af3215cdcfbf7d82",
-                "sha256:f3128d882383c503003130389bf892856341c1da12c881ae24d6358c82561b55"
+                "sha256:6f4c2882a943d20714076679f8dcc5675e953d6c29bfea3bc5d08bb6cdea5d36",
+                "sha256:cb1dab893f9e39b3e68d9118c555dcd86526d531c128c3f72e1551939723b72f"
             ],
-            "version": "==20.0.13"
+            "version": "==20.0.14"
         },
         "wcwidth": {
             "hashes": [
