@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "af3625abab262cd8e4330480f8dc7556109cbfb17aa15fea0a573b5b1da523b6"
+            "sha256": "50731ca9169f0b7c206a2c8dccc03d3b9a799a1f727ef791404720a6415147ba"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -53,11 +53,11 @@
         },
         "awscli": {
             "hashes": [
-                "sha256:92102230a35c7c858eabcc18bfaa50a8656769c73eb2f3bc50a6ee93c394c35e",
-                "sha256:aa71dea2b5ceb4d8eaba1650c8be278415f52bffa5c6771face5f3925049476f"
+                "sha256:14623fce97ca16b76484709827e547b210987368c91d8f722d163fb3e09cc139",
+                "sha256:f85d538d2dcc130734dd4b2582b7e7dd945e7ce9e6373e67b12498ccc0c73f0a"
             ],
             "index": "pypi",
-            "version": "==1.18.29"
+            "version": "==1.18.30"
         },
         "bcrypt": {
             "hashes": [
@@ -99,10 +99,10 @@
         },
         "botocore": {
             "hashes": [
-                "sha256:7bcae36b3b9449b2137069701e7a877980d63bc331f6c6d77d2c7db42202ebe5",
-                "sha256:d49caf1dae7dd903c2af443dbafd76dcf3902d87236a83f8b64e77aa556d1c6b"
+                "sha256:38eef2271ab908979ad7ec7a5cdf334c2a5a0b5e8fe37937c8a76e3ed9c18940",
+                "sha256:d71f22e81bb17d92a6c3aad9ff04ca79af5f053ac35f6d6f16e1f002aa0655af"
             ],
-            "version": "==1.15.29"
+            "version": "==1.15.30"
         },
         "cerberus": {
             "hashes": [
@@ -290,11 +290,11 @@
         },
         "importlib-metadata": {
             "hashes": [
-                "sha256:0095bf45caca7a93685cbb9e5ef49f0ed37f848639df8f4684f07229aa7a8322",
-                "sha256:dd381cddc02a58a23667ef675164ad70848d82966d3a8fddea96dcfb51064803"
+                "sha256:298a914c82144c6b3b06c568a8973b89ad2176685f43cd1ea9ba968307300fa9",
+                "sha256:dfc83688553a91a786c6c91eeb5f3b1d31f24d71877bbd94ecbf5484e57690a2"
             ],
             "markers": "python_version < '3.8'",
-            "version": "==1.5.1"
+            "version": "==1.5.2"
         },
         "jinja2": {
             "hashes": [
