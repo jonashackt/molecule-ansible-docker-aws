@@ -7,7 +7,7 @@ verify_ssl = true
 
 [packages]
 ansible = "==2.9.6"
-molecule = "==3.0.2"
+molecule = "==3.0.3"
 testinfra = "==5.0.0"
 python-vagrant = "==0.5.15"
 awscli = "==1.18.38"
