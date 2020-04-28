@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "24375e0f337c1001d0881b365c2021041fc4e72fa3c505281fcf25d6dedbc0d4"
+            "sha256": "e3e7fff4240ecbf378cf1b49c68176392f5065d5affe3d282bc9922ff5778d8a"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -39,11 +39,11 @@
         },
         "awscli": {
             "hashes": [
-                "sha256:1d6277bab70966c0ecf78ec9108e09383410012509038d3578cd2026429feb77",
-                "sha256:ff3c2fd5a3d9e4397ec8ff3c81bb7a81b8be8d711c03551374104ff41e979e95"
+                "sha256:8f18a02ae1817afd084a20191d14daa9c4ead86cdc7c9e4e6209a034ae61232b",
+                "sha256:e2005b3b8ee78005c29da416922bf2777519e683309ef4c3939ff8826a72e612"
             ],
             "index": "pypi",
-            "version": "==1.18.47"
+            "version": "==1.18.48"
         },
         "bcrypt": {
             "hashes": [
@@ -85,10 +85,10 @@
         },
         "botocore": {
             "hashes": [
-                "sha256:6c6e9db7a6e420431794faee111923e4627b4920d4d9d8b16e1a578a389b2283",
-                "sha256:cceeb6d2a1bbbd062ab54552ded5065a12b14e845aa35613fc91fd68312020c0"
+                "sha256:ef4fa3055421cb95a7bf559e715f8c5f656aca30fafef070eca21b13ca3f0f81",
+                "sha256:f3569216d2f0067a34608e26ae1d0035b84fa29ad68d6c5fd26124a4cc86e8c9"
             ],
-            "version": "==1.15.47"
+            "version": "==1.15.48"
         },
         "cerberus": {
             "hashes": [
@@ -520,10 +520,10 @@
         },
         "sh": {
             "hashes": [
-                "sha256:ee445c1ab771a095a31302789ef086d0b7fdc07591fd29385d445fa5165dbd74",
-                "sha256:f00dfb38579ab661786daec7a7b9436facf77682f62160db5b66d58c8b2f270a"
+                "sha256:6f792e45b45d039b423081558904981e8ab49572b0c38009fcc65feaab06bcda",
+                "sha256:97a3d2205e3c6a842d87ebbc9ae93acae5a352b1bc4609b428d0fd5bb9e286a3"
             ],
-            "version": "==1.13.0"
+            "version": "==1.13.1"
         },
         "shellingham": {
             "hashes": [
