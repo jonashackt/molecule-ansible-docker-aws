@@ -6,7 +6,7 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-ansible = "==2.9.8"
+ansible = "==2.9.9"
 molecule = "==3.0.4"
 testinfra = "==5.0.0"
 python-vagrant = "==0.5.15"
