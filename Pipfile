@@ -12,7 +12,7 @@ testinfra = "==5.1.0"
 python-vagrant = "==0.5.15"
 awscli = "==1.18.49"
 boto3 = "==1.12.49"
-docker = "==4.2.0"
+docker = "==4.2.1"
 molecule-vagrant = "==0.2"
 
 [requires]
