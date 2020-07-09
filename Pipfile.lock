@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "25c33cc8510a4005ce0e7400a752a0a1db49a11ff8fcd909384b1bc03537b55a"
+            "sha256": "1d7aad645a44c7294777726e572d439da5eb1970df8d1c844b76969f3eaf0067"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -320,11 +320,11 @@
         },
         "molecule": {
             "hashes": [
-                "sha256:29137de659d45ecdef28d107c0dc7e85ab3d5e37d5d17813430a7cc15be5b02e",
-                "sha256:b4f556495a0b8955ca4ac2f86b9a675b26b6adcba93206efd325a5b61d90548f"
+                "sha256:11a77db3c066294e4d968ee1dc8c5a2b5e4955a6448060edd5161652e04e366d",
+                "sha256:5ae1d58c0173ce11ea831843fdbf1462770658683e84573d54c3b5bda21ed2cd"
             ],
             "index": "pypi",
-            "version": "==3.0.4"
+            "version": "==3.0.5"
         },
         "molecule-vagrant": {
             "hashes": [
@@ -550,10 +550,10 @@
         },
         "sh": {
             "hashes": [
-                "sha256:ae3258c5249493cebe73cb4e18253a41ed69262484bad36fdb3efcb8ad8870bb",
-                "sha256:b52bf5833ed01c7b5c5fb73a7f71b3d98d48e9b9b8764236237bdc7ecae850fc"
+                "sha256:6f792e45b45d039b423081558904981e8ab49572b0c38009fcc65feaab06bcda",
+                "sha256:97a3d2205e3c6a842d87ebbc9ae93acae5a352b1bc4609b428d0fd5bb9e286a3"
             ],
-            "version": "==1.12.14"
+            "version": "==1.13.1"
         },
         "shellingham": {
             "hashes": [
