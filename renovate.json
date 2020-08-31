@@ -12,5 +12,16 @@
   },
   "circleci": {
     "enabled": false
-  }
+  },
+  "packageRules": [
+    {
+      "packagePatterns": ["aws", "boto"],
+      "groupName": "aws packages",
+      "automerge": true,
+      "automergeType": "branch",
+      "major": {
+        "automerge": false
+      }
+    }
+  ]
 }
