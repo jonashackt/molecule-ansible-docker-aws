@@ -42,8 +42,10 @@ install:
 script:
   - cd docker
 
-  # Molecule Testing Travis-locally with Docker
+  # Molecule Testing Travis-locally with Docker (default: Ubuntu Bionic 18.04)
   - sudo -E pipenv run molecule test
+  # Molecule Testing Travis-locally with Docker Ubuntu Focal 20.04 also
+  - sudo -E pipenv run molecule test --scenario-name docker-ubuntu-focal
 
   # Molecule Testing Travis-locally with Vagrant
   - sudo -E pipenv run molecule create --scenario-name vagrant-ubuntu
