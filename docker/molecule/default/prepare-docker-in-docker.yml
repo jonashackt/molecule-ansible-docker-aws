@@ -2,9 +2,11 @@
 - name: Prepare
   hosts: all
   tasks:
-  - name: install gpg package
+  - name: install gpg (and it's needed python-apt) package
     apt:
-      pkg: gpg
+      pkg:
+        - python-apt
+        - gpg
       state: latest
       update_cache: true
     become: true
