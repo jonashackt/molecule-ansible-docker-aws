@@ -3,7 +3,7 @@ dist: bionic
 language: python
 # configure python version (see https://docs.travis-ci.com/user/languages/python/#specifying-python-versions)
 python:
-  - "3.7"
+  - "3.8"
 
 env:
   - VAGRANT_DEFAULT_PROVIDER=libvirt
