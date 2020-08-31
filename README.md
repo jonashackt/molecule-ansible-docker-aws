@@ -107,7 +107,7 @@ pipenv install ansible molecule
 
 To initialize a new Molecule powered Ansible role named `docker` with the Vagrant driver and the Testinfra verifier you have to execute the following command:
 
-`molecule init role --driver-name vagrant --role-name docker --verifier-name testinfra`
+`molecule init role --driver-name vagrant --verifier-name testinfra docker`
 
 This will give:
 
