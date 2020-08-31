@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/python:3.7.5
+      - image: circleci/python:3.8
 
     environment:
       EC2_REGION: eu-central-1
@@ -24,7 +24,6 @@ jobs:
       - run:
           name: Run Molecule Testing CircleCI-locally with Docker
           command: |
-            cd docker
             pipenv run molecule test
 
       - run:
@@ -38,7 +37,6 @@ jobs:
 #      - run:
 #          name: Run Molecule Testing on AWS EC2
 #          command: |
-#            cd docker
 #            pipenv run molecule --debug destroy --scenario-name aws-ec2-ubuntu
 #            pipenv run molecule --debug create --scenario-name aws-ec2-ubuntu
 #            pipenv run molecule --debug converge --scenario-name aws-ec2-ubuntu

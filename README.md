@@ -120,7 +120,7 @@ Molecule introduces a well known project structure (at least for a Java develope
 
 As you may notice the role standard directory `tasks` is now accompanied by a `tests` directory inside the `molecule` folder where the Testinfra testcases reside.
 
-This repository uses [a Ansible role](docker/tasks/main.yml) that installs Docker into an Ubuntu Box:
+This repository uses [a Ansible role](tasks/main.yml) that installs Docker into an Ubuntu Box:
 
 ```yaml
 - name: add Docker apt key
@@ -151,7 +151,7 @@ This repository uses [a Ansible role](docker/tasks/main.yml) that installs Docke
   become: true
 ```
 
-With Testinfra we can assert on things we want to achieve with our Ansible role: Install the `docker` package and add the user `vagrant` to the group `docker`. Testinfra uses [pytest](https://docs.pytest.org/en/latest/example/index.html) to execute the tests. Our testcases could be found in [test_docker.py](docker/molecule/tests/test_docker.py):
+With Testinfra we can assert on things we want to achieve with our Ansible role: Install the `docker` package and add the user `vagrant` to the group `docker`. Testinfra uses [pytest](https://docs.pytest.org/en/latest/example/index.html) to execute the tests. Our testcases could be found in [test_docker.py](molecule/tests/test_docker.py):
 
 ```python
 import testinfra.utils.ansible_runner
@@ -188,7 +188,7 @@ https://blog.octo.com/test-your-infrastructure-topology-on-aws/
 
 ## Molecule configuration
 
-The [molecule.yml](docker/molecule/vagrant-ubuntu/molecule.yml) configures Molecule:
+The [molecule.yml](molecule/vagrant-ubuntu/molecule.yml) configures Molecule:
 
 ```
 scenario:
@@ -344,7 +344,7 @@ The standard Docker-in-Docker image provided by Docker Inc is based on Alpine Li
 
 But there should be a way to do Docker-in-Docker installation with a Ubuntu base image like `ubuntu:bionic`! And there is :) 
 
-Let´s assume the [standard Ubuntu Docker installation](https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-docker-ce-1) our starting point. Everything described there is done inside our Ansible role under test __docker__ inside the playbook [docker/tasks/main.yml](docker/tasks/main.yml).
+Let´s assume the [standard Ubuntu Docker installation](https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-docker-ce-1) our starting point. Everything described there is done inside our Ansible role under test __docker__ inside the playbook [docker/tasks/main.yml](tasks/main.yml).
 
 All the extra steps needed to install Docker inside a Ubuntu Docker container will be handled inside the `prepare` step. Therefore we´ll use [Molecules´ prepare.yml playbook](https://molecule.readthedocs.io/en/latest/configuration.html#id12):
 
@@ -368,7 +368,7 @@ So let´s configure our `default` Docker scenario to use a `prepare.yml` which c
 
 ### Docker-in-Docker with ubuntu:bionic
 
-Now we should have a look into the [prepare-docker-in-docker.yml](docker/molecule/prepare-docker-in-docker.yml):
+Now we should have a look into the [prepare-docker-in-docker.yml](molecule/prepare-docker-in-docker.yml):
 
 ```yaml
 # Prepare things only necessary in Ubuntu Docker-in-Docker scenario
@@ -422,7 +422,7 @@ platforms:
 
 The last step - or the first, if you leverage the power of Test-Driven-Development (TDD) - was to create a suitable testcase. This test should verify whether the Docker-in-Docker installation was successful.
 
-Therefore we can use the [hello-world](https://hub.docker.com/_/hello-world/) Docker image. Let´s execute a `docker run hello-world` straight inside our test case `test_run_hello_world_container_successfully` in our test suite [test_docker.py](docker/molecule/tests/test_docker.py):
+Therefore we can use the [hello-world](https://hub.docker.com/_/hello-world/) Docker image. Let´s execute a `docker run hello-world` straight inside our test case `test_run_hello_world_container_successfully` in our test suite [test_docker.py](molecule/tests/test_docker.py):
 
 ```
 def test_run_hello_world_container_successfully(host):
@@ -765,7 +765,7 @@ $ aws ec2 describe-subnets
 }
 ```
 
-Now head over to your [molecule.yml](docker/molecule/aws-ec2-ubuntu/molecule.yml) and edit the `vpc_subnet_id` to contain the correct value:
+Now head over to your [molecule.yml](molecule/aws-ec2-ubuntu/molecule.yml) and edit the `vpc_subnet_id` to contain the correct value:
 
 ```
 scenario:
@@ -792,7 +792,7 @@ Fill in your region - e.g. for me this is `eu-central-1` - together with the des
 
 ![ubuntu-Amazon-EC2-AMI-Locator](screenshots/ubuntu-Amazon-EC2-AMI-Locator.png)
 
-Now choose the AMI id with the __Instance Type__ `hvm:ebs-ssd`, which means that our EC2 instance will use Amazon Elastic Block Storage memory. Only this instance type is eligible for the free tier. In our region the the correct AMI id for Ubuntu 18.04 is `ami-080d06f90eb293a27`. We need to configure this inside our [molecule.yml](docker/molecule/aws-ec2-ubuntu/molecule.yml):
+Now choose the AMI id with the __Instance Type__ `hvm:ebs-ssd`, which means that our EC2 instance will use Amazon Elastic Block Storage memory. Only this instance type is eligible for the free tier. In our region the the correct AMI id for Ubuntu 18.04 is `ami-080d06f90eb293a27`. We need to configure this inside our [molecule.yml](molecule/aws-ec2-ubuntu/molecule.yml):
 
 ```
 scenario:
@@ -842,7 +842,7 @@ That should just work fine. We then could head over to the verify-phase:
 molecule verify --scenario-name aws-ec2-ubuntu
 ```
 
-This should successfully execute our Testinfra test suite described in [test_docker.py](docker/molecule/tests/test_docker.py) onto our EC2 instance. If everything ran fine, it should give something like:
+This should successfully execute our Testinfra test suite described in [test_docker.py](molecule/tests/test_docker.py) onto our EC2 instance. If everything ran fine, it should give something like:
 
 ![aws-molecule-verify-success](screenshots/aws-molecule-verify-success.png)
 
@@ -924,7 +924,6 @@ install:
 - aws configure list
 
 script:
-- cd docker
 # Molecule Testing Travis-locally with Docker
 - molecule test
 # Molecule Testing on AWS EC2
@@ -1052,7 +1051,6 @@ jobs:
       - run:
           name: Run Molecule Testing CircleCI-locally with Docker
           command: |
-            cd docker
             molecule test
 
       - run:
@@ -1072,7 +1070,6 @@ jobs:
       - run:
           name: Run Molecule Testing on AWS EC2
           command: |
-            cd docker
             molecule create --scenario-name aws-ec2-ubuntu
             molecule converge --scenario-name aws-ec2-ubuntu
             molecule verify --scenario-name aws-ec2-ubuntu
@@ -1114,7 +1111,6 @@ jobs:
       - run:
           name: Run Molecule Testing CircleCI-locally with Docker
           command: |
-            cd docker
             molecule test
 ```
 
@@ -1384,9 +1380,9 @@ VirtualBox is [one of the three default Vagrant providers](https://www.vagrantup
 
 Since TravisCI only supports the `libvirt/KVM` provider (see the not-working https://github.com/jonashackt/vagrant-travisci), we __need to use libvirt/KVM with TravisCI__.
 
-As we already have a VirtualBox based Molecule scenario [vagrant-ubuntu](docker/molecule/vagrant-ubuntu), wouldn't it be great to be able to use this scenario with VirtualBox locally - and with libvirt/KVM on TravisCI?!
+As we already have a VirtualBox based Molecule scenario [vagrant-ubuntu](molecule/vagrant-ubuntu), wouldn't it be great to be able to use this scenario with VirtualBox locally - and with libvirt/KVM on TravisCI?!
 
-There is the option of configuring Molecule directly in the [molecule.yml](docker/molecule/vagrant-ubuntu/molecule.yml) file with:
+There is the option of configuring Molecule directly in the [molecule.yml](molecule/vagrant-ubuntu/molecule.yml) file with:
 
 ```yaml
 ...
@@ -1430,8 +1426,6 @@ So even using `sudo` doesn't solve the problem here! We need to consider the `su
 
 ```yaml
 script:
-  - cd docker
-
   # Molecule Testing Travis-locally with Vagrant
   - sudo -E pipenv run molecule create --scenario-name vagrant-ubuntu
   - sudo -E pipenv run molecule converge --scenario-name vagrant-ubuntu
