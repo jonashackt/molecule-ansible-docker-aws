@@ -27,7 +27,6 @@ install:
   - sudo -H pipenv install
 
 
-
 jobs:
   include:
     - script:
@@ -69,3 +68,7 @@ jobs:
         - sudo -E pipenv run molecule destroy --scenario-name vagrant-ubuntu
 
       name: "Molecule testing Travis-locally with Vagrant Ubuntu Bionic 18.04"
+
+
+notifications:
+  webhooks: https://galaxy.ansible.com/api/v1/notifications/

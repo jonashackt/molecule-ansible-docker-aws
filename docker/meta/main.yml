@@ -11,9 +11,9 @@ galaxy_info:
   platforms:
     - name: Ubuntu
       versions:
-        - trusty
         - xenial
         - bionic
+        - focal
 
   galaxy_tags:
     - docker
@@ -21,6 +21,7 @@ galaxy_info:
     - molecule
     - bionic
     - xenial
+    - focal
 
 dependencies: []
   # List your role dependencies here, one per line. Be sure to remove the '[]' above,
