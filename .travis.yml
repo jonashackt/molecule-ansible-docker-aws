@@ -18,19 +18,6 @@ cache:
     - /home/travis/.cache/pipenv
 
 install:
-  ### Vagrant installation
-  # Install libvrt & KVM (see https://github.com/alvistack/ansible-role-virtualbox/blob/master/.travis.yml)
-  - sudo apt-get update && sudo apt-get install -y bridge-utils dnsmasq-base ebtables libvirt-bin libvirt-dev qemu-kvm qemu-utils ruby-dev
-
-  # Download Vagrant & Install Vagrant package
-  - sudo wget -nv https://releases.hashicorp.com/vagrant/2.2.10/vagrant_2.2.10_x86_64.deb
-  - sudo dpkg -i vagrant_2.2.10_x86_64.deb
-  - sudo vagrant --version
-
-  # Install vagrant-libvirt Vagrant plugin
-  - sudo vagrant plugin install vagrant-libvirt
-  - sudo vagrant plugin list
-
   # Install Python 3 for usage together with sudo into our Travis build image
   - sudo apt-get install python3.8
   - curl -skL https://bootstrap.pypa.io/get-pip.py | sudo -H python3.8
@@ -39,16 +26,35 @@ install:
   - sudo -H pip3 install pipenv
   - sudo -H pipenv install
 
-script:
-  - cd docker
 
-  # Molecule Testing Travis-locally with Docker (default: Ubuntu Bionic 18.04)
-  - sudo -E pipenv run molecule test
-  # Molecule Testing Travis-locally with Docker Ubuntu Focal 20.04 also
-  - sudo -E pipenv run molecule test --scenario-name docker-ubuntu-focal
 
-  # Molecule Testing Travis-locally with Vagrant
-  - sudo -E pipenv run molecule create --scenario-name vagrant-ubuntu
-  - sudo -E pipenv run molecule converge --scenario-name vagrant-ubuntu
-  - sudo -E pipenv run molecule verify --scenario-name vagrant-ubuntu
-  - sudo -E pipenv run molecule destroy --scenario-name vagrant-ubuntu
+jobs:
+  include:
+    - script:
+        - cd docker
+        - sudo -E pipenv run molecule test
+        - sudo -E pipenv run molecule test --scenario-name docker-ubuntu-focal
+
+      name: "Molecule Testing Travis-locally with Docker Ubuntu Bionic 18.04 & Focal 20.04"
+
+    - script:
+        ### Vagrant installation
+        # Install libvrt & KVM (see https://github.com/alvistack/ansible-role-virtualbox/blob/master/.travis.yml)
+        - sudo apt-get update && sudo apt-get install -y bridge-utils dnsmasq-base ebtables libvirt-bin libvirt-dev qemu-kvm qemu-utils ruby-dev
+
+        # Download Vagrant & Install Vagrant package
+        - sudo wget -nv https://releases.hashicorp.com/vagrant/2.2.10/vagrant_2.2.10_x86_64.deb
+        - sudo dpkg -i vagrant_2.2.10_x86_64.deb
+        - sudo vagrant --version
+
+        # Install vagrant-libvirt Vagrant plugin
+        - sudo vagrant plugin install vagrant-libvirt
+        - sudo vagrant plugin list
+
+        - cd docker
+        - sudo -E pipenv run molecule create --scenario-name vagrant-ubuntu
+        - sudo -E pipenv run molecule converge --scenario-name vagrant-ubuntu
+        - sudo -E pipenv run molecule verify --scenario-name vagrant-ubuntu
+        - sudo -E pipenv run molecule destroy --scenario-name vagrant-ubuntu
+
+      name: "Molecule Testing Travis-locally with Vagrant Ubuntu Bionic 18.04"
