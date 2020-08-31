@@ -3,4 +3,4 @@
   hosts: all
   become: true
   roles:
-    - role: docker
+    - role: molecule-ansible-docker-aws
