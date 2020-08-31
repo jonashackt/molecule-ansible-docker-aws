@@ -9,7 +9,7 @@ platforms:
 provisioner:
   name: ansible
   playbooks:
-    prepare: prepare-docker-in-docker.yml
+    prepare: ../prepare-docker-in-docker.yml
     converge: ../converge.yml
 
 verifier:

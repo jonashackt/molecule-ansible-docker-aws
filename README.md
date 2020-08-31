@@ -368,20 +368,13 @@ So let´s configure our `default` Docker scenario to use a `prepare.yml` which c
 
 ### Docker-in-Docker with ubuntu:bionic
 
-Now we should have a look into the [prepare-docker-in-docker.yml](docker/molecule/default/prepare-docker-in-docker.yml):
+Now we should have a look into the [prepare-docker-in-docker.yml](docker/molecule/prepare-docker-in-docker.yml):
 
 ```yaml
 # Prepare things only necessary in Ubuntu Docker-in-Docker scenario
 - name: Prepare
   hosts: all
   tasks:
-  - name: install gpg package
-    apt:
-      pkg: gpg
-      state: latest
-      update_cache: true
-    become: true
-
     # We need to anticipate the installation of Docker before the role execution...
   - name: use our role to install Docker
     include_tasks: ../../tasks/main.yml
@@ -404,9 +397,7 @@ Now we should have a look into the [prepare-docker-in-docker.yml](docker/molecul
     shell: "/usr/bin/dockerd -H unix:///var/run/docker.sock > dockerd.log 2>&1 &"
 ```
 
-As the `ubuntu:bionic` Docker image is sligthly stripped down compared to a "real" Ubuntu virtual machine, we need to install the `gpg` package at first.
-
-After that the Docker installation has to be executed just in the same way as on a virtual machine using Vagrant. So we simply re-use the existing Docker role here - so we´re not forced to copy code!
+First the Docker installation has to be executed just in the same way as on a virtual machine using Vagrant. So we simply re-use the existing Docker role here - so we´re not forced to copy code!
 
 Then really being able to run Docker-in-Docker we need to do three things:
 

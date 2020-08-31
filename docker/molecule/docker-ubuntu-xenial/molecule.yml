@@ -2,8 +2,8 @@ driver:
   name: docker
 
 platforms:
-  - name: docker-ubuntu
-    image: ubuntu:bionic
+  - name: docker-ubuntu-xenial
+    image: ubuntu:xenial
     privileged: true
 
 provisioner:

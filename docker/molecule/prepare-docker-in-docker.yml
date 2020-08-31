@@ -2,18 +2,9 @@
 - name: Prepare
   hosts: all
   tasks:
-  - name: install gpg (and it's needed python-apt) package
-    apt:
-      pkg:
-        - python-apt
-        - gpg
-      state: latest
-      update_cache: true
-    become: true
-
-    # We need to anticipate the installation of Docker before the role execution...
+  # We need to anticipate the installation of Docker before the role execution...
   - name: use our role to install Docker
-    include_tasks: ../../tasks/main.yml
+    include_tasks: ../tasks/main.yml
 
   - name: create /etc/docker
     file:

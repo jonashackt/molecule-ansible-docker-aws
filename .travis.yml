@@ -33,9 +33,20 @@ jobs:
     - script:
         - cd docker
         - sudo -E pipenv run molecule test
+
+      name: "Molecule testing Travis-locally with Docker Ubuntu Bionic 18.04"
+
+    - script:
+        - cd docker
         - sudo -E pipenv run molecule test --scenario-name docker-ubuntu-focal
 
-      name: "Molecule Testing Travis-locally with Docker Ubuntu Bionic 18.04 & Focal 20.04"
+      name: "Molecule testing Travis-locally with Docker Ubuntu Focal 20.04"
+
+    - script:
+        - cd docker
+        - sudo -E pipenv run molecule test --scenario-name docker-ubuntu-xenial
+
+      name: "Molecule testing Travis-locally with Docker Ubuntu Xenial 16.04"
 
     - script:
         ### Vagrant installation
@@ -57,4 +68,4 @@ jobs:
         - sudo -E pipenv run molecule verify --scenario-name vagrant-ubuntu
         - sudo -E pipenv run molecule destroy --scenario-name vagrant-ubuntu
 
-      name: "Molecule Testing Travis-locally with Vagrant Ubuntu Bionic 18.04"
+      name: "Molecule testing Travis-locally with Vagrant Ubuntu Bionic 18.04"
