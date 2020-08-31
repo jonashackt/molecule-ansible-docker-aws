@@ -20,13 +20,11 @@
   apt:
     pkg: docker-ce
     state: latest
-    update_cache: yes
+    update_cache: true
 
 - name: add vagrant user to docker group
   user:
     name: vagrant
     groups: docker
-    append: yes
+    append: true
   become: true
-
-

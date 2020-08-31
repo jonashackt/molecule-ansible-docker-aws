@@ -1,3 +1,4 @@
+---
 galaxy_info:
   author: jonashackt
   description: Role to install Docker on Ubuntu, continuously tested with Molecule on AWS EC2
