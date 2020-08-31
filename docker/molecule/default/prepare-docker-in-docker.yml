@@ -25,6 +25,7 @@
           "storage-driver": "vfs"
         }
       dest: /etc/docker/daemon.json
+      mode: '600'
 
   # ...since we need to start Docker in a complete different way
   - name: start Docker daemon inside container see https://stackoverflow.com/a/43088716/4964553
