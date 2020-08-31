@@ -32,8 +32,8 @@ install:
   - sudo vagrant plugin list
 
   # Install Python 3 for usage together with sudo into our Travis build image
-  - sudo apt-get install python3.7
-  - curl -skL https://bootstrap.pypa.io/get-pip.py | sudo -H python3.7
+  - sudo apt-get install python3.8
+  - curl -skL https://bootstrap.pypa.io/get-pip.py | sudo -H python3.8
 
   # Install required (and locked) dependecies with pipenv
   - sudo -H pip3 install pipenv

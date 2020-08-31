@@ -1363,8 +1363,8 @@ So we need to install Python 3 for sudo access also. Let's do this inside the [.
 
 ```yaml
   # Install Python 3 for usage together with sudo into our Travis build image
-  - sudo apt-get install python3.7
-  - curl -skL https://bootstrap.pypa.io/get-pip.py | sudo -H python3.7
+  - sudo apt-get install python3.8
+  - curl -skL https://bootstrap.pypa.io/get-pip.py | sudo -H python3.8
 ```
 
 With this we should be able to use Python 3.x together with `sudo pip`, which we directly use to install `pipenv`:
