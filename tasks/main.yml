@@ -2,7 +2,7 @@
 # tasks file for docker
 - name: Log on which Linux distro Docker is going to be installed
   debug:
-    msg: "The distro is: {{ ansible_distribution|lower }} and the version name is: {{ ansible_lsb.codename }}"
+    msg: "The distro is: {{ ansible_distribution|lower }} and the version name is: {{ ansible_distribution_release|lower }}"
 
 - name: Install packages needed to add Docker repository later (see https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository)
   apt:
