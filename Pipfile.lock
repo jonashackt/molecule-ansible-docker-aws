@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "f67b6db4efccff92f2a56ee34573e46b639375f2d78882d1e8e84c83b7d0b2a7"
+            "sha256": "5282841a8377f68fab1f3450d69e788b94fff8f66e2fb61d745245db1184243c"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -233,11 +233,11 @@
         },
         "docker": {
             "hashes": [
-                "sha256:d4625e70e3d5a12d7cbf1fd68cef2e081ac86b83889e00e5466d975f90e50dad",
-                "sha256:de5753b7f6486dd541a98393e423e387579b8974a5068748b83f852cc76a89d6"
+                "sha256:d3393c878f575d3a9ca3b94471a3c89a6d960b35feb92f033c0de36cc9d934db",
+                "sha256:f3607d5695be025fa405a12aca2e5df702a57db63790c73b927eb6a94aac60af"
             ],
             "index": "pypi",
-            "version": "==4.4.3"
+            "version": "==4.4.4"
         },
         "docutils": {
             "hashes": [
@@ -565,7 +565,7 @@
                 "sha256:1f7c481be658eb27f451c3f714aec5bc1fc2431c28f89848ef589c2392171f2e",
                 "sha256:86a157008d17c73ee03da80de91e09fc2f7713109ccd4e90496eeb3702bef638"
             ],
-            "markers": "python_version >= '3.6' and python_version < '4.0'",
+            "markers": "python_version >= '3.6' and python_version < '4'",
             "version": "==9.11.1"
         },
         "rsa": {
@@ -573,7 +573,7 @@
                 "sha256:78f9a9bf4e7be0c5ded4583326e7461e3a3c5aae24073648b4bdfa797d78c9d2",
                 "sha256:9d689e6ca1b3038bc82bf8d23e944b6b6037bc02301a574935b2dd946e0353b9"
             ],
-            "markers": "python_version >= '3.5' and python_version < '4.0'",
+            "markers": "python_version >= '3.5' and python_version < '4'",
             "version": "==4.7.2"
         },
         "s3transfer": {
@@ -588,7 +588,7 @@
                 "sha256:820adcf1b4451c9cc7759848797703263ba0eb6a4cad76d73548a9e0d57b7926",
                 "sha256:d435f514e834e3fdc0941f6a29d086b80b2ea51b28112aee6254bd104ee42a74"
             ],
-            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
+            "markers": "sys_platform == 'linux' and sys_platform == 'linux'",
             "version": "==0.2.1"
         },
         "shellingham": {
@@ -651,7 +651,7 @@
                 "sha256:1b465e494e3e0d8939b50680403e3aedaa2bc434b7d5af64dfd3c958d7f5ae80",
                 "sha256:de3eedaad74a2683334e282005cd8d7f22f4d55fa690a2a1020a416cb0a47e73"
             ],
-            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4' and python_version < '4.0'",
+            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4' and python_version < '4'",
             "version": "==1.26.3"
         },
         "websocket-client": {
