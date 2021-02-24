@@ -6,6 +6,8 @@
 [![versionmolecule](https://img.shields.io/github/pipenv/locked/dependency-version/jonashackt/molecule-ansible-docker-aws/molecule?color=brightgreen)](https://molecule.readthedocs.io/en/latest/)
 [![versiontestinfra](https://img.shields.io/github/pipenv/locked/dependency-version/jonashackt/molecule-ansible-docker-aws/testinfra?color=brightgreen)](https://testinfra.readthedocs.io/en/latest/)
 [![versionmolecule-vagrant](https://img.shields.io/github/pipenv/locked/dependency-version/jonashackt/molecule-ansible-docker-aws/molecule-vagrant?color=brightgreen)](https://github.com/ansible-community/molecule-vagrant)
+[![versionmolecule-docker](https://img.shields.io/github/pipenv/locked/dependency-version/jonashackt/molecule-ansible-docker-aws/molecule-docker?color=brightgreen)](https://github.com/ansible-community/molecule-docker)
+[![versionmolecule-ec2](https://img.shields.io/github/pipenv/locked/dependency-version/jonashackt/molecule-ansible-docker-aws/molecule-ec2?color=brightgreen)](https://github.com/ansible-community/molecule-ec2)
 [![versionawscli](https://img.shields.io/github/pipenv/locked/dependency-version/jonashackt/molecule-ansible-docker-aws/awscli?color=brightgreen)](https://aws.amazon.com/cli/)
 
 Example project showing how to test Ansible roles with Molecule using Testinfra and a multiscenario approach with Vagrant, Docker & AWS EC2 as the infrastructure under test. 
