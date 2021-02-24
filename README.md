@@ -1,7 +1,6 @@
 # molecule-ansible-docker-aws
 [![Build Status](https://github.com/jonashackt/molecule-ansible-docker-aws/workflows/docker/badge.svg)](https://github.com/jonashackt/molecule-ansible-docker-aws/actions)
 [![Build Status](https://github.com/jonashackt/molecule-ansible-docker-aws/workflows/vagrant/badge.svg)](https://github.com/jonashackt/molecule-ansible-docker-aws/actions)
-[![CircleCI](https://circleci.com/gh/jonashackt/molecule-ansible-docker-aws.svg?style=svg)](https://circleci.com/gh/jonashackt/molecule-ansible-docker-aws)
 [![renovateenabled](https://img.shields.io/badge/renovate-enabled-yellow)](https://renovatebot.com)
 [![versionansible](https://img.shields.io/github/pipenv/locked/dependency-version/jonashackt/molecule-ansible-docker-aws/ansible?color=brightgreen)](https://docs.ansible.com/ansible/latest/index.html)
 [![versionmolecule](https://img.shields.io/github/pipenv/locked/dependency-version/jonashackt/molecule-ansible-docker-aws/molecule?color=brightgreen)](https://molecule.readthedocs.io/en/latest/)
@@ -681,7 +680,7 @@ Running a Molecule test without setting the region correctly as environment vari
 So for now we need to set the region manually before running our Molecule tests against EC2:
 
 ```
-export EC2_REGION=eu-central-1
+export AWS_REGION=eu-central-1
 ```
 
 And there's another thing to do: We need to configure the correct `vpc_subnet_id` inside our `molecule.yml` - if not, we get an error like this:
@@ -753,16 +752,17 @@ $ aws ec2 describe-subnets
 Now head over to your [molecule.yml](molecule/aws-ec2-ubuntu/molecule.yml) and edit the `vpc_subnet_id` to contain the correct value:
 
 ```
-scenario:
-  name: aws-ec2-ubuntu
-
 driver:
   name: ec2
+  
 platforms:
   - name: aws-ec2-ubuntu
-    image: ami-a5b196c0
+    image_owner: 099720109477
+    image_name: ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*
     instance_type: t2.micro
     vpc_subnet_id: subnet-a2efa1d9
+    instance_tags:
+      - Name: molecule-aws-ec2-ubuntu
 ...
 ```
 
@@ -802,6 +802,25 @@ Now we should have everything prepared. Let's try to run our first Molecule test
 ```
 molecule --debug create --scenario-name aws-ec2-ubuntu
 ```
+
+> Right now we have an issue with the new community module
+
+```shell
+TASK [Create molecule instance(s)] *********************************************
+changed: [localhost] => (item={'image_name': 'ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*', 'image_owner': '099720109477', 'instance_tags': [{'Name': 'molecule-aws-ec2-ubuntu'}], 'instance_type': 't2.micro', 'name': 'aws-ec2-ubuntu', 'vpc_subnet_id': 'subnet-a2efa1d9'})
+
+TASK [Wait for instance(s) creation to complete] *******************************
+FAILED - RETRYING: Wait for instance(s) creation to complete (300 retries left).
+ok: [localhost] => (item={'started': 1, 'finished': 0, 'ansible_job_id': '397490056884.47351', 'results_file': '/Users/jonashecht/.ansible_async/397490056884.47351', 'changed': True, 'failed': False, 'item': {'image_name': 'ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*', 'image_owner': '099720109477', 'instance_tags': [{'Name': 'molecule-aws-ec2-ubuntu'}], 'instance_type': 't2.micro', 'name': 'aws-ec2-ubuntu', 'vpc_subnet_id': 'subnet-a2efa1d9'}, 'ansible_loop_var': 'item', 'index': 0, 'ansible_index_var': 'index'})
+
+TASK [Populate instance config dict] *******************************************
+fatal: [localhost]: FAILED! => {"msg": "The task includes an option with an undefined variable. The error was: list object has no element 0\n\nThe error appears to be in '/Users/jonashecht/dev/molecule-ansible-docker-aws/molecule/aws-ec2-ubuntu/create.yml': line 112, column 7, but may\nbe elsewhere in the file depending on the exact syntax problem.\n\nThe offending line appears to be:\n\n\n    - name: Populate instance config dict\n      ^ here\n"}
+```
+
+See https://github.com/ansible-community/molecule/discussions/2946, https://github.com/ansible-community/molecule/pull/2869/files, https://github.com/ansible-community/molecule-ec2/pull/34 (only merged 3 days ago)
+
+
+
 
 We could have a sneak peak into our Ansible EC2 Management console under https://eu-central-1.console.aws.amazon.com/ec2/v2/home?region=eu-central-1. We should see our EC2 instance starting up:
 
