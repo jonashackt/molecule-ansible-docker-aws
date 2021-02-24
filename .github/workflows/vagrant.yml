@@ -21,9 +21,8 @@ jobs:
       with:
         python-version: '3.9'
 
-    - name: Install required (and locked) dependecies with pipenv
+    - name: Install required dependecies with pipenv
       run: |
-        echo "Install required (and locked) dependecies with pipenv"
         pip install pipenv
         pipenv install
 

@@ -21,9 +21,9 @@ jobs:
       with:
         python-version: '3.9'
 
-    - name: Install required (and locked) dependecies with pipenv
+    - name: Install Docker & required dependencies with pipenv
       run: |
-        echo "Install required (and locked) dependecies with pipenv"
+        sudo apt install docker
         pip install pipenv
         pipenv install
 
