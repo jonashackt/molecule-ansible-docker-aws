@@ -4,9 +4,12 @@ driver:
 
 platforms:
   - name: aws-ec2-ubuntu
-    image: ami-07d1bb89ff2dd50fe
+    image_owner: 099720109477
+    image_name: ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*
     instance_type: t2.micro
     vpc_subnet_id: subnet-a2efa1d9
+    instance_tags:
+      - Name: molecule-aws-ec2-ubuntu
 
 provisioner:
   name: ansible

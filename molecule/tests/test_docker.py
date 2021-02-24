@@ -19,6 +19,6 @@ def test_vagrant_user_is_part_of_group_docker(host):
 
 
 def test_run_hello_world_container_successfully(host):
-    hello_world_ran = host.run("sudo docker run hello-world")
+    hello_world_ran = host.run("sudo docker run ghcr.io/jonashackt/hello-world")
 
-    assert 'Hello from Docker!' in hello_world_ran.stdout
+    assert 'Hello from Docker on GitHub Container Registry!' in hello_world_ran.stdout
