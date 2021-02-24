@@ -23,7 +23,8 @@ jobs:
 
     - name: Install Docker & required dependencies with pipenv
       run: |
-        sudo apt install docker
+        docker info
+        sudo apt-get install docker
         pip install pipenv
         pipenv install
 
