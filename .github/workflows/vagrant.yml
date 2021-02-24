@@ -1,4 +1,4 @@
-name: molecule
+name: vagrant
 
 on: [push]
 
@@ -27,7 +27,7 @@ jobs:
         pip install pipenv
         pipenv install
 
-    - name: Molecule testing GHA-locally with Vagrant Ubuntu Bionic 18.04
+    - name: Molecule testing GHA-locally with Vagrant Ubuntu Bionic
       run: |
         pipenv run molecule create --scenario-name vagrant-ubuntu
         pipenv run molecule converge --scenario-name vagrant-ubuntu

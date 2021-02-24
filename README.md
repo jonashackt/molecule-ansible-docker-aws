@@ -1,6 +1,7 @@
 # molecule-ansible-docker-aws
 [![Build Status](https://travis-ci.com/jonashackt/molecule-ansible-docker-aws.svg?branch=master)](https://travis-ci.com/jonashackt/molecule-ansible-docker-aws)
-[![Build Status](https://github.com/jonashackt/molecule-ansible-docker-aws/workflows/molecule/badge.svg)](https://github.com/jonashackt/molecule-ansible-docker-aws/actions)
+[![Build Status](https://github.com/jonashackt/molecule-ansible-docker-aws/workflows/docker/badge.svg)](https://github.com/jonashackt/molecule-ansible-docker-aws/actions)
+[![Build Status](https://github.com/jonashackt/molecule-ansible-docker-aws/workflows/vagrant/badge.svg)](https://github.com/jonashackt/molecule-ansible-docker-aws/actions)
 [![CircleCI](https://circleci.com/gh/jonashackt/molecule-ansible-docker-aws.svg?style=svg)](https://circleci.com/gh/jonashackt/molecule-ansible-docker-aws)
 [![renovateenabled](https://img.shields.io/badge/renovate-enabled-yellow)](https://renovatebot.com)
 [![versionansible](https://img.shields.io/github/pipenv/locked/dependency-version/jonashackt/molecule-ansible-docker-aws/ansible?color=brightgreen)](https://docs.ansible.com/ansible/latest/index.html)
@@ -87,20 +88,25 @@ Therefore let's install `pipenv`:
 pip3 install pipenv
 ``` 
 
-Then create a virtual environment for the current project (pinned to Python 3.7+):
+Then create a virtual environment for the current project (pinned to Python 3.9+):
 
 ```
-pipenv shell --python 3.7
+pipenv shell --python 3.9
 ```
 
 And finally install needed pip packages with:
 
 ```
-pipenv install ansible molecule
+pipenv install
 ```
 
-> For using Vagrant with Molecule we also need `python-vagrant` module installed
-* `pipenv install python-vagrant`
+This will install all needed dependencies which are listed incl. their versions in the [Pipfile](Pipfile).
+
+This project uses the following molecule modules:
+
+* [molecule-docker](https://github.com/ansible-community/molecule-docker) (needs `molecule-docker` and `docker` pip packages)
+* [molecule-ec2](https://github.com/ansible-community/molecule-ec2) (needs `molecule-ec2` and `awscli` and `boto3` pip packages)
+* [molecule-vagrant](https://github.com/ansible-community/molecule-vagrant) for Vagrant support (needs `molecule-vagrant` and `python-vagrant` pip packages)
 
 
 
@@ -108,7 +114,7 @@ pipenv install ansible molecule
 
 To initialize a new Molecule powered Ansible role named `docker` with the Vagrant driver and the Testinfra verifier you have to execute the following command:
 
-`molecule init role --driver-name vagrant --verifier-name testinfra docker`
+`pipenv run molecule init role docker --verifier-name testinfra --driver-name docker`
 
 This will give:
 

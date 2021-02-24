@@ -9,11 +9,13 @@ verify_ssl = true
 ansible = "==2.10.7"
 molecule = "==3.2.3"
 testinfra = "==5.3.1"
+docker = "==4.4.3"
+molecule-docker = "==0.2.4"
 python-vagrant = "==0.5.15"
+molecule-vagrant = "==0.6.1"
+molecule-ec2 = "==0.3"
 awscli = "==1.18.128"
 boto3 = "==1.14.51"
-docker = "==4.4.3"
-molecule-vagrant = "==0.6.1"
 
 [requires]
 python_version = "3.9"
