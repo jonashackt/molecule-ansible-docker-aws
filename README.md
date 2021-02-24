@@ -1,5 +1,6 @@
 # molecule-ansible-docker-aws
 [![Build Status](https://travis-ci.com/jonashackt/molecule-ansible-docker-aws.svg?branch=master)](https://travis-ci.com/jonashackt/molecule-ansible-docker-aws)
+[![Build Status](https://github.com/jonashackt/molecule-ansible-docker-aws/workflows/molecule/badge.svg)](https://github.com/jonashackt/molecule-ansible-docker-aws/actions)
 [![CircleCI](https://circleci.com/gh/jonashackt/molecule-ansible-docker-aws.svg?style=svg)](https://circleci.com/gh/jonashackt/molecule-ansible-docker-aws)
 [![renovateenabled](https://img.shields.io/badge/renovate-enabled-yellow)](https://renovatebot.com)
 [![versionansible](https://img.shields.io/github/pipenv/locked/dependency-version/jonashackt/molecule-ansible-docker-aws/ansible?color=brightgreen)](https://docs.ansible.com/ansible/latest/index.html)

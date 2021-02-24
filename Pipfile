@@ -16,4 +16,4 @@ docker = "==4.4.3"
 molecule-vagrant = "==0.6.1"
 
 [requires]
-python_version = "3.8"
+python_version = "3.9"
