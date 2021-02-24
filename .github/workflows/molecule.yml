@@ -13,8 +13,15 @@ jobs:
       with:
         python-version: '3.9'
 
-    - name: Install GraalVM, Maven, Native Image & Run Maven build
+    - name: Install required (and locked) dependecies with pipenv
       run: |
         echo "Install required (and locked) dependecies with pipenv"
         pip install pipenv
         pipenv install
+
+    - name: Molecule testing GHA-locally with Vagrant Ubuntu Bionic 18.04
+      run: |
+        pipenv run molecule create --scenario-name vagrant-ubuntu
+        pipenv run molecule converge --scenario-name vagrant-ubuntu
+        pipenv run molecule verify --scenario-name vagrant-ubuntu
+        pipenv run molecule destroy --scenario-name vagrant-ubuntu
