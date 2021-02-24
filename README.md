@@ -1,5 +1,4 @@
 # molecule-ansible-docker-aws
-[![Build Status](https://travis-ci.com/jonashackt/molecule-ansible-docker-aws.svg?branch=master)](https://travis-ci.com/jonashackt/molecule-ansible-docker-aws)
 [![Build Status](https://github.com/jonashackt/molecule-ansible-docker-aws/workflows/docker/badge.svg)](https://github.com/jonashackt/molecule-ansible-docker-aws/actions)
 [![Build Status](https://github.com/jonashackt/molecule-ansible-docker-aws/workflows/vagrant/badge.svg)](https://github.com/jonashackt/molecule-ansible-docker-aws/actions)
 [![CircleCI](https://circleci.com/gh/jonashackt/molecule-ansible-docker-aws.svg?style=svg)](https://circleci.com/gh/jonashackt/molecule-ansible-docker-aws)
@@ -210,8 +209,6 @@ platforms:
     box: ubuntu/bionic64
     memory: 512
     cpus: 1
-    provider_raw_config_args:
-    - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected' ]"
 
 provisioner:
   name: ansible
@@ -239,27 +236,8 @@ verifier:
 
 ```
 
-We have some specialties here. First thing is the follow addition to the `platforms` key:
 
-```
-    provider_raw_config_args:
-    - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected' ]"
-```
-
-Without this configuration Molecule isn´t able to spin up "standard" Vagrant Ubuntu boxes like `ubuntu/bionic64` and `ubuntu/xenial64`. If you do a `tail -f /var/folders/5p/l1cc1kqd69n_qxrftgln7xdm0000gn/T/molecule/docker/default/vagrant-ubuntu-docker.err`, you see errors like this:
-
-```
-There was an error while executing `VBoxManage`, a CLI used by Vagrant
-for controlling VirtualBox. The command and stderr is shown below.
-
-Command: ["startvm", "64c5ca1e-0f7c-4dea-bc07-8144a56a0029", "--type", "headless"]
-
-Stderr: VBoxManage: error: RawFile#0 failed to create the raw output file /usr/local/lib/python2.7/site-packages/molecule/provisioner/ansible/playbooks/vagrant/ubuntu-bionic-18.04-cloudimg-console.log (VERR_ACCESS_DENIED)
-```
-
-This is a workaround until https://github.com/ansible/molecule/issues/1556 gets fixed. This shouldn´t be necessary to be configured.
-
-The second thing is `PYTHONWARNINGS: "ignore:.*U.*mode is deprecated:DeprecationWarning"` environment variable definition. If you don´t configure this you´ll end up with bloated test logs like this:
+There's a special `PYTHONWARNINGS: "ignore:.*U.*mode is deprecated:DeprecationWarning"` environment variable definition. If you don´t configure this you´ll end up with bloated test logs like this:
 
 ![verify-with-deprecation-warnings](screenshots/verify-with-deprecation-warnings.png)
 
@@ -306,7 +284,7 @@ To get an idea on how this works I sligthly restructured the repository. We star
 And because Docker is the default Molecule driver for testing Ansible roles I changed the name of the Vagrant scenario to `vagrant-ubuntu`. Don´t forget to install `docker`:
 
 ```
-pip3 install docker
+pip3 install molecule-docker docker
 ```
 
 Using `molecule test` as we´re used to will now execute the Docker (e.g. `default`) scenario. This change results in the following project structure:
@@ -321,7 +299,7 @@ molecule test --scenario-name vagrant-ubuntu
 
 [![asciicast](https://asciinema.org/a/213352.svg)](https://asciinema.org/a/213352)
 
-All the files which belong only to a certain scenario are placed inside the scenarios directory. For example in the Docker scenario this is `Dockerfile.js` and in Vagrant one this is `prepare.yml`. Also the `molecule.yml` files have to access the `playbook.yml` and the testfiles differently since they are now separate from the scenario directory to be [able to reuse them over all scenarios](https://molecule.readthedocs.io/en/latest/examples.html#sharing-across-scenarios):
+All the files which belong only to a certain scenario are placed inside the scenarios directory. For example in the Docker scenario there's only the `molecule.yml` and in Vagrant one this is an additional `prepare.yml`. Also the `molecule.yml` files have to access the `playbook.yml` and the testfiles differently since they are now separate from the scenario directory to be [able to reuse them over all scenarios](https://molecule.readthedocs.io/en/latest/examples.html#sharing-across-scenarios):
 
 ```
 ...
@@ -450,12 +428,12 @@ This will verify that
 
 Now that we successfully used Vagrant & Docker as infrastructure providers for Molecule, we should now start to use a cloud provider like AWS. 
 
-We should be able to use [Molecule's EC2 driver](https://molecule.readthedocs.io/en/latest/configuration.html#ec2), which itself uses [Ansible's ec2 module](http://docs.ansible.com/ansible/latest/ec2_module.html) to interact with AWS.
+We should be able to use [Molecule's EC2 driver](https://github.com/ansible-community/molecule-ec2), which itself uses [Ansible's ec2 module](http://docs.ansible.com/ansible/latest/ec2_module.html) to interact with AWS.
 
-First we need to install the [Boto Python packages](https://pypi.org/project/boto/). They will provide interfaces to Amazon Web Services:
+First we need to install the [Boto Python packages](https://pypi.org/project/boto3/). They will provide interfaces to Amazon Web Services:
 
 ```
-pip3 install boto boto3
+pip3 install molecule-ec2 awscli boto3
 ```
 
 
@@ -464,12 +442,12 @@ pip3 install boto boto3
 Then we just init a new Molecule scenario inside our existing multi scenario project called `aws-ec2-ubuntu`. Therefore we can leverage Molecule's `molecule init scenario` command:
 
 ```
-cd molecule-ansible-docker-vagrant/docker
+cd molecule-ansible-docker-aws
 
 molecule init scenario --driver-name ec2 --role-name docker --scenario-name aws-ec2-ubuntu
 ```
 
-That should create a new directory `aws-ec2-ubuntu` inside the `docker/molecule` folder.  We'll integrate the results into our multi scenario project in a second.
+That should create a new directory `aws-ec2-ubuntu` inside the `molecule` folder.  We'll integrate the results into our multi scenario project in a second.
 
 Now let's dig into the generated `molecule.yml`:
 
@@ -897,6 +875,9 @@ molecule test --scenario-name aws-ec2-ubuntu
 ```
 
 
+
+
+
 ## Use TravisCI to execute Molecule with EC2 infrastructure
 
 My ultimate goal of the whole Molecule journey was to be able to let TravisCI create Cloud environments and execute Ansible roles on them.
@@ -1250,192 +1231,47 @@ testinfra = "==4.1.0"
 As we Testinfra is now also not longer installed by default, we should also add it explicitely. 
 
 
-## Use Vagrant on TravisCI to execute Molecule
+## Use Vagrant on GitHub Actions to execute Molecule
 
-Well that one was on my list for a long time (and I guess not only on my list, [Ansible famous geerlingguy couldn't believe his ears also](https://github.com/ansible-community/molecule-vagrant/issues/8#issuecomment-589795115)), but it is now possible to __run a full-blown Vagrant Box on TravisCI__. I had to create a example project for that, see it in action if you like: https://github.com/jonashackt/vagrant-travisci-libvrt
+Well that one was on my list for a long time - but as Travis defacto laid off the OpenSource support, I switched to GitHub Actions. 
 
-So now we should be able to do this with Molecule too, right?!
-
-Therefore, let's have a look into our [.travis.yml](.travis.yml), where we only run our Docker-in-Docker tests right now. Because we need to install and configure Vagrant there also:
+Since GHA is easily able to run Vagrant (see https://github.com/jonashackt/vagrant-github-actions), we can simply use it inside our GHA workflow file [vagrant.yml](.github/workflows/vagrant.yml):
 
 ```yaml
-...
+name: vagrant
 
-# Cache the big Vagrant boxes
-cache:
-  directories:
-    - /home/travis/.vagrant.d/boxes
-    - /home/travis/.cache/pipenv
+on: [push]
 
-install:
-  ### Vagrant installation
-  # Install libvrt & KVM (see https://github.com/alvistack/ansible-role-virtualbox/blob/master/.travis.yml)
-  - sudo apt-get update && sudo apt-get install -y bridge-utils dnsmasq-base ebtables libvirt-bin libvirt-dev qemu-kvm qemu-utils ruby-dev
+jobs:
+  molecule-vagrant-ubuntu:
+    runs-on: macos-10.15
 
-  # Download Vagrant & Install Vagrant package
-  - sudo wget -nv https://releases.hashicorp.com/vagrant/2.2.7/vagrant_2.2.7_x86_64.deb
-  - sudo dpkg -i vagrant_2.2.7_x86_64.deb
-  - sudo vagrant --version
+    steps:
+    - uses: actions/checkout@v2
 
-  # Install vagrant-libvirt Vagrant plugin
-  - sudo vagrant plugin install vagrant-libvirt
-  - sudo vagrant plugin list
-...
+    - name: Cache pipenv virtualenvs incl. all pip packages
+      uses: actions/cache@v2
+      with:
+        path: ~/.local/share/virtualenvs
+        key: ${{ runner.os }}-pipenv-${{ hashFiles('**/Pipfile.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-pipenv-
+
+    - uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
+
+    - name: Install required dependecies with pipenv
+      run: |
+        pip install pipenv
+        pipenv install
+
+    - name: Molecule testing GHA-locally with Vagrant Ubuntu Bionic
+      run: |
+        pipenv run molecule create --scenario-name vagrant-ubuntu
+        pipenv run molecule converge --scenario-name vagrant-ubuntu
+        pipenv run molecule verify --scenario-name vagrant-ubuntu
+        pipenv run molecule destroy --scenario-name vagrant-ubuntu
 ```
 
-The installation of Vagrant & libvirt/KVM is exactly the same as in the https://github.com/jonashackt/vagrant-travisci-libvrt
-
-We also need to execute Vagrant with `sudo`, otherwise we'll run into the [known permission denied errors](https://github.com/jonashackt/vagrant-travisci-libvrt#prevent-errors-like-the-home-directory-you-specified-is-not-accessible).
-
-
-## Install Python 3 for sudo access & pipenv based on Python 3
-
-If you try to go the fast path and use a Travis Python build image (as described in the docs: https://docs.travis-ci.com/user/languages/python/), you'll run into a dead end!
-
-Because if we use the Python image (even in 3.x!)
-
-```yaml
-dist: bionic
-language: python
-# configure python version (see https://docs.travis-ci.com/user/languages/python/#specifying-python-versions)
-python:
-  - "3.7"
-``` 
-
-we will not get a Python 3 based `pip` to install our `pipenv` on, if we use `sudo pip install`! This is [because Python 3 is only installed as a separate virtualenv for each version](https://docs.travis-ci.com/user/languages/python/#travis-ci-uses-isolated-virtualenvs).
-
-But as our Molecule project's dependencies need Python 3.4 as a minimum, we'll [run into errors like](https://travis-ci.org/github/jonashackt/molecule-ansible-docker-aws/builds/661102534):
-
-```
-$ sudo -H pipenv install
-  Pipfile.lock (fa3b18) out of date, updating to (1357e7)...
-  Locking [dev-packages] dependencies...
-  Locking [packages] dependencies...
-FAIL
-Traceback (most recent call last):
-  File "/usr/local/lib/python2.7/dist-packages/pipenv/resolver.py", line 126, in <module>
-    main()
-  File "/usr/local/lib/python2.7/dist-packages/pipenv/resolver.py", line 119, in main
-    parsed.requirements_dir, parsed.packages)
-  File "/usr/local/lib/python2.7/dist-packages/pipenv/resolver.py", line 85, in _main
-    requirements_dir=requirements_dir,
-  File "/usr/local/lib/python2.7/dist-packages/pipenv/resolver.py", line 69, in resolve
-    req_dir=requirements_dir
-  File "/usr/local/lib/python2.7/dist-packages/pipenv/utils.py", line 726, in resolve_deps
-    req_dir=req_dir,
-  File "/usr/local/lib/python2.7/dist-packages/pipenv/utils.py", line 480, in actually_resolve_deps
-    resolved_tree = resolver.resolve()
-  File "/usr/local/lib/python2.7/dist-packages/pipenv/utils.py", line 385, in resolve
-    results = self.resolver.resolve(max_rounds=environments.PIPENV_MAX_ROUNDS)
-  File "/usr/local/lib/python2.7/dist-packages/pipenv/patched/piptools/resolver.py", line 102, in resolve
-    has_changed, best_matches = self._resolve_one_round()
-  File "/usr/local/lib/python2.7/dist-packages/pipenv/patched/piptools/resolver.py", line 206, in _resolve_one_round
-    for dep in self._iter_dependencies(best_match):
-  File "/usr/local/lib/python2.7/dist-packages/pipenv/patched/piptools/resolver.py", line 301, in _iter_dependencies
-    dependencies = self.repository.get_dependencies(ireq)
-  File "/usr/local/lib/python2.7/dist-packages/pipenv/patched/piptools/repositories/pypi.py", line 234, in get_dependencies
-    legacy_results = self.get_legacy_dependencies(ireq)
-  File "/usr/local/lib/python2.7/dist-packages/pipenv/patched/piptools/repositories/pypi.py", line 426, in get_legacy_dependencies
-    results, ireq = self.resolve_reqs(download_dir, ireq, wheel_cache)
-  File "/usr/local/lib/python2.7/dist-packages/pipenv/patched/piptools/repositories/pypi.py", line 297, in resolve_reqs
-    results = resolver._resolve_one(reqset, ireq)
-  File "/usr/local/lib/python2.7/dist-packages/pipenv/patched/notpip/_internal/resolve.py", line 274, in _resolve_one
-    self.requires_python = check_dist_requires_python(dist, absorb=False)
-  File "/usr/local/lib/python2.7/dist-packages/pipenv/patched/notpip/_internal/utils/packaging.py", line 62, in check_dist_requires_python
-    '.'.join(map(str, sys.version_info[:3])),)
-pipenv.patched.notpip._internal.exceptions.UnsupportedPythonVersion: testinfra requires Python '>=3.4' but the running Python is 2.7.17
-```
-
-Also trying to use Python 3 explicitely with the command `sudo pip3 install` will result in error (whereas `pip3 install` without the `sudo` works perfectly fine):
-
-```
-$ sudo pip3 install pipenv
-sudo: pip3: command not found
-```
-
-So we need to install Python 3 for sudo access also. Let's do this inside the [.travis.yml](.travis.yml) `install:` section. As we use the `dist: bionic` which is Ubuntu Bionic 18.04, [we already have a Python 3.x installation build in](https://askubuntu.com/a/865569/451114) we can simply upgrade:
-
-```yaml
-  # Install Python 3 for usage together with sudo into our Travis build image
-  - sudo apt-get install python3.8
-  - curl -skL https://bootstrap.pypa.io/get-pip.py | sudo -H python3.8
-```
-
-With this we should be able to use Python 3.x together with `sudo pip`, which we directly use to install `pipenv`:
-
-```yaml
-  # Install required (and locked) dependecies with pipenv
-  - sudo -H pip install pipenv
-  - sudo -H pipenv install
-```
-
-I also experienced `pipenv` not running inside my job, but instead given the following error message:
-
-```
-The directory '/home/travis/.cache/pipenv/http' or its parent directory is not owned by the current user and the cache has been disabled. Please check the permissions and owner of that directory. If executing pip with sudo, you may want sudo's -H flag.
-The directory '/home/travis/.cache/pipenv' or its parent directory is not owned by the current user and caching wheels has been disabled. check the permissions and owner of that directory. If executing pip with sudo, you may want sudo's -H flag.
-Ignoring ruamel.yaml: markers 'python_version >= "3.7"' don't match your environment
-``` 
-
-So we need to install `pipenv` via `pip` using the `sudo -H` option - the same applies to the `pipenv install` command.
-
-
-
-### Using VirtualBox locally furthermore - but switching to libvirt on TravisCI
-
-VirtualBox is [one of the three default Vagrant providers](https://www.vagrantup.com/docs/providers/) (+ Hyper-V & Docker) - and it is widely used in projects and blog posts. Additionally many folks use MacOS on their development machines, so I don't want to switch the virtualization provider for my Molecule tests locally.
-
-Since TravisCI only supports the `libvirt/KVM` provider (see the not-working https://github.com/jonashackt/vagrant-travisci), we __need to use libvirt/KVM with TravisCI__.
-
-As we already have a VirtualBox based Molecule scenario [vagrant-ubuntu](molecule/vagrant-ubuntu), wouldn't it be great to be able to use this scenario with VirtualBox locally - and with libvirt/KVM on TravisCI?!
-
-There is the option of configuring Molecule directly in the [molecule.yml](molecule/vagrant-ubuntu/molecule.yml) file with:
-
-```yaml
-...
-driver:
-  name: vagrant
-  provider:
-    name: libvirt
-...
-```
-
-But in this case, we wouldn't be able to use VirtualBox as our local provider. We also can't simply tell Vagrant to use the provider `libvirt` with `vagrant up --provider=libvirt`, since we're using Molecule which itself controls Vagrant.
-
-So we need another method to tell Vagrant to run with `libvirt` only on TravisCI.
-
-Luckily there's another option described in the [vagrant-libvirt Plugin docs](https://github.com/vagrant-libvirt/vagrant-libvirt#start-vm), where we could use an environment variable `VAGRANT_DEFAULT_PROVIDER=libvirt`. So let's enhance our [.travis.yml](.travis.yml):
-
-```yaml
-env:
-- VAGRANT_DEFAULT_PROVIDER=libvirt
-
-```
-
-### Run our Molecule Vagrant Scenario
-
-Since we need to use `sudo` for executing Vagrant without errors, we also sticked to it while installing our Python dependencies with `pipenv`.
-
-To have those deps available, we also need to execute Molecule using `sudo`. Using `sudo pipenv run molecule` should do the trick, right?
-
-__NO!__ That's not enough. I really gave away lot's and lot's of hours debugging this! You'll run into errors like the following:
-
-```
-$ sudo cat /root/.cache/molecule/docker/vagrant-libvirt-ubuntu/vagrant-vagrant-libvirt-ubuntu.err
-### 2020-03-11 12:23:54 ###
-### 2020-03-11 12:23:54 ###
-The provider 'libvirt' could not be found, but was requested to
-back the machine 'vagrant-libvirt-ubuntu'. Please use a provider that exists.
-Vagrant knows about the following providers: hyperv, docker, virtualbox
-```
-
-So even using `sudo` doesn't solve the problem here! We need to consider the `sudo -E` switch. This will preserve the user environment when running the commands. Therefore successfully spinning up a Vagrant environment with Molecule on TravisCI only works with `sudo -E pipenv run molecule create --scenario-name vagrant-ubuntu`. You can see Travis' full `script` section here:
-
-```yaml
-script:
-  # Molecule Testing Travis-locally with Vagrant
-  - sudo -E pipenv run molecule create --scenario-name vagrant-ubuntu
-  - sudo -E pipenv run molecule converge --scenario-name vagrant-ubuntu
-  - sudo -E pipenv run molecule verify --scenario-name vagrant-ubuntu
-  - sudo -E pipenv run molecule destroy --scenario-name vagrant-ubuntu
-```
+Caching the pipenv virtualenv we also get relatively fast cycle times here.
