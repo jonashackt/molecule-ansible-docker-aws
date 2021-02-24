@@ -2,7 +2,7 @@
 driver:
   name: vagrant
   provider:
-    name: virtualbox
+    name: VBox
 
 platforms:
   - name: vagrant-ubuntu
