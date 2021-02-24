@@ -10,6 +10,8 @@
 
 Example project showing how to test Ansible roles with Molecule using Testinfra and a multiscenario approach with Vagrant, Docker & AWS EC2 as the infrastructure under test. 
 
+__This project moved on to GitHub Actions: So this branch is solely here to conserve the Travis configuration and docs for somebody in need__
+
 [![asciicast](https://asciinema.org/a/214914.svg)](https://asciinema.org/a/214914)
 
 There are already two blog posts complementing this repository:
