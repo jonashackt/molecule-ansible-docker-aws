@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   molecule-docker-ubuntu:
-    runs-on: macos-10.15
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
@@ -21,10 +21,9 @@ jobs:
       with:
         python-version: '3.9'
 
-    - name: Install Docker & required dependencies with pipenv
+    - name: Install required dependencies with pipenv
       run: |
         docker info
-        sudo apt-get install docker
         pip install pipenv
         pipenv install
 
