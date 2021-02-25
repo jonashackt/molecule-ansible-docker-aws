@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "3428f095a3d9ad280b0fced873be9f821a76ab89a1097222159d3de698863e29"
+            "sha256": "3ce85ab31a188345b5ff7b0da911818eea5c4675806388553a155d34db445d72"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -48,11 +48,11 @@
         },
         "awscli": {
             "hashes": [
-                "sha256:9ded101d563ea19a9f35468f1b618a52b4c7351379c07f38baa6d67b948a1aab",
-                "sha256:c8c4e758aff6693da8a015899933fde6df6caa22cb28e57415b5125d97007a3f"
+                "sha256:2cd849f71575f10c723df4375d6754f9065249365f9ab3353021d5b0cc00e0b6",
+                "sha256:ca2521159c0f7ec78dc8c561cde8e150e1e8591d0b0d14164f50c36cc7424b8b"
             ],
             "index": "pypi",
-            "version": "==1.19.15"
+            "version": "==1.19.16"
         },
         "bcrypt": {
             "hashes": [
@@ -84,19 +84,19 @@
         },
         "boto3": {
             "hashes": [
-                "sha256:a6b36a3ed9628eb34f7b653c549b045a7f8ddfa26e88c2dc1ad42e3b6d2f3197",
-                "sha256:d259352f40c5f4fe2dd16110106b86eab07ecd9f6f471a73d23fa8cb8054dcb6"
+                "sha256:602eadaef665f49090344e0f87aa6a98dbe1ccdd2f20069a372ed35f2706c63c",
+                "sha256:7d52ae25baeef79151147c729051a790b7a8b3858a126d59c9ab957815a6d4e7"
             ],
             "index": "pypi",
-            "version": "==1.17.15"
+            "version": "==1.17.16"
         },
         "botocore": {
             "hashes": [
-                "sha256:71c5073c7f042dc8d4684c7ddd0ab1fce1e9d1db7ab9cdb0ab4c6bd5a6855db4",
-                "sha256:e4f6184ef463f047f78d95ff735228d934b34c1fcc22e247076a1dd69c4a7c2d"
+                "sha256:48350c0524fafcc6f1cf792a80080eeaf282c4ceed016e9296f1ebfda7c34fb3",
+                "sha256:dd95871cf8a418ab730a219f2bfc301c98f2d9d0a294e43f51715bdd4aedd4cd"
             ],
             "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4, 3.5'",
-            "version": "==1.20.15"
+            "version": "==1.20.16"
         },
         "cerberus": {
             "hashes": [
