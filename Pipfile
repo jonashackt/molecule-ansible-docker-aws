@@ -14,8 +14,8 @@ molecule-docker = "==0.2.4"
 python-vagrant = "==0.5.15"
 molecule-vagrant = "==0.6.1"
 molecule-ec2 = "==0.3"
-awscli = "==1.19.17"
-boto3 = "==1.17.17"
+awscli = "==1.19.18"
+boto3 = "==1.17.18"
 boto = "==2.49.0"
 
 [requires]
