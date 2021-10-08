@@ -9,7 +9,7 @@ verify_ssl = true
 ansible = "==4.6.0"
 molecule = "==3.4.0"
 testinfra = "==5.3.1"
-docker = "==5.0.2"
+docker = "==5.0.3"
 molecule-docker = "==0.2.4"
 python-vagrant = "==0.5.15"
 molecule-vagrant = "==0.6.3"
