@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "e7f0d981bc63e2cc443713eaf1e7c675970614c85bdc000f73546e081ae931fc"
+            "sha256": "b4c9b5565be1ae90382f8ed0e78d1d58f33f5881a32506e583a596ba513c9376"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -56,11 +56,11 @@
         },
         "awscli": {
             "hashes": [
-                "sha256:42837214096e1750e22d0187bf8d65c8f33b674df203b07a8560fe23b47ad49a",
-                "sha256:830d6127684e319d7f9151f5bd23b78be9da0fb68374dbe3b284977fda63a9e2"
+                "sha256:86e11b7f70a05c554662fdd5f1e70acc5fbae8bd09c2bde4ff354b69d71364db",
+                "sha256:d295d6dcd86c32b9a91e41397239ad178ada5be207d43e6adcfe70d119760f83"
             ],
             "index": "pypi",
-            "version": "==1.22.33"
+            "version": "==1.22.34"
         },
         "bcrypt": {
             "hashes": [
@@ -95,19 +95,19 @@
         },
         "boto3": {
             "hashes": [
-                "sha256:1e72294b042651ab27a3b6a9eea2810fc8faab5be52b0876f9f5b55f5fd9e101",
-                "sha256:4110e8a1790842d1f818363b83c5f72dea4bdd980c46df1540814c4a79d72884"
+                "sha256:79ef3ad894ba37233dae72f1a1fc740408a4b4bd025a02c8fb7bbb3a0a8b65bb",
+                "sha256:87024f4e62ca7fd9231b3ed21772b168dd4e26f1afc5b2b663908987b5e30229"
             ],
             "index": "pypi",
-            "version": "==1.20.33"
+            "version": "==1.20.34"
         },
         "botocore": {
             "hashes": [
-                "sha256:8faeda0da14a3cb5df8005052527cc0263181adad6bdbfedbe20079c72973c2c",
-                "sha256:9be1ea775e6de420a5873dff42108a1843e9137a52ef98c926dad56a8152ef2f"
+                "sha256:5c3ba03c4ac7e48906db63a7cad761c6ca505cc7174a18f179bbf8f8708d5a08",
+                "sha256:edd352ac409272c1fc1bbc6518891753a398e69f9eb861d26c319b500f018959"
             ],
             "markers": "python_version >= '3.6'",
-            "version": "==1.23.33"
+            "version": "==1.23.34"
         },
         "bracex": {
             "hashes": [
@@ -689,7 +689,7 @@
                 "sha256:820adcf1b4451c9cc7759848797703263ba0eb6a4cad76d73548a9e0d57b7926",
                 "sha256:d435f514e834e3fdc0941f6a29d086b80b2ea51b28112aee6254bd104ee42a74"
             ],
-            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
+            "markers": "sys_platform == 'linux'",
             "version": "==0.2.1"
         },
         "setuptools": {
