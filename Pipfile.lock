@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "54279911a738dc8d8fa43c2ff19429b6032c6da94c43f0e27f1fb5ee3dd1c460"
+            "sha256": "680dfb7581a2871ac0f7dcc5bb0365e7df7a138a7f292dc78e89c17eea6c2611"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -56,11 +56,11 @@
         },
         "awscli": {
             "hashes": [
-                "sha256:1ac31c94b87f56d3da3630fe5c32aa4d87925f6f51d9a452ec87fd1bdd7c3966",
-                "sha256:c936f3a4adc0115b0fd584d7d9e7bb7c5f111c6eb7dcb8b7c6b3b895b47e37ef"
+                "sha256:5beb444fb71ac97e17951e9a61bc7821429e014274f87dc68aaf373ccf47b561",
+                "sha256:fbbf3faae40f32a2a142ce3d1aeaeb7109e6077f29b2682366eaced687f2deed"
             ],
             "index": "pypi",
-            "version": "==1.22.35"
+            "version": "==1.22.36"
         },
         "bcrypt": {
             "hashes": [
@@ -95,19 +95,19 @@
         },
         "boto3": {
             "hashes": [
-                "sha256:42dd9fcb9e033ab19c9dfaeaba745ef9d2db6efe4e9f1e1f547b3e3e0b1f4a82",
-                "sha256:e0247a901ba3b7ec51f232921764b7ad14f458ed91038a71df9da732e12bbbe1"
+                "sha256:a46e78108aa9ead583f2ae9e2c769c2865f0ed8567da1bc0568fbb4809932807",
+                "sha256:d2df801e368ec0782c6ed50232dd76bf0ae38ef63056d8d363a39bad62947166"
             ],
             "index": "pypi",
-            "version": "==1.20.35"
+            "version": "==1.20.36"
         },
         "botocore": {
             "hashes": [
-                "sha256:4cbd668a28e489c8d1909f621684f070309b3ae990667094b344e6ea72337795",
-                "sha256:5be6ba6c5ea71c256da8a5023bf9c278847c4b90fdb40f2c4c3bdb21ca11ff28"
+                "sha256:3af8fef31baae5cc4016dadcb4cf7848a0bf1efb74bcdb7d1dc6b8d0910e1898",
+                "sha256:eb69259ee19b36073c899f4cd75af8cef5bc042a9cf053f2fcbb4f544da751b2"
             ],
             "markers": "python_version >= '3.6'",
-            "version": "==1.23.35"
+            "version": "==1.23.36"
         },
         "bracex": {
             "hashes": [
