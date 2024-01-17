@@ -10,7 +10,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Cache pipenv virtualenvs incl. all pip packages
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
         path: ~/.local/share/virtualenvs
         key: ${{ runner.os }}-pipenv-${{ hashFiles('**/Pipfile.lock') }}
